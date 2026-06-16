@@ -4,7 +4,14 @@
  */
 package easyPOS.login;
 
+import control.ApplicationDataManager;
 import dbOperations.LoginDBOperation;
+import java.awt.Font;
+import java.awt.FontFormatException;
+import java.awt.GraphicsEnvironment;
+import java.io.IOException;
+import java.util.Locale;
+import java.util.ResourceBundle;
 import javax.swing.JOptionPane;
 
 /**
@@ -18,6 +25,7 @@ public class ForgotPwdPanel extends javax.swing.JPanel {
      */
     public ForgotPwdPanel() {
         initComponents();
+        switchLanguage();
     }
 
     /**
@@ -135,6 +143,27 @@ public class ForgotPwdPanel extends javax.swing.JPanel {
                     .addGap(0, 0, Short.MAX_VALUE)))
         );
     }// </editor-fold>//GEN-END:initComponents
+
+    private void switchLanguage() {
+        Locale locale = new Locale("si", "LK");
+        ResourceBundle resourceBundle = ResourceBundle.getBundle("easyPOS/login/Bundle", locale);
+        try {
+            Font customFont = Font.createFont(Font.TRUETYPE_FONT,
+                    ApplicationDataManager.getInstance().getSinhalaFontFile()).deriveFont(12f);
+            GraphicsEnvironment ge = GraphicsEnvironment.getLocalGraphicsEnvironment();
+            ge.registerFont(customFont);
+            jLabel54.setFont(customFont);
+            jLabel55.setFont(customFont);
+            jLabel56.setFont(customFont);
+            jButtonFogotLogin.setFont(customFont);
+        } catch (IOException | FontFormatException e) {
+            System.err.println(e);
+        }
+        jLabel54.setText(resourceBundle.getString("ForgotPwdPanel.jLabel54.text"));
+        jLabel55.setText(resourceBundle.getString("ForgotPwdPanel.jLabel55.text"));
+        jLabel56.setText(resourceBundle.getString("ForgotPwdPanel.jLabel56.text"));
+        jButtonFogotLogin.setText(resourceBundle.getString("ForgotPwdPanel.jButtonFogotLogin.text"));
+    }
 
     private void jButtonFogotLoginActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonFogotLoginActionPerformed
         int indx=jComboBoxFPwd1.getSelectedIndex();

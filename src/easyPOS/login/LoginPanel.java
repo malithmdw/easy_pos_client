@@ -28,7 +28,9 @@ import java.io.File;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Locale;
 import java.util.Map;
+import java.util.ResourceBundle;
 import localDatabase.DatabaseManager;
 import serverDataModels.Category;
 import serverDataModels.Institute;
@@ -51,6 +53,7 @@ public class LoginPanel extends javax.swing.JPanel {
      */
     public LoginPanel() {
         initComponents();
+        switchLanguage();
     }
 
     @SuppressWarnings("unchecked")
@@ -214,6 +217,27 @@ public class LoginPanel extends javax.swing.JPanel {
     private void jButtonLoginKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_jButtonLoginKeyPressed
         loginAction();
     }//GEN-LAST:event_jButtonLoginKeyPressed
+
+    private void switchLanguage() {
+        Locale locale = new Locale("si", "LK");
+        ResourceBundle resourceBundle = ResourceBundle.getBundle("easyPOS/login/Bundle", locale);
+        try {
+            Font customFont = Font.createFont(Font.TRUETYPE_FONT,
+                    ApplicationDataManager.getInstance().getSinhalaFontFile()).deriveFont(14f);
+            GraphicsEnvironment ge = GraphicsEnvironment.getLocalGraphicsEnvironment();
+            ge.registerFont(customFont);
+            jLabelLoginUserName.setFont(customFont);
+            jLabelLoginPwd.setFont(customFont);
+            jButtonLogin.setFont(customFont);
+            jButtonPwdFogot.setFont(customFont);
+        } catch (IOException | FontFormatException e) {
+            System.err.println(e);
+        }
+        jLabelLoginUserName.setText(resourceBundle.getString("LoginPanel.jLabelLoginUserName.text"));
+        jLabelLoginPwd.setText(resourceBundle.getString("LoginPanel.jLabelLoginPwd.text"));
+        jButtonLogin.setText(resourceBundle.getString("LoginPanel.jButtonLogin.text"));
+        jButtonPwdFogot.setText(resourceBundle.getString("LoginPanel.jButtonPwdFogot.text"));
+    }
 
     private void loginAction(){
         if (util.NetworkUtil.isInternetAvailable()) {

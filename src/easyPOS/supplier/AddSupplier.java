@@ -1,16 +1,24 @@
 package easyPOS.supplier;
 
+import control.ApplicationDataManager;
 import dataModels.SupplierDataModel;
 import dbOperations.SuppliesDBOperation;
 import java.awt.Color;
+import java.awt.Font;
+import java.awt.FontFormatException;
+import java.awt.GraphicsEnvironment;
 import java.awt.Toolkit;
 import java.awt.event.KeyEvent;
+import java.io.IOException;
+import java.util.Locale;
+import java.util.ResourceBundle;
 import javax.swing.JOptionPane;
 
 public class AddSupplier extends javax.swing.JFrame {
 
     public AddSupplier() {
         initComponents();
+        switchLanguage();
         setIcon();
     }
     
@@ -711,6 +719,47 @@ public class AddSupplier extends javax.swing.JFrame {
                 new AddSupplier().setVisible(true);
             }
         });
+    }
+
+    private void switchLanguage() {
+        Locale locale = new Locale("si", "LK");
+        ResourceBundle resourceBundle = ResourceBundle.getBundle("easyPOS/supplier/Bundle", locale);
+        try {
+            Font customFont = Font.createFont(Font.TRUETYPE_FONT,
+                    ApplicationDataManager.getInstance().getSinhalaFontFile()).deriveFont(12f);
+            GraphicsEnvironment ge = GraphicsEnvironment.getLocalGraphicsEnvironment();
+            ge.registerFont(customFont);
+            jLabel1.setFont(customFont);
+            jLabel2.setFont(customFont);
+            jLabel3.setFont(customFont);
+            jLabel4.setFont(customFont);
+            jLabel5.setFont(customFont);
+            jLabel6.setFont(customFont);
+            jLabel7.setFont(customFont);
+            jLabel10.setFont(customFont);
+            jLabel8.setFont(customFont);
+            jButtonAddSupp.setFont(customFont);
+            jButtonClear.setFont(customFont);
+            jButtonCancel1.setFont(customFont);
+            jButtonSaveChange.setFont(customFont);
+            jButtonDelete.setFont(customFont);
+        } catch (IOException | FontFormatException e) {
+            System.err.println(e);
+        }
+        jLabel1.setText(resourceBundle.getString("AddSupplier.jLabel1.text"));
+        jLabel2.setText(resourceBundle.getString("AddSupplier.jLabel2.text"));
+        jLabel3.setText(resourceBundle.getString("AddSupplier.jLabel3.text"));
+        jLabel4.setText(resourceBundle.getString("AddSupplier.jLabel4.text"));
+        jLabel5.setText(resourceBundle.getString("AddSupplier.jLabel5.text"));
+        jLabel6.setText(resourceBundle.getString("AddSupplier.jLabel6.text"));
+        jLabel7.setText(resourceBundle.getString("AddSupplier.jLabel7.text"));
+        jLabel10.setText(resourceBundle.getString("AddSupplier.jLabel10.text"));
+        jLabel8.setText(resourceBundle.getString("AddSupplier.jLabel8.text"));
+        jButtonAddSupp.setText(resourceBundle.getString("AddSupplier.jButtonAddSupp.text"));
+        jButtonClear.setText(resourceBundle.getString("AddSupplier.jButtonClear.text"));
+        jButtonCancel1.setText(resourceBundle.getString("AddSupplier.jButtonCancel1.text"));
+        jButtonSaveChange.setText(resourceBundle.getString("AddSupplier.jButtonSaveChange.text"));
+        jButtonDelete.setText(resourceBundle.getString("AddSupplier.jButtonDelete.text"));
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables

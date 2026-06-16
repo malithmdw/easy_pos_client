@@ -8,9 +8,15 @@ import dataModels.SupplierDataModel;
 import dataModels.SupplyVariables;
 import dbOperations.StockDBOperation;
 import dbOperations.SuppliesDBOperation;
+import java.awt.Font;
+import java.awt.FontFormatException;
+import java.awt.GraphicsEnvironment;
 import java.awt.event.KeyEvent;
+import java.io.IOException;
 import java.text.DecimalFormat;
 import java.util.ArrayList;
+import java.util.Locale;
+import java.util.ResourceBundle;
 import javax.swing.JOptionPane;
 import javax.swing.table.DefaultTableCellRenderer;
 import tableModels.SupplierLoadTbl;
@@ -37,6 +43,7 @@ public class SupplierPanel extends javax.swing.JPanel {
      */
     public SupplierPanel() {
         initComponents();
+        switchLanguage();
     }
 
     /**
@@ -1863,6 +1870,114 @@ public class SupplierPanel extends javax.swing.JPanel {
     }
     
     
+    private void switchLanguage() {
+        Locale locale = new Locale("si", "LK");
+        ResourceBundle resourceBundle = ResourceBundle.getBundle("easyPOS/supplier/Bundle", locale);
+        try {
+            Font customFont = Font.createFont(Font.TRUETYPE_FONT,
+                    ApplicationDataManager.getInstance().getSinhalaFontFile()).deriveFont(12f);
+            GraphicsEnvironment ge = GraphicsEnvironment.getLocalGraphicsEnvironment();
+            ge.registerFont(customFont);
+            jButton11.setFont(customFont);
+            jButton12.setFont(customFont);
+            jButton13.setFont(customFont);
+            jButton14.setFont(customFont);
+            jButton18.setFont(customFont);
+            jButton19.setFont(customFont);
+            jButton22.setFont(customFont);
+            jLabel47.setFont(customFont);
+            jLabel48.setFont(customFont);
+            jLabel49.setFont(customFont);
+            jButton20.setFont(customFont);
+            jLabel42.setFont(customFont);
+            jLabel43.setFont(customFont);
+            jLabel44.setFont(customFont);
+            jLabel68.setFont(customFont);
+            jLabel71.setFont(customFont);
+            jLabel69.setFont(customFont);
+            jLabel70.setFont(customFont);
+            jCheckBoxSuppAlert.setFont(customFont);
+            jLabel72.setFont(customFont);
+            jLabel73.setFont(customFont);
+            jLabel74.setFont(customFont);
+            jLabel75.setFont(customFont);
+            jButton16.setFont(customFont);
+            jButton15.setFont(customFont);
+            jButtonEditSupply2.setFont(customFont);
+            jButtonDeleteSupply2.setFont(customFont);
+            jButton43.setFont(customFont);
+            jButton32.setFont(customFont);
+            jButton25.setFont(customFont);
+            jCheckBoxAutoInv.setFont(customFont);
+            jButtonAutoInv.setFont(customFont);
+            jLabel95.setFont(customFont);
+            jLabel96.setFont(customFont);
+            jLabel97.setFont(customFont);
+            jLabel98.setFont(customFont);
+            jLabel99.setFont(customFont);
+            jLabel100.setFont(customFont);
+            jLabel101.setFont(customFont);
+            jCheckBoxSuppAlert1.setFont(customFont);
+            jLabel102.setFont(customFont);
+            jLabel103.setFont(customFont);
+            jLabel104.setFont(customFont);
+            jLabel105.setFont(customFont);
+            jButton35.setFont(customFont);
+            jButton23.setFont(customFont);
+        } catch (IOException | FontFormatException e) {
+            System.err.println(e);
+        }
+        jTabbedPane1.setTitleAt(0, resourceBundle.getString("SupplierPanel.tab.suppliers"));
+        jTabbedPane1.setTitleAt(1, resourceBundle.getString("SupplierPanel.tab.supplies"));
+        jTabbedPane1.setTitleAt(2, resourceBundle.getString("SupplierPanel.tab.advanced"));
+        jButton11.setText(resourceBundle.getString("SupplierPanel.jButton11.text"));
+        jButton12.setText(resourceBundle.getString("SupplierPanel.jButton12.text"));
+        jButton13.setText(resourceBundle.getString("SupplierPanel.jButton13.text"));
+        jButton14.setText(resourceBundle.getString("SupplierPanel.jButton14.text"));
+        jButton18.setText(resourceBundle.getString("SupplierPanel.jButton18.text"));
+        jButton19.setText(resourceBundle.getString("SupplierPanel.jButton19.text"));
+        jButton22.setText(resourceBundle.getString("SupplierPanel.jButton22.text"));
+        jLabel47.setText(resourceBundle.getString("SupplierPanel.jLabel47.text"));
+        jLabel48.setText(resourceBundle.getString("SupplierPanel.jLabel48.text"));
+        jLabel49.setText(resourceBundle.getString("SupplierPanel.jLabel49.text"));
+        jButton20.setText(resourceBundle.getString("SupplierPanel.jButton20.text"));
+        jLabel42.setText(resourceBundle.getString("SupplierPanel.jLabel42.text"));
+        jLabel43.setText(resourceBundle.getString("SupplierPanel.jLabel43.text"));
+        jLabel44.setText(resourceBundle.getString("SupplierPanel.jLabel44.text"));
+        jLabel68.setText(resourceBundle.getString("SupplierPanel.jLabel68.text"));
+        jLabel71.setText(resourceBundle.getString("SupplierPanel.jLabel71.text"));
+        jLabel69.setText(resourceBundle.getString("SupplierPanel.jLabel69.text"));
+        jLabel70.setText(resourceBundle.getString("SupplierPanel.jLabel70.text"));
+        jCheckBoxSuppAlert.setText(resourceBundle.getString("SupplierPanel.jCheckBoxSuppAlert.text"));
+        jLabel72.setText(resourceBundle.getString("SupplierPanel.jLabel72.text"));
+        jLabel73.setText(resourceBundle.getString("SupplierPanel.jLabel73.text"));
+        jLabel74.setText(resourceBundle.getString("SupplierPanel.jLabel74.text"));
+        jLabel75.setText(resourceBundle.getString("SupplierPanel.jLabel75.text"));
+        jButton16.setText(resourceBundle.getString("SupplierPanel.jButton16.text"));
+        jButton15.setText(resourceBundle.getString("SupplierPanel.jButton15.text"));
+        jButtonEditSupply2.setText(resourceBundle.getString("SupplierPanel.jButtonEditSupply2.text"));
+        jButtonDeleteSupply2.setText(resourceBundle.getString("SupplierPanel.jButtonDeleteSupply2.text"));
+        jButton43.setText(resourceBundle.getString("SupplierPanel.jButton43.text"));
+        jButton32.setText(resourceBundle.getString("SupplierPanel.jButton32.text"));
+        jButton25.setText(resourceBundle.getString("SupplierPanel.jButton25.text"));
+        jCheckBoxAutoInv.setText(resourceBundle.getString("SupplierPanel.jCheckBoxAutoInv.text"));
+        jButtonAutoInv.setText(resourceBundle.getString("SupplierPanel.jButtonAutoInv.text"));
+        jLabel95.setText(resourceBundle.getString("SupplierPanel.jLabel95.text"));
+        jLabel96.setText(resourceBundle.getString("SupplierPanel.jLabel96.text"));
+        jLabel97.setText(resourceBundle.getString("SupplierPanel.jLabel97.text"));
+        jLabel98.setText(resourceBundle.getString("SupplierPanel.jLabel98.text"));
+        jLabel99.setText(resourceBundle.getString("SupplierPanel.jLabel99.text"));
+        jLabel100.setText(resourceBundle.getString("SupplierPanel.jLabel100.text"));
+        jLabel101.setText(resourceBundle.getString("SupplierPanel.jLabel101.text"));
+        jCheckBoxSuppAlert1.setText(resourceBundle.getString("SupplierPanel.jCheckBoxSuppAlert1.text"));
+        jLabel102.setText(resourceBundle.getString("SupplierPanel.jLabel102.text"));
+        jLabel103.setText(resourceBundle.getString("SupplierPanel.jLabel103.text"));
+        jLabel104.setText(resourceBundle.getString("SupplierPanel.jLabel104.text"));
+        jLabel105.setText(resourceBundle.getString("SupplierPanel.jLabel105.text"));
+        jButton35.setText(resourceBundle.getString("SupplierPanel.jButton35.text"));
+        jButton23.setText(resourceBundle.getString("SupplierPanel.jButton23.text"));
+    }
+
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton jButton11;
     private javax.swing.JButton jButton12;

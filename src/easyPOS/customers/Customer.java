@@ -10,8 +10,14 @@ import control.SimpleCustomerStatementPrint;
 import dataModels.ReceiptCommonData;
 import easyPOS.stock.StockPanel;
 import java.awt.Color;
+import java.awt.Font;
+import java.awt.FontFormatException;
+import java.awt.GraphicsEnvironment;
 import java.awt.event.KeyEvent;
 import java.awt.print.PageFormat;
+import java.io.IOException;
+import java.util.Locale;
+import java.util.ResourceBundle;
 import java.awt.print.Paper;
 import java.awt.print.PrinterException;
 import java.awt.print.PrinterJob;
@@ -46,6 +52,7 @@ public class Customer extends javax.swing.JPanel {
      */
     public Customer() {
         initComponents();
+        switchLanguage();
         customerDetailsPanel.setVisible(false);
         customerTransactionsPanel.setVisible(false);
         jPanelCustPayment.setVisible(false);
@@ -764,6 +771,39 @@ public class Customer extends javax.swing.JPanel {
 //                jTableCurStoke.getColumnModel().getColumn(2).setMinWidth(150);
 //                jTableCurStoke.getColumnModel().getColumn(3).setMinWidth(200);
 //                jTableCurStoke.getColumnModel().getColumn(9).setMinWidth(100);
+    }
+
+    private void switchLanguage() {
+        Locale locale = new Locale("si", "LK");
+        ResourceBundle resourceBundle = ResourceBundle.getBundle("easyPOS/customers/Bundle", locale);
+        try {
+            Font customFont = Font.createFont(Font.TRUETYPE_FONT,
+                    ApplicationDataManager.getInstance().getSinhalaFontFile()).deriveFont(18f);
+            GraphicsEnvironment ge = GraphicsEnvironment.getLocalGraphicsEnvironment();
+            ge.registerFont(customFont);
+            jLabel18.setFont(customFont);
+            jLabel25.setFont(customFont);
+            jLabel26.setFont(customFont);
+            jLabel31.setFont(customFont);
+            jLabel19.setFont(customFont);
+            jButtonAddNewCustomer.setFont(customFont);
+            jButtonEditCustomer.setFont(customFont);
+            jButtonPrintSummary.setFont(customFont);
+            jTextFieldCustomerSearch.setFont(customFont);
+            jTextFieldCustomerSearch1.setFont(customFont);
+        } catch (IOException | FontFormatException e) {
+            System.err.println(e);
+        }
+        jLabel18.setText(resourceBundle.getString("Customer.jLabel18.text"));
+        jLabel25.setText(resourceBundle.getString("Customer.jLabel25.text"));
+        jLabel26.setText(resourceBundle.getString("Customer.jLabel26.text"));
+        jLabel31.setText(resourceBundle.getString("Customer.jLabel31.text"));
+        jLabel19.setText(resourceBundle.getString("Customer.jLabel19.text"));
+        jButtonAddNewCustomer.setText(resourceBundle.getString("Customer.jButtonAddNewCustomer.text"));
+        jButtonEditCustomer.setText(resourceBundle.getString("Customer.jButtonEditCustomer.text"));
+        jButtonPrintSummary.setText(resourceBundle.getString("Customer.jButtonPrintSummary.text"));
+        jTextFieldCustomerSearch.setText(resourceBundle.getString("Customer.jTextFieldCustomerSearch.text"));
+        jTextFieldCustomerSearch1.setText(resourceBundle.getString("Customer.jTextFieldCustomerSearch1.text"));
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables

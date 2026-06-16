@@ -1,10 +1,17 @@
 package easyPOS;
 
+import control.ApplicationDataManager;
 import control.EventManager;
 import dataModels.MenuItemType;
+import java.awt.Font;
+import java.awt.FontFormatException;
+import java.awt.GraphicsEnvironment;
+import java.io.IOException;
 import static java.lang.Thread.sleep;
 import java.util.Calendar;
 import java.util.GregorianCalendar;
+import java.util.Locale;
+import java.util.ResourceBundle;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -19,6 +26,7 @@ public final class HeaderPanel extends javax.swing.JPanel {
      */
     public HeaderPanel() {
         initComponents();
+        switchLanguage();
         setTodayDate();
     }
 
@@ -129,6 +137,25 @@ public final class HeaderPanel extends javax.swing.JPanel {
     private void jLabelHeaderLogoMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jLabelHeaderLogoMouseClicked
         EventManager.getInstance().notifyMenuItemChanged(MenuItemType.ICON_CLICK);
     }//GEN-LAST:event_jLabelHeaderLogoMouseClicked
+
+    private void switchLanguage() {
+        Locale locale = new Locale("si", "LK");
+        ResourceBundle resourceBundle = ResourceBundle.getBundle("easyPOS/Bundle", locale);
+        try {
+            Font customFont = Font.createFont(Font.TRUETYPE_FONT,
+                    ApplicationDataManager.getInstance().getSinhalaFontFile()).deriveFont(18f);
+            GraphicsEnvironment ge = GraphicsEnvironment.getLocalGraphicsEnvironment();
+            ge.registerFont(customFont);
+            jLabelHeaderBusinessName.setFont(customFont);
+            jButtonHeaderHome.setFont(customFont);
+            jButtonHeaderLogOut.setFont(customFont);
+        } catch (IOException | FontFormatException e) {
+            System.err.println(e);
+        }
+        jLabelHeaderBusinessName.setText(resourceBundle.getString("HeaderPanel.jLabelHeaderBusinessName.text"));
+        jButtonHeaderHome.setText(resourceBundle.getString("HeaderPanel.jButtonHeaderHome.text"));
+        jButtonHeaderLogOut.setText(resourceBundle.getString("HeaderPanel.jButtonHeaderLogOut.text"));
+    }
 
     void setTodayDate(){//set Date in text field
         Thread clock;

@@ -1,7 +1,14 @@
 package easyPOS.settings;
 
+import control.ApplicationDataManager;
 import dataModels.UserDataModel;
 import dbOperations.LoginDBOperation;
+import java.awt.Font;
+import java.awt.FontFormatException;
+import java.awt.GraphicsEnvironment;
+import java.io.IOException;
+import java.util.Locale;
+import java.util.ResourceBundle;
 import javax.swing.JOptionPane;
 
 /**
@@ -21,6 +28,7 @@ public class SettingsPanel extends javax.swing.JPanel {
      */
     public SettingsPanel() {
         initComponents();
+        switchLanguage();
     }
 
     /**
@@ -1296,6 +1304,107 @@ public class SettingsPanel extends javax.swing.JPanel {
         jTextFieldSecAns.setText("");
         jPasswordFieldCreatePwd.setText("");
         jPasswordFieldCreatePwd2.setText("");
+    }
+
+    private void switchLanguage() {
+        Locale locale = new Locale("si", "LK");
+        ResourceBundle resourceBundle = ResourceBundle.getBundle("easyPOS/settings/Bundle", locale);
+        try {
+            Font customFont = Font.createFont(Font.TRUETYPE_FONT,
+                    ApplicationDataManager.getInstance().getSinhalaFontFile()).deriveFont(12f);
+            GraphicsEnvironment ge = GraphicsEnvironment.getLocalGraphicsEnvironment();
+            ge.registerFont(customFont);
+            jLabel35.setFont(customFont); jLabel36.setFont(customFont);
+            jLabel37.setFont(customFont); jLabel38.setFont(customFont);
+            jCheckBoxCreateAdminAcc.setFont(customFont);
+            jButton28.setFont(customFont); jButton29.setFont(customFont);
+            jButton30.setFont(customFont); jButton31.setFont(customFont);
+            jLabel62.setFont(customFont); jLabel63.setFont(customFont);
+            jLabel61.setFont(customFont); jButtonChangeAcc.setFont(customFont);
+            jLabel66.setFont(customFont); jButton41.setFont(customFont);
+            jButtonDelUserAcc.setFont(customFont);
+            jLabel64.setFont(customFont); jCheckBoxStock.setFont(customFont);
+            jCheckBox3.setFont(customFont); jCheckBox13.setFont(customFont);
+            jCheckBox14.setFont(customFont);
+            jButton39.setFont(customFont); jButton40.setFont(customFont);
+            jLabel65.setFont(customFont); jCheckBox15.setFont(customFont);
+            jCheckBox16.setFont(customFont); jCheckBox17.setFont(customFont);
+            jCheckBox18.setFont(customFont); jCheckBox19.setFont(customFont);
+            jLabel67.setFont(customFont);
+            jCheckBox5.setFont(customFont); jCheckBox2.setFont(customFont);
+            jCheckBox8.setFont(customFont); jCheckBox9.setFont(customFont);
+            jLabel39.setFont(customFont); jCheckBox4.setFont(customFont);
+            jCheckBox10.setFont(customFont); jCheckBox11.setFont(customFont);
+            jCheckBox12.setFont(customFont); jCheckBox6.setFont(customFont);
+            jButton1.setFont(customFont); jButton8.setFont(customFont);
+            jLabel41.setFont(customFont); jLabel40.setFont(customFont);
+            jButton17.setFont(customFont); jLabel80.setFont(customFont);
+            jLabel89.setFont(customFont); jCheckBoxClear1.setFont(customFont);
+            jLabel90.setFont(customFont); jLabel91.setFont(customFont);
+            jLabel92.setFont(customFont); jLabel93.setFont(customFont);
+            jCheckBoxClear2.setFont(customFont); jCheckBoxClear3.setFont(customFont);
+            jCheckBoxClear4.setFont(customFont);
+        } catch (IOException | FontFormatException e) {
+            System.err.println(e);
+        }
+        jTabbedPane3.setTitleAt(0, resourceBundle.getString("SettingsPanel.tab.userAccounts"));
+        jTabbedPane3.setTitleAt(1, resourceBundle.getString("SettingsPanel.tab.accessLevels"));
+        jTabbedPane3.setTitleAt(2, resourceBundle.getString("SettingsPanel.tab.advancedSettings"));
+        jLabel35.setText(resourceBundle.getString("SettingsPanel.jLabel35.text"));
+        jLabel36.setText(resourceBundle.getString("SettingsPanel.jLabel36.text"));
+        jLabel37.setText(resourceBundle.getString("SettingsPanel.jLabel37.text"));
+        jLabel38.setText(resourceBundle.getString("SettingsPanel.jLabel38.text"));
+        jCheckBoxCreateAdminAcc.setText(resourceBundle.getString("SettingsPanel.jCheckBoxCreateAdminAcc.text"));
+        jButton28.setText(resourceBundle.getString("SettingsPanel.jButton28.text"));
+        jButton29.setText(resourceBundle.getString("SettingsPanel.jButton29.text"));
+        jButton30.setText(resourceBundle.getString("SettingsPanel.jButton30.text"));
+        jButton31.setText(resourceBundle.getString("SettingsPanel.jButton31.text"));
+        jLabel62.setText(resourceBundle.getString("SettingsPanel.jLabel62.text"));
+        jLabel63.setText(resourceBundle.getString("SettingsPanel.jLabel63.text"));
+        jLabel61.setText(resourceBundle.getString("SettingsPanel.jLabel61.text"));
+        jButtonChangeAcc.setText(resourceBundle.getString("SettingsPanel.jButtonChangeAcc.text"));
+        jLabel66.setText(resourceBundle.getString("SettingsPanel.jLabel66.text"));
+        jButton41.setText(resourceBundle.getString("SettingsPanel.jButton41.text"));
+        jButtonDelUserAcc.setText(resourceBundle.getString("SettingsPanel.jButtonDelUserAcc.text"));
+        jLabel64.setText(resourceBundle.getString("SettingsPanel.jLabel64.text"));
+        jCheckBoxStock.setText(resourceBundle.getString("SettingsPanel.jCheckBoxStock.text"));
+        jCheckBox3.setText(resourceBundle.getString("SettingsPanel.jCheckBox3.text"));
+        jCheckBox13.setText(resourceBundle.getString("SettingsPanel.jCheckBox13.text"));
+        jCheckBox14.setText(resourceBundle.getString("SettingsPanel.jCheckBox14.text"));
+        jButton39.setText(resourceBundle.getString("SettingsPanel.jButton39.text"));
+        jButton40.setText(resourceBundle.getString("SettingsPanel.jButton40.text"));
+        jLabel65.setText(resourceBundle.getString("SettingsPanel.jLabel65.text"));
+        jCheckBox15.setText(resourceBundle.getString("SettingsPanel.jCheckBox15.text"));
+        jCheckBox16.setText(resourceBundle.getString("SettingsPanel.jCheckBox16.text"));
+        jCheckBox17.setText(resourceBundle.getString("SettingsPanel.jCheckBox17.text"));
+        jCheckBox18.setText(resourceBundle.getString("SettingsPanel.jCheckBox18.text"));
+        jCheckBox19.setText(resourceBundle.getString("SettingsPanel.jCheckBox19.text"));
+        jLabel67.setText(resourceBundle.getString("SettingsPanel.jLabel67.text"));
+        jCheckBox5.setText(resourceBundle.getString("SettingsPanel.jCheckBox5.text"));
+        jCheckBox2.setText(resourceBundle.getString("SettingsPanel.jCheckBox2.text"));
+        jCheckBox8.setText(resourceBundle.getString("SettingsPanel.jCheckBox8.text"));
+        jCheckBox9.setText(resourceBundle.getString("SettingsPanel.jCheckBox9.text"));
+        jLabel39.setText(resourceBundle.getString("SettingsPanel.jLabel39.text"));
+        jCheckBox4.setText(resourceBundle.getString("SettingsPanel.jCheckBox4.text"));
+        jCheckBox10.setText(resourceBundle.getString("SettingsPanel.jCheckBox10.text"));
+        jCheckBox11.setText(resourceBundle.getString("SettingsPanel.jCheckBox11.text"));
+        jCheckBox12.setText(resourceBundle.getString("SettingsPanel.jCheckBox12.text"));
+        jCheckBox6.setText(resourceBundle.getString("SettingsPanel.jCheckBox6.text"));
+        jButton1.setText(resourceBundle.getString("SettingsPanel.jButton1.text"));
+        jButton8.setText(resourceBundle.getString("SettingsPanel.jButton8.text"));
+        jLabel41.setText(resourceBundle.getString("SettingsPanel.jLabel41.text"));
+        jLabel40.setText(resourceBundle.getString("SettingsPanel.jLabel40.text"));
+        jButton17.setText(resourceBundle.getString("SettingsPanel.jButton17.text"));
+        jLabel80.setText(resourceBundle.getString("SettingsPanel.jLabel80.text"));
+        jLabel89.setText(resourceBundle.getString("SettingsPanel.jLabel89.text"));
+        jCheckBoxClear1.setText(resourceBundle.getString("SettingsPanel.jCheckBoxClear1.text"));
+        jLabel90.setText(resourceBundle.getString("SettingsPanel.jLabel90.text"));
+        jLabel91.setText(resourceBundle.getString("SettingsPanel.jLabel91.text"));
+        jLabel92.setText(resourceBundle.getString("SettingsPanel.jLabel92.text"));
+        jLabel93.setText(resourceBundle.getString("SettingsPanel.jLabel93.text"));
+        jCheckBoxClear2.setText(resourceBundle.getString("SettingsPanel.jCheckBoxClear2.text"));
+        jCheckBoxClear3.setText(resourceBundle.getString("SettingsPanel.jCheckBoxClear3.text"));
+        jCheckBoxClear4.setText(resourceBundle.getString("SettingsPanel.jCheckBoxClear4.text"));
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables

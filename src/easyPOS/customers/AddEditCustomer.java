@@ -8,6 +8,8 @@ import java.awt.Font;
 import java.awt.FontFormatException;
 import java.awt.GraphicsEnvironment;
 import java.io.IOException;
+import java.util.Locale;
+import java.util.ResourceBundle;
 import java.util.concurrent.ExecutionException;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
@@ -37,6 +39,7 @@ public class AddEditCustomer extends javax.swing.JFrame {
      */
     public AddEditCustomer(MODE mode, CustomerModel customerModel) {
         initComponents();
+        switchLanguage();
         setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
         
         this.mode = mode;
@@ -226,6 +229,33 @@ public class AddEditCustomer extends javax.swing.JFrame {
 
         pack();
     }// </editor-fold>//GEN-END:initComponents
+
+    private void switchLanguage() {
+        Locale locale = new Locale("si", "LK");
+        ResourceBundle resourceBundle = ResourceBundle.getBundle("easyPOS/customers/Bundle", locale);
+        try {
+            Font customFont = Font.createFont(Font.TRUETYPE_FONT,
+                    ApplicationDataManager.getInstance().getSinhalaFontFile()).deriveFont(18f);
+            GraphicsEnvironment ge = GraphicsEnvironment.getLocalGraphicsEnvironment();
+            ge.registerFont(customFont);
+            jLabel18.setFont(customFont);
+            jLabel25.setFont(customFont);
+            jLabel26.setFont(customFont);
+            jLabel27.setFont(customFont);
+            jLabel28.setFont(customFont);
+            jLabel29.setFont(customFont);
+            jButton1.setFont(customFont);
+        } catch (IOException | FontFormatException e) {
+            System.err.println(e);
+        }
+        jLabel18.setText(resourceBundle.getString("Customer.jLabel18.text"));
+        jLabel25.setText(resourceBundle.getString("Customer.jLabel25.text"));
+        jLabel26.setText(resourceBundle.getString("Customer.jLabel26.text"));
+        jLabel27.setText(resourceBundle.getString("Customer.jLabel25.text"));
+        jLabel28.setText(resourceBundle.getString("Customer.jLabel25.text"));
+        jLabel29.setText(resourceBundle.getString("Customer.jLabel25.text"));
+        jButton1.setText(resourceBundle.getString("AddEditCustomer.jButton1.text"));
+    }
 
     private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
         if (this.mode.equals(MODE.ADD_CUSTOMER)) {

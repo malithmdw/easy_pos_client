@@ -4,10 +4,17 @@
  */
 package easyPOS.reports;
 
+import control.ApplicationDataManager;
 import dataModels.SaleDataModel;
 import dbOperations.SalesDBOperation;
 import java.awt.Color;
+import java.awt.Font;
+import java.awt.FontFormatException;
+import java.awt.GraphicsEnvironment;
+import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Locale;
+import java.util.ResourceBundle;
 import javax.swing.JOptionPane;
 import org.jfree.chart.ChartFactory;
 import org.jfree.chart.ChartFrame;
@@ -35,6 +42,7 @@ public class ReportPanel extends javax.swing.JPanel {
      */
     public ReportPanel() {
         initComponents();
+        switchLanguage();
     }
 
     /**
@@ -775,6 +783,41 @@ public class ReportPanel extends javax.swing.JPanel {
 //                }            
 //        }
     }
+    private void switchLanguage() {
+        Locale locale = new Locale("si", "LK");
+        ResourceBundle resourceBundle = ResourceBundle.getBundle("easyPOS/reports/Bundle", locale);
+        try {
+            Font customFont = Font.createFont(Font.TRUETYPE_FONT,
+                    ApplicationDataManager.getInstance().getSinhalaFontFile()).deriveFont(14f);
+            GraphicsEnvironment ge = GraphicsEnvironment.getLocalGraphicsEnvironment();
+            ge.registerFont(customFont);
+            jLabel4.setFont(customFont);
+            jLabel32.setFont(customFont);
+            jButton26.setFont(customFont);
+            jButton27.setFont(customFont);
+            jButton7.setFont(customFont);
+            jLabel88.setFont(customFont);
+            jCheckBoxBarChart.setFont(customFont);
+            jCheckBoxLineChart.setFont(customFont);
+            jLabel82.setFont(customFont);
+            jLabel83.setFont(customFont);
+            jLabel84.setFont(customFont);
+        } catch (IOException | FontFormatException e) {
+            System.err.println(e);
+        }
+        jLabel4.setText(resourceBundle.getString("ReportPanel.jLabel4.text"));
+        jLabel32.setText(resourceBundle.getString("ReportPanel.jLabel32.text"));
+        jButton26.setText(resourceBundle.getString("ReportPanel.jButton26.text"));
+        jButton27.setText(resourceBundle.getString("ReportPanel.jButton27.text"));
+        jButton7.setText(resourceBundle.getString("ReportPanel.jButton7.text"));
+        jLabel88.setText(resourceBundle.getString("ReportPanel.jLabel88.text"));
+        jCheckBoxBarChart.setText(resourceBundle.getString("ReportPanel.jCheckBoxBarChart.text"));
+        jCheckBoxLineChart.setText(resourceBundle.getString("ReportPanel.jCheckBoxLineChart.text"));
+        jLabel82.setText(resourceBundle.getString("ReportPanel.jLabel82.text"));
+        jLabel83.setText(resourceBundle.getString("ReportPanel.jLabel83.text"));
+        jLabel84.setText(resourceBundle.getString("ReportPanel.jLabel84.text"));
+    }
+
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton jButton26;
     private javax.swing.JButton jButton27;
