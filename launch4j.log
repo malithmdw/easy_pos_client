@@ -1,0 +1,143 @@
+
+
+Version:	3.9
+CmdLine:	C:\Users\malit\OneDrive\Documents\NetBeansProjects\EasyPOS\EasyPOS\EasyPOS\EasyPOS.exe --l4j-debug
+WOW64:		yes
+Working dir:	C:\Users\malit\OneDrive\Documents\NetBeansProjects\EasyPOS\EasyPOS\EasyPOS\.
+64-bit search:	SOFTWARE\JavaSoft\Java Runtime Environment...
+Check:		SOFTWARE\JavaSoft\Java Runtime Environment\1.8
+Ignore:		1.8
+Check:		SOFTWARE\JavaSoft\Java Runtime Environment\1.8.0_202
+Check launcher:	C:\Program Files\Java\jre1.8.0_202\bin\javaw.exe (OK)
+Match:		1.8.0_202
+64-bit search:	SOFTWARE\JavaSoft\Java Development Kit...
+Check:		SOFTWARE\JavaSoft\Java Development Kit\1.8
+Ignore:		1.8
+Check:		SOFTWARE\JavaSoft\Java Development Kit\1.8.0_202
+Ignore:		1.8.0_202
+Runtime used:	1.8.0_202 (64-bit)
+Substitute:	JAVA_HOME = 
+Launcher:	C:\Program Files\Java\jre1.8.0_202\bin\javaw.exe
+Launcher args:	-Denv.java.home="" -jar "C:\Users\malit\OneDrive\Documents\NetBeansProjects\EasyPOS\EasyPOS\EasyPOS\EasyPOS.exe"
+Args length:	112/32768 chars
+Exit code:	0
+
+
+Version:	3.9
+CmdLine:	C:\Users\malit\OneDrive\Documents\NetBeansProjects\EasyPOS\EasyPOS\EasyPOS\EasyPOS.exe --l4j-debug
+WOW64:		yes
+Working dir:	C:\Users\malit\OneDrive\Documents\NetBeansProjects\EasyPOS\EasyPOS\EasyPOS\.
+64-bit search:	SOFTWARE\JavaSoft\Java Runtime Environment...
+Check:		SOFTWARE\JavaSoft\Java Runtime Environment\1.8
+Ignore:		1.8
+Check:		SOFTWARE\JavaSoft\Java Runtime Environment\1.8.0_202
+Check launcher:	C:\Program Files\Java\jre1.8.0_202\bin\javaw.exe (OK)
+Match:		1.8.0_202
+64-bit search:	SOFTWARE\JavaSoft\Java Development Kit...
+Check:		SOFTWARE\JavaSoft\Java Development Kit\1.8
+Ignore:		1.8
+Check:		SOFTWARE\JavaSoft\Java Development Kit\1.8.0_202
+Ignore:		1.8.0_202
+Runtime used:	1.8.0_202 (64-bit)
+Substitute:	JAVA_HOME = 
+Add classpath:	JTattoo-1.6.11.exe
+Launcher:	C:\Program Files\Java\jre1.8.0_202\bin\javaw.exe
+Launcher args:	-Denv.java.home="" -classpath "C:\Users\malit\OneDrive\Documents\NetBeansProjects\EasyPOS\EasyPOS\EasyPOS\EasyPOS.exe;JTattoo-1.6.11.exe" OpenScreen.java
+Args length:	153/32768 chars
+Exit code:	0
+
+
+Version:	3.9
+CmdLine:	C:\Users\malit\OneDrive\Documents\NetBeansProjects\EasyPOS\EasyPOS\EasyPOS\EasyPOS.exe --l4j-debug
+WOW64:		yes
+Working dir:	C:\Users\malit\OneDrive\Documents\NetBeansProjects\EasyPOS\EasyPOS\EasyPOS\.
+64-bit search:	SOFTWARE\JavaSoft\Java Runtime Environment...
+Check:		SOFTWARE\JavaSoft\Java Runtime Environment\1.8
+Ignore:		1.8
+Check:		SOFTWARE\JavaSoft\Java Runtime Environment\1.8.0_202
+Check launcher:	C:\Program Files\Java\jre1.8.0_202\bin\javaw.exe (OK)
+Match:		1.8.0_202
+64-bit search:	SOFTWARE\JavaSoft\Java Development Kit...
+Check:		SOFTWARE\JavaSoft\Java Development Kit\1.8
+Ignore:		1.8
+Check:		SOFTWARE\JavaSoft\Java Development Kit\1.8.0_202
+Ignore:		1.8.0_202
+Runtime used:	1.8.0_202 (64-bit)
+Substitute:	JAVA_HOME = 
+Add classpath:	lib\JTattoo-1.6.11.jar
+Launcher:	C:\Program Files\Java\jre1.8.0_202\bin\javaw.exe
+Launcher args:	-Denv.java.home="" -classpath "C:\Users\malit\OneDrive\Documents\NetBeansProjects\EasyPOS\EasyPOS\EasyPOS\EasyPOS.exe;lib\JTattoo-1.6.11.jar" OpenScreen.java
+Args length:	157/32768 chars
+Exit code:	0
+
+
+Version:	3.9
+CmdLine:	C:\Users\malit\OneDrive\Documents\NetBeansProjects\EasyPOS\EasyPOS\EasyPOS\EasyPOS.exe --l4j-debug
+WOW64:		yes
+Working dir:	C:\Users\malit\OneDrive\Documents\NetBeansProjects\EasyPOS\EasyPOS\EasyPOS\.
+64-bit search:	SOFTWARE\JavaSoft\Java Runtime Environment...
+Check:		SOFTWARE\JavaSoft\Java Runtime Environment\1.8
+Ignore:		1.8
+Check:		SOFTWARE\JavaSoft\Java Runtime Environment\1.8.0_202
+Check launcher:	C:\Program Files\Java\jre1.8.0_202\bin\javaw.exe (OK)
+Match:		1.8.0_202
+64-bit search:	SOFTWARE\JavaSoft\Java Development Kit...
+Check:		SOFTWARE\JavaSoft\Java Development Kit\1.8
+Ignore:		1.8
+Check:		SOFTWARE\JavaSoft\Java Development Kit\1.8.0_202
+Ignore:		1.8.0_202
+Runtime used:	1.8.0_202 (64-bit)
+Substitute:	JAVA_HOME = 
+Add classpath:	lib\JTattoo-1.6.11.jar
+Launcher:	C:\Program Files\Java\jre1.8.0_202\bin\javaw.exe
+Launcher args:	-Denv.java.home="" -classpath "C:\Users\malit\OneDrive\Documents\NetBeansProjects\EasyPOS\EasyPOS\EasyPOS\EasyPOS.exe;lib\JTattoo-1.6.11.jar" easyPOS.OpenScreen
+Args length:	160/32768 chars
+Exit code:	0
+
+
+Version:	3.9
+CmdLine:	C:\Users\malit\OneDrive\Documents\NetBeansProjects\EasyPOS\EasyPOS\EasyPOS\EasyPOS.exe --l4j-debug
+WOW64:		yes
+Working dir:	C:\Users\malit\OneDrive\Documents\NetBeansProjects\EasyPOS\EasyPOS\EasyPOS\.
+64-bit search:	SOFTWARE\JavaSoft\Java Runtime Environment...
+Check:		SOFTWARE\JavaSoft\Java Runtime Environment\1.8
+Ignore:		1.8
+Check:		SOFTWARE\JavaSoft\Java Runtime Environment\1.8.0_202
+Check launcher:	C:\Program Files\Java\jre1.8.0_202\bin\javaw.exe (OK)
+Match:		1.8.0_202
+64-bit search:	SOFTWARE\JavaSoft\Java Development Kit...
+Check:		SOFTWARE\JavaSoft\Java Development Kit\1.8
+Ignore:		1.8
+Check:		SOFTWARE\JavaSoft\Java Development Kit\1.8.0_202
+Ignore:		1.8.0_202
+Runtime used:	1.8.0_202 (64-bit)
+Substitute:	JAVA_HOME = 
+Add classpath:	lib\JTattoo-1.6.11.exe
+Launcher:	C:\Program Files\Java\jre1.8.0_202\bin\javaw.exe
+Launcher args:	-Denv.java.home="" -classpath "C:\Users\malit\OneDrive\Documents\NetBeansProjects\EasyPOS\EasyPOS\EasyPOS\EasyPOS.exe;lib\JTattoo-1.6.11.exe" easyPOS.OpenScreen
+Args length:	160/32768 chars
+Exit code:	0
+
+
+Version:	3.9
+CmdLine:	C:\Users\malit\OneDrive\Documents\NetBeansProjects\EasyPOS\EasyPOS\EasyPOS\EasyPOS.exe --l4j-debug
+WOW64:		yes
+Working dir:	C:\Users\malit\OneDrive\Documents\NetBeansProjects\EasyPOS\EasyPOS\EasyPOS\.
+64-bit search:	SOFTWARE\JavaSoft\Java Runtime Environment...
+Check:		SOFTWARE\JavaSoft\Java Runtime Environment\1.8
+Ignore:		1.8
+Check:		SOFTWARE\JavaSoft\Java Runtime Environment\1.8.0_202
+Check launcher:	C:\Program Files\Java\jre1.8.0_202\bin\javaw.exe (OK)
+Match:		1.8.0_202
+64-bit search:	SOFTWARE\JavaSoft\Java Development Kit...
+Check:		SOFTWARE\JavaSoft\Java Development Kit\1.8
+Ignore:		1.8
+Check:		SOFTWARE\JavaSoft\Java Development Kit\1.8.0_202
+Ignore:		1.8.0_202
+Runtime used:	1.8.0_202 (64-bit)
+Substitute:	JAVA_HOME = 
+Add classpath:	lib\JTattoo-1.6.11.exe
+Launcher:	C:\Program Files\Java\jre1.8.0_202\bin\javaw.exe
+Launcher args:	-Denv.java.home="" -classpath "C:\Users\malit\OneDrive\Documents\NetBeansProjects\EasyPOS\EasyPOS\EasyPOS\EasyPOS.exe;lib\JTattoo-1.6.11.exe" easyPOS.OpenScreen
+Args length:	160/32768 chars
+Exit code:	0

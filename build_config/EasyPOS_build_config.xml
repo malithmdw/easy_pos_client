@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<launch4jConfig>
+  <dontWrapJar>false</dontWrapJar>
+  <headerType>gui</headerType>
+  <jar>C:\Users\malit\OneDrive\Documents\NetBeansProjects\EasyPOS\EasyPOS\EasyPOS\dist\EasyPOS.jar</jar>
+  <outfile>C:\Users\malit\OneDrive\Documents\NetBeansProjects\EasyPOS\EasyPOS\EasyPOS\dist\EasyPOS.exe</outfile>
+  <errTitle></errTitle>
+  <cmdLine></cmdLine>
+  <chdir>.</chdir>
+  <priority>normal</priority>
+  <downloadUrl>http://java.com/download</downloadUrl>
+  <supportUrl></supportUrl>
+  <stayAlive>false</stayAlive>
+  <restartOnCrash>false</restartOnCrash>
+  <manifest></manifest>
+  <icon></icon>
+  <singleInstance>
+    <mutexName>EasyPOS</mutexName>
+    <windowTitle></windowTitle>
+  </singleInstance>
+  <classPath>
+    <mainClass>easyPOS.OpenScreen</mainClass>
+    <cp>EasyPOS.jar</cp>
+    <cp>lib/*.jar</cp>
+  </classPath>
+  <jre>
+    <path></path>
+    <bundledJre64Bit>false</bundledJre64Bit>
+    <bundledJreAsFallback>false</bundledJreAsFallback>
+    <minVersion>1.8.0</minVersion>
+    <maxVersion>1.8.0_202</maxVersion>
+    <jdkPreference>preferJre</jdkPreference>
+    <runtimeBits>64/32</runtimeBits>
+    <opt>-Denv.java.home=&quot;%JAVA_HOME%&quot;</opt>
+  </jre>
+  <versionInfo>
+    <fileVersion>1.0.0.1</fileVersion>
+    <txtFileVersion>0.1</txtFileVersion>
+    <fileDescription>Easy POS</fileDescription>
+    <copyright>Easy POS Application</copyright>
+    <productVersion>1.0.0.1</productVersion>
+    <txtProductVersion>0.1</txtProductVersion>
+    <productName>Easy POS</productName>
+    <companyName>eSS Technologies</companyName>
+    <internalName>Easy POS</internalName>
+    <originalFilename>EasyPOS.exe</originalFilename>
+    <trademarks></trademarks>
+    <language>ENGLISH_US</language>
+  </versionInfo>
+</launch4jConfig>
