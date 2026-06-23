@@ -8,8 +8,6 @@ import java.awt.Font;
 import java.awt.FontFormatException;
 import java.awt.GraphicsEnvironment;
 import java.io.IOException;
-import java.util.Locale;
-import java.util.ResourceBundle;
 import java.util.concurrent.ExecutionException;
 import javax.swing.JLabel;
 import javax.swing.JOptionPane;
@@ -31,7 +29,6 @@ public class AddNewItemPanel extends javax.swing.JPanel {
      */
     public AddNewItemPanel() {
         initComponents();
-        switchLanguage();
     }
 
     @SuppressWarnings("unchecked")
@@ -148,23 +145,6 @@ public class AddNewItemPanel extends javax.swing.JPanel {
         worker.execute();
     }
     
-
-    private void switchLanguage() {
-        Locale locale = new Locale("si", "LK");
-        ResourceBundle resourceBundle = ResourceBundle.getBundle("easyPOS/stock/Bundle", locale);
-        try {
-            Font customFont = Font.createFont(Font.TRUETYPE_FONT,
-                    ApplicationDataManager.getInstance().getSinhalaFontFile()).deriveFont(14f);
-            GraphicsEnvironment ge = GraphicsEnvironment.getLocalGraphicsEnvironment();
-            ge.registerFont(customFont);
-            jButton1.setFont(customFont);
-            jButton2.setFont(customFont);
-        } catch (IOException | FontFormatException e) {
-            System.err.println(e);
-        }
-        jButton1.setText(resourceBundle.getString("AddNewItemPanel.jButton1.text"));
-        jButton2.setText(resourceBundle.getString("AddNewItemPanel.jButton2.text"));
-    }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton jButton1;

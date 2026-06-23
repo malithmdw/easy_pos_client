@@ -1,6 +1,7 @@
 package easyPOS.stock;
 
 import appDataModels.APIHeaderData;
+import appDataModels.BarcodeLableItemDataModel;
 import appDataModels.CategoryModel;
 import control.ApplicationDataManager;
 import control.EasyPosLogger;
@@ -15,8 +16,6 @@ import java.awt.event.KeyEvent;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Locale;
-import java.util.ResourceBundle;
 import java.util.concurrent.ExecutionException;
 import javax.swing.DefaultComboBoxModel;
 import javax.swing.JLabel;
@@ -27,6 +26,7 @@ import javax.swing.table.DefaultTableCellRenderer;
 import localDatabase.DatabaseManager;
 import serverDataModels.Category;
 import serverDataModels.Item;
+import serverDataModels.ItemStock;
 import serverResponseDataModel.CommonResponse;
 import tableModels.LiveStockBatchTbl;
 import tableModels.LiveStockItemTbl;
@@ -50,7 +50,6 @@ public class LiveStockPanel extends javax.swing.JPanel {
      */
     public LiveStockPanel() {
         initComponents();
-        switchLanguage();
     }
     
     public void loadInitialDataToUI(StockPanel parent)
@@ -288,7 +287,7 @@ public class LiveStockPanel extends javax.swing.JPanel {
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(jButtonStockFullPrint, javax.swing.GroupLayout.PREFERRED_SIZE, 175, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(jButtonStockBarcodePrint, javax.swing.GroupLayout.PREFERRED_SIZE, 175, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addComponent(jButtonStockBarcodePrint, javax.swing.GroupLayout.PREFERRED_SIZE, 200, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
         jPanelStockEditDeleteLayout.setVerticalGroup(
@@ -394,7 +393,7 @@ public class LiveStockPanel extends javax.swing.JPanel {
                                 .addComponent(jComboBoxSearchItem, javax.swing.GroupLayout.PREFERRED_SIZE, 172, javax.swing.GroupLayout.PREFERRED_SIZE)
                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                                 .addComponent(jButtonStokeSearch)))
-                        .addGap(0, 362, Short.MAX_VALUE))
+                        .addGap(0, 337, Short.MAX_VALUE))
                     .addComponent(jPanel2, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
                 .addContainerGap())
         );
@@ -508,29 +507,29 @@ public class LiveStockPanel extends javax.swing.JPanel {
     }//GEN-LAST:event_jTableLiveStockItemBatchesMouseClicked
 
     private void jButtonStockBarcodePrintActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonStockBarcodePrintActionPerformed
-        // TODO add your handling code here:
-    }//GEN-LAST:event_jButtonStockBarcodePrintActionPerformed
-
-    private void switchLanguage() {
-        Locale locale = new Locale("si", "LK");
-        ResourceBundle resourceBundle = ResourceBundle.getBundle("easyPOS/stock/Bundle", locale);
-        try {
-            Font customFont = Font.createFont(Font.TRUETYPE_FONT,
-                    ApplicationDataManager.getInstance().getSinhalaFontFile()).deriveFont(14f);
-            GraphicsEnvironment ge = GraphicsEnvironment.getLocalGraphicsEnvironment();
-            ge.registerFont(customFont);
-            jButtonStokeSearch.setFont(customFont);
-            jButtonPrintAList.setFont(customFont);
-            jButtonStockFullPrint.setFont(customFont);
-            jButtonStockBarcodePrint.setFont(customFont);
-        } catch (IOException | FontFormatException e) {
-            System.err.println(e);
+        if (jTableLiveStockItemBatches.getSelectedRow() < 0) {
+            JOptionPane.showMessageDialog(parent, "Please select the batch");
         }
-        jButtonStokeSearch.setText(resourceBundle.getString("LiveStockPanel.jButtonStokeSearch.text"));
-        jButtonPrintAList.setText(resourceBundle.getString("LiveStockPanel.jButtonPrintAList.text"));
-        jButtonStockFullPrint.setText(resourceBundle.getString("LiveStockPanel.jButtonStockFullPrint.text"));
-        jButtonStockBarcodePrint.setText(resourceBundle.getString("LiveStockPanel.jButtonStockBarcodePrint.text"));
-    }
+        else if (jTableCurStockItems.getSelectedRow() < 0) {
+            JOptionPane.showMessageDialog(parent, "Please select the Item");
+        }
+        else{
+            Item selectedItem = itemDataList.get(jTableCurStockItems.getSelectedRow());
+            ItemStock selectedItemStock = selectedItem.stock.get(jTableLiveStockItemBatches.getSelectedRow());
+            
+            BarcodeLableItemDataModel dm =new BarcodeLableItemDataModel();
+            dm.setBarcode(selectedItem.barcode);
+            dm.setItemId(selectedItem.item_id);
+            dm.setItemName(selectedItem.item_name);
+            dm.setItemNameSin(selectedItem.item_name_sin);
+            dm.setItemNameTam(selectedItem.item_name_tam);
+            dm.setPrice(selectedItemStock.selling_price);
+            
+            BarcodeStickerCountWindow barcodeStickerCountWindow = new BarcodeStickerCountWindow();
+            barcodeStickerCountWindow.setData(dm, parent.getBarcodeLablePrintPanel());
+            barcodeStickerCountWindow.show();
+        }
+    }//GEN-LAST:event_jButtonStockBarcodePrintActionPerformed
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton jButtonPrintAList;

@@ -1,16 +1,9 @@
 package easyPOS.stock;
 
-import control.ApplicationDataManager;
 import dbOperations.StockDBOperation;
 import dbOperations.SuppliesDBOperation;
-import java.awt.Font;
-import java.awt.FontFormatException;
-import java.awt.GraphicsEnvironment;
 import java.awt.HeadlessException;
 import java.awt.print.PrinterException;
-import java.io.IOException;
-import java.util.Locale;
-import java.util.ResourceBundle;
 import javax.swing.JOptionPane;
 
 /**
@@ -27,7 +20,6 @@ public class StockPanel extends javax.swing.JPanel {
      */
     public StockPanel() {
         initComponents();
-        switchLanguage();
     }
     
     
@@ -56,6 +48,9 @@ public class StockPanel extends javax.swing.JPanel {
         jPanelStock.revalidate();
     }
     
+    public BarcodeLablePrintPanel getBarcodeLablePrintPanel(){
+        return barcodeLablePrintPanel1;
+    }
     @SuppressWarnings("unchecked")
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
@@ -83,6 +78,7 @@ public class StockPanel extends javax.swing.JPanel {
         jComboBoxSupplier = new javax.swing.JComboBox();
         jPanel2 = new javax.swing.JPanel();
         addNewItemPanel1 = new easyPOS.stock.AddNewItemPanel();
+        barcodeLablePrintPanel1 = new easyPOS.stock.BarcodeLablePrintPanel();
 
         jTabbedPaneListForOrder.setFont(new java.awt.Font("Tahoma", 0, 18)); // NOI18N
         jTabbedPaneListForOrder.addMouseListener(new java.awt.event.MouseAdapter() {
@@ -269,6 +265,7 @@ public class StockPanel extends javax.swing.JPanel {
         );
 
         jTabbedPaneListForOrder.addTab(bundle1.getString("StockPanel.jPanel2.TabConstraints.tabTitle"), jPanel2); // NOI18N
+        jTabbedPaneListForOrder.addTab(bundle1.getString("StockPanel.barcodeLablePrintPanel1.TabConstraints.tabTitle"), barcodeLablePrintPanel1); // NOI18N
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(this);
         this.setLayout(layout);
@@ -335,6 +332,8 @@ public class StockPanel extends javax.swing.JPanel {
                 break;
             case 4:
                 addNewItemPanel1.loadData();
+            case 5:
+                barcodeLablePrintPanel1.loadData();
                 break;
             default:
                 break;
@@ -501,35 +500,9 @@ public class StockPanel extends javax.swing.JPanel {
 //            }            
 //        }
     }
-    private void switchLanguage() {
-        Locale locale = new Locale("si", "LK");
-        ResourceBundle bundle = ResourceBundle.getBundle("easyPOS/Bundle", locale);
-        ResourceBundle bundle1 = ResourceBundle.getBundle("easyPOS/stock/Bundle", locale);
-        try {
-            Font customFont = Font.createFont(Font.TRUETYPE_FONT,
-                    ApplicationDataManager.getInstance().getSinhalaFontFile()).deriveFont(14f);
-            GraphicsEnvironment ge = GraphicsEnvironment.getLocalGraphicsEnvironment();
-            ge.registerFont(customFont);
-            jLabel86.setFont(customFont);
-            jLabel81.setFont(customFont);
-            jButtonPrintExpSt.setFont(customFont);
-            jButton24.setFont(customFont);
-        } catch (IOException | FontFormatException e) {
-            System.err.println(e);
-        }
-        jLabel86.setText(bundle.getString("StockPanel.jLabel86.text"));
-        jButtonPrintExpSt.setText(bundle.getString("StockPanel.jButtonPrintExpSt.text"));
-        jLabel81.setText(bundle.getString("StockPanel.jLabel81.text"));
-        jButton24.setText(bundle.getString("StockPanel.jButton24.text"));
-        jTabbedPaneListForOrder.setTitleAt(0, bundle.getString("StockPanel.jPanel7.TabConstraints.tabTitle"));
-        jTabbedPaneListForOrder.setTitleAt(1, bundle1.getString("StockPanel.jPanel1.TabConstraints.tabTitle"));
-        jTabbedPaneListForOrder.setTitleAt(2, bundle.getString("StockPanel.jPanel4.TabConstraints.tabTitle"));
-        jTabbedPaneListForOrder.setTitleAt(3, bundle.getString("StockPanel.jPanel12.TabConstraints.tabTitle"));
-        jTabbedPaneListForOrder.setTitleAt(4, bundle1.getString("StockPanel.jPanel2.TabConstraints.tabTitle"));
-    }
-
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private easyPOS.stock.AddNewItemPanel addNewItemPanel1;
+    private easyPOS.stock.BarcodeLablePrintPanel barcodeLablePrintPanel1;
     private easyPOS.stock.ChangePricePanel changePricePanel1;
     private javax.swing.JButton jButton24;
     private javax.swing.JButton jButtonPrintExpSt;
