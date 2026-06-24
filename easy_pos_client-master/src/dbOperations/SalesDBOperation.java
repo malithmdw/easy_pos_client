@@ -94,8 +94,8 @@ public class SalesDBOperation {
             pst.setString(5, billDataModel.getDate() + " " + billDataModel.getTime());
             pst.setString(6, userName);
             pst.setDouble(7,billDataModel.getTotalGrossAmount());
-            pst.setDouble(8,billDataModel.getTotalDiscount());
-            pst.setDouble(9,billDataModel.getTotalDiscount());
+            pst.setDouble(8,billDataModel.getBillDiscount());
+            pst.setDouble(9,billDataModel.getBillDiscount());
             pst.setDouble(10,billDataModel.getNetTotal());
             pst.setDouble(11,billDataModel.getMoneyReceive());
             pst.setDouble(12,0);

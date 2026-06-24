@@ -231,10 +231,10 @@ public class SimpleReceiptPrint implements Printable{
                     + "Balance Paid     Rs.  %12s\n"
                     + "No Of Items          %12s\n\n",
                 util.GeneralUtil.getCurrencyString(billDataModel.getTotalGrossAmount()), 
-                util.GeneralUtil.getCurrencyString(billDataModel.getTotalDiscount()),
+                util.GeneralUtil.getCurrencyString(billDataModel.getBillDiscount() + billDataModel.getRuleDiscount()),
                 util.GeneralUtil.getCurrencyString(billDataModel.getNetTotal()),
                 util.GeneralUtil.getCurrencyString(billDataModel.getMoneyReceive()),
-                util.GeneralUtil.getCurrencyString(billDataModel.getBalance()),
+                util.GeneralUtil.getCurrencyString(billDataModel.getCashBalance()),
                 billDataModel.getNoOfItems());
         
         String billSummarySin = String.format(""
@@ -245,10 +245,10 @@ public class SimpleReceiptPrint implements Printable{
                     + "ඉතිරි ගෙවීම්            රු.  %12s\n"
                     + "අයිතම ගණන              %12s\n\n",
                 util.GeneralUtil.getCurrencyString(billDataModel.getTotalGrossAmount()), 
-                util.GeneralUtil.getCurrencyString(billDataModel.getTotalDiscount()),
+                util.GeneralUtil.getCurrencyString(billDataModel.getBillDiscount() + billDataModel.getRuleDiscount()),
                 util.GeneralUtil.getCurrencyString(billDataModel.getNetTotal()),
                 util.GeneralUtil.getCurrencyString(billDataModel.getMoneyReceive()),
-                util.GeneralUtil.getCurrencyString(billDataModel.getBalance()),
+                util.GeneralUtil.getCurrencyString(billDataModel.getCashBalance()),
                 billDataModel.getNoOfItems());
         
         String[] billSummary;
@@ -280,13 +280,13 @@ public class SimpleReceiptPrint implements Printable{
         }
         
         // Credit Sale data
-        if (billDataModel.getBalance() < 0) {
+        if (billDataModel.getCreditAmount() != 0) {
             printDashSeparator(g2, x, y);
             y = y + 11;
             
             String creditSaleData;
             String customerData;
-            double creditAmount = billDataModel.getBalance();
+            double creditAmount = billDataModel.getCreditAmount();
             if (creditAmount < 0) {
                 creditAmount = creditAmount * (-1);
             }

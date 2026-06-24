@@ -416,7 +416,7 @@ public class SaleInvoiceJPanel extends javax.swing.JPanel {
                 if (selectedCustomer != null) {
                     custId = selectedCustomer.customer_id;
                 }
-                billDataModel.setBalance(Double.parseDouble(jTextFieldBal.getText()));
+                billDataModel.setCashBalance(Double.parseDouble(jTextFieldBal.getText()));
                 billDataModel.setCashierId(ApplicationDataManager.getInstance().getLoggedInUser().getUserCode());
                 billDataModel.setCashierName(ApplicationDataManager.getInstance().getLoggedInUser().getUserName());
                 billDataModel.setCustomerId(custId);
@@ -429,7 +429,7 @@ public class SaleInvoiceJPanel extends javax.swing.JPanel {
                 billDataModel.setNetTotal(Double.parseDouble(jTextFieldNetTot.getText()));
                 billDataModel.setNoOfItems(Double.parseDouble(jTextFieldSalesNoOfItms.getText()));
                 billDataModel.setTime(DateTimeUtil.getCurrentTimeHHmmss());
-                billDataModel.setTotalDiscount(Double.parseDouble(jTextFieldTotalDis.getText()));
+                billDataModel.setBillDiscount(Double.parseDouble(jTextFieldTotalDis.getText()));
                 billDataModel.setTotalGrossAmount(Double.parseDouble(jTextFieldGrossAmount.getText()));
                 
                 // Print bill
@@ -470,7 +470,7 @@ public class SaleInvoiceJPanel extends javax.swing.JPanel {
                 if (selectedCustomer != null) {
                     custId = selectedCustomer.customer_id;
                 }
-                billDataModel.setBalance(Double.parseDouble(jTextFieldBal.getText()));
+                billDataModel.setCashBalance(Double.parseDouble(jTextFieldBal.getText()));
                 billDataModel.setCashierId(ApplicationDataManager.getInstance().getLoggedInUser().getUserCode());
                 billDataModel.setCashierName(ApplicationDataManager.getInstance().getLoggedInUser().getUserName());
                 billDataModel.setCustomerId(custId);
@@ -483,7 +483,7 @@ public class SaleInvoiceJPanel extends javax.swing.JPanel {
                 billDataModel.setNetTotal(Double.parseDouble(jTextFieldNetTot.getText()));
                 billDataModel.setNoOfItems(Double.parseDouble(jTextFieldSalesNoOfItms.getText()));
                 billDataModel.setTime(DateTimeUtil.getCurrentTimeHHmmss());
-                billDataModel.setTotalDiscount(Double.parseDouble(jTextFieldTotalDis.getText()));
+                billDataModel.setBillDiscount(Double.parseDouble(jTextFieldTotalDis.getText()));
                 billDataModel.setTotalGrossAmount(Double.parseDouble(jTextFieldGrossAmount.getText()));
                 
                 return true;                                
@@ -687,13 +687,13 @@ public class SaleInvoiceJPanel extends javax.swing.JPanel {
         invoice.cust_contact_no = billDataModel.getCustomerContactNo();
         invoice.gross_amount = billDataModel.getTotalGrossAmount();
         invoice.no_of_items = billDataModel.getNoOfItems();
-        invoice.total_discount = billDataModel.getTotalDiscount(); 
+        invoice.total_discount = billDataModel.getBillDiscount(); 
         invoice.net_total = billDataModel.getNetTotal();
         invoice.money_received = billDataModel.getMoneyReceive();
         invoice.card_received = billDataModel.getCardReceive();
         invoice.voucher_received = billDataModel.getVoucherReceive();
         invoice.total_received = (invoice.money_received + invoice.card_received + invoice.voucher_received);
-        invoice.balance_amount = billDataModel.getBalance();
+        invoice.balance_amount = billDataModel.getCashBalance();
         invoice.settle_date_time = saleDateTime;
         invoice.settle_update_by = billDataModel.getCashierName();
         

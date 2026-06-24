@@ -2,6 +2,8 @@ package dataModels;
 
 import java.util.ArrayList;
 import java.util.List;
+import serverDataModels.DiscountRule;
+import serverDataModels.Voucher;
 
 public class BillDataModel {
 
@@ -14,17 +16,22 @@ public class BillDataModel {
     private int customerId;
     private String customerContactNo;
     private List<BillItemDataModel> billItems = new ArrayList<>();
+    private List<Voucher> voucherList = new ArrayList<>();
+    private List<DiscountRule> discountRulesApplied = new ArrayList<>();
     
     private double totalGrossAmount;
     private double noOfItems;
-    private double totalDiscount;
+    private double billDiscount;
     private double ruleDiscount;
     private double netTotal;
     private double moneyReceive;
     private double cardReceive;
     private double voucherReceive;
-    private double balance;
+    private double cashBalance;
+    private double creditAmount;
     private MethodOfPayment methodOfPayment;
+    private String cardType;
+    private String cardRef;
 
     public BillDataModel(BillDataModel billDataModel) {
         date = billDataModel.date;
@@ -40,11 +47,11 @@ public class BillDataModel {
 
         totalGrossAmount = billDataModel.totalGrossAmount;
         noOfItems = billDataModel.noOfItems;
-        totalDiscount = billDataModel.totalDiscount;
+        billDiscount = billDataModel.billDiscount;
         ruleDiscount = billDataModel.ruleDiscount;
         netTotal = billDataModel.netTotal;
         moneyReceive = billDataModel.moneyReceive;
-        balance = billDataModel.balance;
+        cashBalance = billDataModel.cashBalance;
         methodOfPayment = billDataModel.methodOfPayment;
     }
 
@@ -181,15 +188,15 @@ public class BillDataModel {
     /**
      * @return the totalDiscount
      */
-    public double getTotalDiscount() {
-        return totalDiscount;
+    public double getBillDiscount() {
+        return billDiscount;
     }
 
     /**
      * @param totalDiscount the totalDiscount to set
      */
-    public void setTotalDiscount(double totalDiscount) {
-        this.totalDiscount = totalDiscount;
+    public void setBillDiscount(double totalDiscount) {
+        this.billDiscount = totalDiscount;
     }
 
     /**
@@ -223,15 +230,15 @@ public class BillDataModel {
     /**
      * @return the balance
      */
-    public double getBalance() {
-        return balance;
+    public double getCashBalance() {
+        return cashBalance;
     }
 
     /**
      * @param balance the balance to set
      */
-    public void setBalance(double balance) {
-        this.balance = balance;
+    public void setCashBalance(double balance) {
+        this.cashBalance = balance;
     }
 
     /**
@@ -315,5 +322,75 @@ public class BillDataModel {
      */
     public void setRuleDiscount(double ruleDiscount) {
         this.ruleDiscount = ruleDiscount;
+    }
+    
+    /**
+     * @return the cardRef
+     */
+    public String getCardRef() {
+        return cardRef;
+    }
+
+    /**
+     * @param cardRef the cardRef to set
+     */
+    public void setCardRef(String cardRef) {
+        this.cardRef = cardRef;
+    }
+
+    /**
+     * @return the cardType
+     */
+    public String getCardType() {
+        return cardType;
+    }
+
+    /**
+     * @param cardType the cardType to set
+     */
+    public void setCardType(String cardType) {
+        this.cardType = cardType;
+    }
+    
+    /**
+     * @return the voucherList
+     */
+    public List<Voucher> getVoucherList() {
+        return voucherList;
+    }
+
+    /**
+     * @param voucherList the voucherList to set
+     */
+    public void setVoucherList(List<Voucher> voucherList) {
+        this.voucherList = voucherList;
+    }
+    
+    /**
+     * @return the discountRulesApplied
+     */
+    public List<DiscountRule> getDiscountRulesApplied() {
+        return discountRulesApplied;
+    }
+
+    /**
+     * @param discountRulesApplied the discountRulesApplied to set
+     */
+    public void setDiscountRulesApplied(List<DiscountRule> discountRulesApplied) {
+        this.discountRulesApplied = discountRulesApplied;
+    }
+    
+    /**
+     * @return the creditAmount
+     */
+    public double getCreditAmount() {
+        return creditAmount;
+    }
+
+    /**
+     * @param creditAmount the creditAmount to set
+     */
+    public void setCreditAmount(double creditAmount) {
+        this.creditAmount = creditAmount;
     }
 }

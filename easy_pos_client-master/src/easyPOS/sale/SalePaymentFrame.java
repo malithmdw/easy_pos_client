@@ -71,11 +71,11 @@ public class SalePaymentFrame extends javax.swing.JFrame {
 
     private void setInitData(){
         salepanelBillTotalTextField.setText(util.GeneralUtil.getCurrencyString(billDataModel.getTotalGrossAmount()));
-        salepanelBillDisTextField.setText(util.GeneralUtil.getCurrencyString(billDataModel.getTotalDiscount()));
+        salepanelBillDisTextField.setText(util.GeneralUtil.getCurrencyString(billDataModel.getBillDiscount()));
         salepanelTotalTextField.setText("");
         salepanelNetAmtTextField.setText(util.GeneralUtil.getCurrencyString(billDataModel.getNetTotal()));
         salepanelPaidTextField.setText(util.GeneralUtil.getCurrencyString(billDataModel.getMoneyReceive()));
-        salepanelBalanceTextField.setText(util.GeneralUtil.getCurrencyString(billDataModel.getBalance()));
+        salepanelBalanceTextField.setText(util.GeneralUtil.getCurrencyString(billDataModel.getCashBalance()));
         salepanelCustNumTextField.setText(billDataModel.getCustomerContactNo());
         salepanelTotalTextField.setText(util.GeneralUtil.getCurrencyString(billDataModel.getNetTotal()));
         salepanelCustNameTextField.setText("");
@@ -204,6 +204,99 @@ public class SalePaymentFrame extends javax.swing.JFrame {
         jButton1.setText(resourceBundle.getString("SalePaymentFrame.jButton1.text"));
         jButton2.setText(resourceBundle.getString("SalePaymentFrame.jButton2.text"));
     }
+    
+    private double calcRuleDiscount(boolean applyChangesForBillData){
+        ArrayList<Integer> selectedMOPIDs = new ArrayList<>();
+        ArrayList<DiscountRule> discountRulesApplied = new ArrayList<>();
+        String cardType = "OTHER";
+
+        if (salePaymentCashRadioButton.isSelected()) {
+            selectedMOPIDs.add(1);
+        }
+        if (salePaymentCardRadioButton.isSelected()) {                
+            selectedMOPIDs.add(2);
+
+            if (visaRadioButton.isSelected()) {
+                cardType = "VISA";
+            }else if (masterRadioButton.isSelected()) {
+                cardType = "MASTER";
+            }else if (amexRadioButton.isSelected()) {
+                cardType = "AMEX";
+            }else if (upiRadioButton.isSelected()) {
+                cardType = "UPI";
+            }else if (jcbRadioButton.isSelected()) {
+                cardType = "JCB";
+            }
+            
+            if (applyChangesForBillData) {
+                billDataModel.setCardType(cardType);
+                billDataModel.setCardRef(cardLast4DigInputTextField.getText());
+            }
+        }
+        if (salePaymentVoucherRadioButton.isSelected()) {
+            selectedMOPIDs.add(3);
+        }
+
+        double totalRuleDiscount = 0;
+
+        for(DiscountRule disRule : localDatabase.DatabaseManager.getInstance().getDiscountRules())
+        {
+            for (Integer selectedMOPID : selectedMOPIDs) {
+                if (billDataModel.getNetTotal() > disRule.bill_above // Bill Above
+                        && (disRule.only_for_mop == 0 || selectedMOPID == disRule.only_for_mop) // MOP
+                        && (disRule.only_for_loyalty_customers == 0 || (disRule.only_for_loyalty_customers == 1 && selectedCustomer != null))// loyalty customer check
+                        ) {
+                    // Category check
+                    if (disRule.only_for_category == 0) {
+                        // Apply for ALL CATEGORIES
+                        double totalRulePercDis = (billDataModel.getNetTotal()*disRule.discount_percentage/100);
+                        double totalRuleFixDis = disRule.fix_discount;
+                        totalRuleDiscount = totalRulePercDis + totalRuleFixDis;
+                        discountRulesApplied.add(disRule);
+                        
+                        if (applyChangesForBillData) {
+                            for (BillItemDataModel billItem : billDataModel.getBillItems()) {
+//                                billItem.setDiscountPerone(0);/
+//                                billItem.setNetAmount(0);/
+                            }
+                        }
+                    }
+                    else{
+                        // Apply for Selected CATEGORIES
+                        ArrayList<BillItemDataModel> billItemsOfCategory = new ArrayList<>();
+                        
+                        double categorynetTotal = 0;
+                        for (BillItemDataModel billItem : billDataModel.getBillItems()) {
+                            if (disRule.only_for_category == localDatabase.DatabaseManager.getInstance().getItemByItemId(billItem.getItemId()).getCategoryId()) {
+                                categorynetTotal = categorynetTotal + billItem.getNetAmount();
+                                billItemsOfCategory.add(billItem);
+                            }
+                        }
+
+                        if (categorynetTotal > disRule.bill_above && categorynetTotal > 0) {
+                            
+                            double totalRulePercDis = (categorynetTotal * disRule.discount_percentage/100);
+                            double totalRuleFixDis = disRule.fix_discount;
+                            totalRuleDiscount = totalRulePercDis + totalRuleFixDis;
+                            discountRulesApplied.add(disRule);
+                                
+                            if (applyChangesForBillData) {
+                                for (BillItemDataModel billItem : billItemsOfCategory) {
+//                                    billItem.setDiscountPerone(billItem.getDiscountPerone() + ());
+//                                    billItem.setNetAmount(0);
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        }
+        
+        if (applyChangesForBillData) {
+            billDataModel.setDiscountRulesApplied(discountRulesApplied);
+        }
+        return totalRuleDiscount;
+    }
 
     private void calculateAmounts(){
 
@@ -225,51 +318,8 @@ public class SalePaymentFrame extends javax.swing.JFrame {
             salepanelTotalTextField.setText("");
             salepanelPaidTextField.setText("");
             salepanelBalanceTextField.setText("");
-
-            int selectedMOPID = 0;
-            if (salePaymentCashRadioButton.isSelected()) {
-                selectedMOPID = 1;
-            }
-            if (salePaymentCardRadioButton.isSelected()) {
-                selectedMOPID = 2;
-            }
-            if (salePaymentVoucherRadioButton.isSelected()) {
-                selectedMOPID = 3;
-            }
-
-            double totalRuleDiscount = 0;
-
-            for(DiscountRule disRule : localDatabase.DatabaseManager.getInstance().getDiscountRules())
-            {
-                if (billDataModel.getNetTotal() > disRule.bill_above // Bill Above
-                        && (disRule.only_for_mop == 0 || selectedMOPID == disRule.only_for_mop) // MOP
-                        && (disRule.only_for_loyalty_customers == 0 || (disRule.only_for_loyalty_customers == 1 && selectedCustomer != null))// loyalty customer check
-                        ) {
-                    // Category check
-                    if (disRule.only_for_category == 0) {
-                        // Apply for ALL CATEGORIES
-                        totalRuleDiscount = totalRuleDiscount + (billDataModel.getNetTotal()*disRule.discount_percentage/100);
-                        totalRuleDiscount = totalRuleDiscount + disRule.fix_discount;
-                    }
-                    else{
-                        // Apply for Selected CATEGORIES
-                        double categorynetTotal = 0;
-                        for (BillItemDataModel billItem : billDataModel.getBillItems()) {
-                            if (disRule.only_for_category == localDatabase.DatabaseManager.getInstance().getItemByItemId(billItem.getItemId()).getCategoryId()) {
-                                categorynetTotal = categorynetTotal + billItem.getNetAmount();
-                            }
-                        }
-
-                        if (categorynetTotal > disRule.bill_above) {
-                            totalRuleDiscount = totalRuleDiscount + (categorynetTotal * disRule.discount_percentage/100);
-
-                            if (categorynetTotal > 0) {
-                                totalRuleDiscount = totalRuleDiscount + disRule.fix_discount;
-                            }
-                        }
-                    }
-                }
-            }
+            
+            double totalRuleDiscount = calcRuleDiscount(false);
 
             double newNetAmount = billDataModel.getNetTotal() - totalRuleDiscount;
             double totalPaid = cashAmount + cardAmount + voucherAmount;
@@ -431,8 +481,11 @@ public class SalePaymentFrame extends javax.swing.JFrame {
             billDataModel.setRuleDiscount(Double.parseDouble(salepanelTotalTextField.getText()));
             billDataModel.setNetTotal(Double.parseDouble(salepanelNetAmtTextField.getText()));
             billDataModel.setMoneyReceive(Double.parseDouble(jTextField6.getText()));
-            billDataModel.setBalance(Double.parseDouble(salepanelBalanceTextField.getText()));
-
+            billDataModel.setCashBalance(Double.parseDouble(salepanelBalanceTextField.getText()));
+            billDataModel.setCreditAmount(Double.parseDouble(salepanelCreditTextField.getText()));
+            
+            calcRuleDiscount(true);
+                    
             // Print bill
             if (printBill(billDataModel)) {
                     // Show print preview
@@ -476,20 +529,29 @@ public class SalePaymentFrame extends javax.swing.JFrame {
         invoice.cust_contact_no = billDataModel.getCustomerContactNo();
         invoice.gross_amount = billDataModel.getTotalGrossAmount();
         invoice.no_of_items = billDataModel.getNoOfItems();
-        invoice.total_discount = billDataModel.getTotalDiscount();
+        invoice.total_discount = billDataModel.getBillDiscount() + billDataModel.getRuleDiscount();
         invoice.net_total = billDataModel.getNetTotal();
         invoice.money_received = billDataModel.getMoneyReceive();
         invoice.card_received = billDataModel.getCardReceive();
         invoice.voucher_received = billDataModel.getVoucherReceive();
         invoice.total_received = (invoice.money_received + invoice.card_received + invoice.voucher_received);
-        invoice.balance_amount = billDataModel.getBalance();
+        invoice.balance_amount = billDataModel.getCreditAmount();
         invoice.settle_date_time = saleDateTime;
         invoice.settle_update_by = billDataModel.getCashierName();
 
         invoice.invoice_type = 1; // Retail sale
-        invoice.cash_ref = "";
-        invoice.card_ref = "";
-        invoice.voucher_ref = "";
+        String discountRuleData = "";
+        for (DiscountRule discountRule : billDataModel.getDiscountRulesApplied()) {
+            discountRuleData += discountRule.rule_id + "|";
+        }
+        invoice.cash_ref = discountRuleData;
+        invoice.card_ref = billDataModel.getCardRef();
+        
+        String voucherData = "";
+        for (Voucher voucher : billDataModel.getVoucherList()) {
+            voucherData += voucher.voucher_id + "|";
+        }
+        invoice.voucher_ref = voucherData;
 
         double totalCost = 0;
         for (BillItemDataModel billItem : billDataModel.getBillItems()) {
@@ -1023,7 +1085,7 @@ public class SalePaymentFrame extends javax.swing.JFrame {
                                 .addComponent(voucherNumInputTextField, javax.swing.GroupLayout.PREFERRED_SIZE, 64, javax.swing.GroupLayout.PREFERRED_SIZE)
                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                                 .addComponent(voucherSearchButton)
-                                .addGap(0, 6, Short.MAX_VALUE))
+                                .addGap(0, 0, Short.MAX_VALUE))
                             .addComponent(jTextField9)))
                     .addGroup(jPanel3Layout.createSequentialGroup()
                         .addComponent(salePaymentCashRadioButton, javax.swing.GroupLayout.PREFERRED_SIZE, 98, javax.swing.GroupLayout.PREFERRED_SIZE)
@@ -1053,7 +1115,7 @@ public class SalePaymentFrame extends javax.swing.JFrame {
                             .addGroup(jPanel3Layout.createSequentialGroup()
                                 .addComponent(paymentMethodInputLabel1)
                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                .addComponent(cardLast4DigInputTextField)))))
+                                .addComponent(cardLast4DigInputTextField, javax.swing.GroupLayout.PREFERRED_SIZE, 117, javax.swing.GroupLayout.PREFERRED_SIZE)))))
                 .addContainerGap())
         );
         jPanel3Layout.setVerticalGroup(
@@ -1080,9 +1142,9 @@ public class SalePaymentFrame extends javax.swing.JFrame {
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(jScrollPaneVoucherTbl, javax.swing.GroupLayout.PREFERRED_SIZE, 89, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(44, 44, 44)
-                .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
-                    .addComponent(cardLast4DigInputTextField, javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(paymentMethodInputLabel1, javax.swing.GroupLayout.PREFERRED_SIZE, 22, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(paymentMethodInputLabel1, javax.swing.GroupLayout.PREFERRED_SIZE, 22, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(cardLast4DigInputTextField))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(visaRadioButton)
@@ -1126,12 +1188,12 @@ public class SalePaymentFrame extends javax.swing.JFrame {
                     .addComponent(jLabel6, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                     .addComponent(jLabel7, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                .addGroup(jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel4Layout.createSequentialGroup()
+                .addGroup(jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                    .addGroup(jPanel4Layout.createSequentialGroup()
                         .addComponent(salepanelCustNumTextField, javax.swing.GroupLayout.PREFERRED_SIZE, 104, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addGap(4, 4, 4)
                         .addComponent(jButton3))
-                    .addComponent(salepanelCustNameTextField, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, 146, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addComponent(salepanelCustNameTextField))
                 .addContainerGap())
         );
         jPanel4Layout.setVerticalGroup(

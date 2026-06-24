@@ -69,7 +69,7 @@ public class SalesVoucherRedeemTbl extends AbstractTableModel {
     public Object getValueAt(int rowIndex, int columnIndex) {
         switch (columnIndex) {
             case 0:
-                return voucherList.get(rowIndex).voucher_name;
+                return voucherList.get(rowIndex).voucher_id + "-" + voucherList.get(rowIndex).voucher_name;
             case 1:
                 return df.format(voucherList.get(rowIndex).amount);
             case 2:
