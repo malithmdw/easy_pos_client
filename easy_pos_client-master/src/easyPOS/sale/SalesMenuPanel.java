@@ -26,7 +26,7 @@ public class SalesMenuPanel extends javax.swing.JPanel {
         savedBillButton = new javax.swing.JButton();
         calButton = new javax.swing.JButton();
         noteButton = new javax.swing.JButton();
-        numberPadButton = new javax.swing.JButton();
+        saleReturnButton = new javax.swing.JButton();
 
         searchStockButton.setIcon(new javax.swing.ImageIcon(getClass().getResource("/images/search.png"))); // NOI18N
         searchStockButton.addActionListener(new java.awt.event.ActionListener() {
@@ -55,10 +55,10 @@ public class SalesMenuPanel extends javax.swing.JPanel {
 
         noteButton.setIcon(new javax.swing.ImageIcon(getClass().getResource("/images/printer.png"))); // NOI18N
 
-        numberPadButton.setIcon(new javax.swing.ImageIcon(getClass().getResource("/images/cal.png"))); // NOI18N
-        numberPadButton.addActionListener(new java.awt.event.ActionListener() {
+        saleReturnButton.setIcon(new javax.swing.ImageIcon(getClass().getResource("/images/edit.png"))); // NOI18N
+        saleReturnButton.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                numberPadButtonActionPerformed(evt);
+                saleReturnButtonActionPerformed(evt);
             }
         });
 
@@ -68,7 +68,7 @@ public class SalesMenuPanel extends javax.swing.JPanel {
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
                 .addContainerGap()
-                .addComponent(numberPadButton, javax.swing.GroupLayout.PREFERRED_SIZE, 38, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addComponent(saleReturnButton, javax.swing.GroupLayout.PREFERRED_SIZE, 38, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                 .addComponent(searchStockButton)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
@@ -92,7 +92,7 @@ public class SalesMenuPanel extends javax.swing.JPanel {
                         .addComponent(rePrintButton, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                         .addComponent(saveBillButton, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                         .addComponent(savedBillButton, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                        .addComponent(numberPadButton, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                        .addComponent(saleReturnButton, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
                     .addComponent(searchStockButton)
                     .addComponent(noteButton)
                     .addComponent(calButton, javax.swing.GroupLayout.PREFERRED_SIZE, 39, javax.swing.GroupLayout.PREFERRED_SIZE))
@@ -108,9 +108,9 @@ public class SalesMenuPanel extends javax.swing.JPanel {
         EventManager.getInstance().notifySalesMenuItemClicked(SalesMenuItemClickListener.SalesMenuItem.RE_PRINT);
     }//GEN-LAST:event_rePrintButtonActionPerformed
 
-    private void numberPadButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_numberPadButtonActionPerformed
-        EventManager.getInstance().notifySalesMenuItemClicked(SalesMenuItemClickListener.SalesMenuItem.NUMBER_PAD);
-    }//GEN-LAST:event_numberPadButtonActionPerformed
+    private void saleReturnButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_saleReturnButtonActionPerformed
+        EventManager.getInstance().notifySalesMenuItemClicked(SalesMenuItemClickListener.SalesMenuItem.SALE_RETURN);
+    }//GEN-LAST:event_saleReturnButtonActionPerformed
 
     private void savedBillButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_savedBillButtonActionPerformed
         // TODO add your handling code here:
@@ -120,8 +120,8 @@ public class SalesMenuPanel extends javax.swing.JPanel {
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton calButton;
     private javax.swing.JButton noteButton;
-    private javax.swing.JButton numberPadButton;
     private javax.swing.JButton rePrintButton;
+    private javax.swing.JButton saleReturnButton;
     private javax.swing.JButton saveBillButton;
     private javax.swing.JButton savedBillButton;
     private javax.swing.JButton searchStockButton;

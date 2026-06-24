@@ -35,6 +35,11 @@ public class ItemSelection extends javax.swing.JPanel {
                     
                     // load the table
                 }
+                else if (SalesMenuItemClickListener.SalesMenuItem.SALE_RETURN.equals(menuItem)) {
+                    SaleReturnFrame saleReturnFrame = new SaleReturnFrame();
+                    saleReturnFrame.setDefaultCloseOperation(SalePaymentFrame.DISPOSE_ON_CLOSE);
+                    saleReturnFrame.setVisible(true);            
+                }
             }
         });
     }

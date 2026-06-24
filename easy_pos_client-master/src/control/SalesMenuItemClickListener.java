@@ -7,6 +7,7 @@ package control;
 public interface SalesMenuItemClickListener {
     
     public enum SalesMenuItem{
+        SALE_RETURN,
         SEARCH_STOCK,
         WHOLE_SALE_BILL,
         RE_PRINT,
