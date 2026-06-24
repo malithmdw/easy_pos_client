@@ -76,7 +76,8 @@ public class ServerAPIConnection {
         PROCESS_PURCHASING_INVOICE("process-perchasing-invoice.php"),
         GET_MEASURE_UNITS_DATA("get-measure-units.php"),
         GET_PENDING_PURCHASING_INVOICES("get-pending-purchasing-invoices.php"),
-        UPDATE_BATCH_SELLING_PRICES("update-batch-selling-price.php");
+        UPDATE_BATCH_SELLING_PRICES("update-batch-selling-price.php"),
+        REDEEM_VOUCHER("redeem-voucher.php");
         
         private final String name;
         
@@ -751,6 +752,17 @@ public class ServerAPIConnection {
         return commonResponse;
     }
     
+    public CommonResponse redeemVoucher(String voucherId, String completedBy)
+    {
+        WebService webService = new WebService();
+        Map<String, String> bodyData = new HashMap<>();
+
+        bodyData.put("voucher_id", voucherId);
+        bodyData.put("completed_by", completedBy);
+
+        return webService.sendPOSTRequest(API_NAME.REDEEM_VOUCHER.getAPIName(), generateHeader(), bodyData);
+    }
+
     public CommonResponse processCompletePurchasingInvoice(String systemInvoiceNumber)
     {
         WebService webService = new WebService();

@@ -505,6 +505,20 @@ public class SalePaymentFrame extends javax.swing.JFrame implements control.Lang
 
                     // Insert data to sales table & sale items table
                     submitToDB(billDataModel);
+                    
+                    // Redeem vouchers if used
+                    if (!billDataModel.getVoucherList().isEmpty()) {
+                        String cashierName = billDataModel.getCashierName();
+                        for (Voucher voucher : billDataModel.getVoucherList()) {
+                            final String vId = String.valueOf(voucher.voucher_id);
+                            ServerDataSubmissionQueue.getInstance().notifyAction(() -> {
+                                APIHeaderData hdr = new APIHeaderData();
+                                hdr.setInstituteId(RuntimeDataManager.getInstance().getRuntimeData().getInstituteId());
+                                hdr.setTerminalId(RuntimeDataManager.getInstance().getRuntimeData().getTerminalId());
+                                ServerAPIConnection.getInstance(hdr).redeemVoucher(vId, cashierName);
+                            });
+                        }
+                    }
 
                     // Update invoice number in local DB
                     DatabaseManager.getInstance().updateAppDataInvoiceNumber(ApplicationDataManager.getInstance().getNextInvoiceNumber());
