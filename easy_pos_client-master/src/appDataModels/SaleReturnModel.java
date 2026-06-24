@@ -13,7 +13,7 @@ import serverDataModels.SaleReturn;
 public class SaleReturnModel {
     private long recId;
     private String requestNo;
-    private long saleInvoiceNo;
+    private String saleInvoiceNo;
     private long customerId;
     private double totalAmount;
     private String requestDateTime;
@@ -30,8 +30,8 @@ public class SaleReturnModel {
         this.requestDateTime = dto.request_date_time;
         this.requestBy = dto.request_by;
 
-        if (dto.sale_return_items != null) {
-            this.saleReturnItemModels = dto.sale_return_items.stream()
+        if (dto.return_items != null) {
+            this.saleReturnItemModels = dto.return_items.stream()
                     .map(SaleReturnItemModel::new)  // DTO → Model
                     .collect(Collectors.toList());
         } else {
@@ -51,11 +51,11 @@ public class SaleReturnModel {
         dto.request_by = this.getRequestBy();
 
         if (this.saleReturnItemModels != null) {
-            dto.sale_return_items = this.saleReturnItemModels.stream()
+            dto.return_items = this.saleReturnItemModels.stream()
                     .map(SaleReturnItemModel::newSaleReturnItemDTO)  // Model → DTO
                     .collect(Collectors.toList());
         } else {
-            dto.sale_return_items = new ArrayList<>();
+            dto.return_items = new ArrayList<>();
         }
 
         return dto;
@@ -68,8 +68,8 @@ public class SaleReturnModel {
     public String getRequestNo() { return requestNo; }
     public void setRequestNo(String requestNo) { this.requestNo = requestNo; }
 
-    public long getSaleInvoiceNo() { return saleInvoiceNo; }
-    public void setSaleInvoiceNo(long saleInvoiceNo) { this.saleInvoiceNo = saleInvoiceNo; }
+    public String getSaleInvoiceNo() { return saleInvoiceNo; }
+    public void setSaleInvoiceNo(String saleInvoiceNo) { this.saleInvoiceNo = saleInvoiceNo; }
 
     public long getCustomerId() { return customerId; }
     public void setCustomerId(long customerId) { this.customerId = customerId; }

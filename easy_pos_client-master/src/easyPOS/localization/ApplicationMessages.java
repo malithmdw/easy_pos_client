@@ -41,6 +41,10 @@ public class ApplicationMessages {
     public static final String VALIDATION_NO_DATA_FOUND                = "validation.no.data.found";
     public static final String VALIDATION_SET_ALERT_DATE               = "validation.set.alert.date";
     public static final String VALIDATION_PAYMENT_AMOUNT_INCORRECT     = "validation.payment.amount.incorrect";
+    public static final String VALIDATION_RETURN_QTY_INVALID           = "validation.return.qty.invalid";
+    public static final String VALIDATION_RETURN_QTY_POSITIVE          = "validation.return.qty.positive";
+    public static final String VALIDATION_RETURN_QTY_EXCEEDS_SOLD      = "validation.return.qty.exceeds.sold";
+    public static final String VALIDATION_RETURN_QTY_EXCEEDS_REMAINING = "validation.return.qty.exceeds.remaining";
 
     // ── Errors ───────────────────────────────────────────────────────────────
     public static final String ERROR_UNEXPECTED                        = "error.unexpected";
@@ -81,6 +85,7 @@ public class ApplicationMessages {
     public static final String INFO_ACCOUNT_CREATED                    = "info.account.created";
     public static final String INFO_AUTO_INVOICE_STARTED               = "info.auto.invoice.started";
     public static final String INFO_INVOICE_DATA_DELETED               = "info.invoice.data.deleted";
+    public static final String INFO_SALE_RETURN_SUCCESS                = "info.sale.return.success";
 
     public static String getMessage(String key) {
         Language lang = ApplicationDataManager.getInstance().getApplicationLanguage();

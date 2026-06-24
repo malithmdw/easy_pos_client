@@ -2,19 +2,16 @@ package easyPOS.sale;
 
 import appDataModels.APIHeaderData;
 import appDataModels.InstituteModel;
+import appDataModels.ItemModel;
 import control.ApplicationDataManager;
 import control.RuntimeDataManager;
-import control.ServerDataSubmissionQueue;
-import control.SimpleReceiptPrint;
-import dataModels.BillDataModel;
-import dataModels.BillItemDataModel;
+import control.SaleReturnVoucherPrint;
 import dataModels.ReceiptCommonData;
-import java.awt.Color;
+import dataModels.SaleReturnInvoiceItemDataModel;
+import dataModels.SaleReturnLineDataModel;
 import java.awt.Font;
 import java.awt.FontFormatException;
 import java.awt.GraphicsEnvironment;
-import java.awt.HeadlessException;
-import java.awt.event.ActionListener;
 import java.awt.print.PageFormat;
 import java.awt.print.Paper;
 import java.awt.print.PrinterException;
@@ -27,21 +24,16 @@ import java.util.Locale;
 import java.util.ResourceBundle;
 import java.util.concurrent.ExecutionException;
 import javax.print.PrintService;
-import javax.swing.JLabel;
-import javax.swing.JOptionPane;
 import javax.swing.JRootPane;
-import javax.swing.JTextField;
 import javax.swing.SwingWorker;
-import javax.swing.event.DocumentEvent;
-import javax.swing.event.DocumentListener;
 import localDatabase.DatabaseManager;
-import serverDataModels.Customer;
-import serverDataModels.DiscountRule;
 import serverDataModels.SaleInvoice;
 import serverDataModels.SaleItem;
-import serverDataModels.Voucher;
+import serverDataModels.SaleReturn;
+import serverDataModels.SaleReturnItem;
 import serverResponseDataModel.CommonResponse;
-import tableModels.SalesVoucherRedeemTbl;
+import tableModels.SaleReturnInvoiceItemsTableModel;
+import tableModels.SaleReturnItemsTableModel;
 import uiUtil.EasyPOSMessageDialog;
 import uiUtil.LoadingGlassPane;
 import webService.ServerAPIConnection;
@@ -54,17 +46,18 @@ import easyPOS.localization.ApplicationMessages;
 public class SaleReturnFrame extends javax.swing.JFrame implements control.LanguageChangeListener {
 
     private SaleInvoiceJPanel parentPanel;
-    private BillDataModel billDataModel;
-    private Customer selectedCustomer;
-    private SalesVoucherRedeemTbl voucherTableModel;
+    private SaleInvoice currentInvoice;
+    private SaleReturnInvoiceItemsTableModel invoiceItemsTableModel;
+    private SaleReturnItemsTableModel returnItemsTableModel;
 
     /**
      * Creates new form SalePaymentFrame
-     * @param parentPanel
      */
     public SaleReturnFrame() {
         initComponents();
         switchLanguage();
+        setupInvoiceItemsTable();
+        setupReturnItemsTable();
         control.EventManager.getInstance().addLanguageChangeListener(this);
     }
 
@@ -75,11 +68,16 @@ public class SaleReturnFrame extends javax.swing.JFrame implements control.Langu
         repaint();
     }
 
-    private void loadSaleInvoiceItemsTable() {
-        voucherTableModel = new SalesVoucherRedeemTbl();
-        saleInvoiceItemsTable.setModel(voucherTableModel);
+    private void setupInvoiceItemsTable() {
+        invoiceItemsTableModel = new SaleReturnInvoiceItemsTableModel(new ArrayList<>());
+        saleInvoiceItemsTable.setModel(invoiceItemsTableModel);
+    }
 
-        saleInvoiceItemsTable.getColumnModel().getColumn(2).setCellRenderer(
+    private void setupReturnItemsTable() {
+        returnItemsTableModel = new SaleReturnItemsTableModel();
+        vouchersTable1.setModel(returnItemsTableModel);
+
+        vouchersTable1.getColumnModel().getColumn(5).setCellRenderer(
             (javax.swing.table.TableCellRenderer) (table, value, isSelected, hasFocus, row, column) -> {
                 javax.swing.JButton btn = new javax.swing.JButton("Remove");
                 btn.setFont(new java.awt.Font("Segoe UI", 0, 11));
@@ -87,16 +85,62 @@ public class SaleReturnFrame extends javax.swing.JFrame implements control.Langu
             }
         );
 
-        saleInvoiceItemsTable.addMouseListener(new java.awt.event.MouseAdapter() {
+        vouchersTable1.addMouseListener(new java.awt.event.MouseAdapter() {
             @Override
             public void mouseClicked(java.awt.event.MouseEvent e) {
-                int row = saleInvoiceItemsTable.rowAtPoint(e.getPoint());
-                int col = saleInvoiceItemsTable.columnAtPoint(e.getPoint());
-                if (col == 2 && row >= 0) {
-                    voucherTableModel.removeRow(row);
+                int row = vouchersTable1.rowAtPoint(e.getPoint());
+                int col = vouchersTable1.columnAtPoint(e.getPoint());
+                if (col == 5 && row >= 0) {
+                    returnItemsTableModel.removeRow(row);
+                    updateReturnAmount();
                 }
             }
         });
+    }
+
+    private void loadInvoiceIntoTable(SaleInvoice invoice) {
+        currentInvoice = invoice;
+
+        List<SaleReturnInvoiceItemDataModel> rows = new ArrayList<>();
+        if (invoice.sale_items != null) {
+            for (SaleItem saleItem : invoice.sale_items) {
+                ItemModel itemModel = DatabaseManager.getInstance().getItemByItemId(saleItem.item_id);
+
+                SaleReturnInvoiceItemDataModel row = new SaleReturnInvoiceItemDataModel();
+                row.setItemId(saleItem.item_id);
+                row.setBatchId(saleItem.batch_id);
+                row.setItemCode(itemModel != null ? itemModel.getBarcode() : "");
+                row.setItemName(itemModel != null ? itemModel.getItemName() : "");
+                row.setQtySold(saleItem.qty);
+                row.setUnitPrice(saleItem.selling_price);
+                row.setDiscount(saleItem.discount);
+                row.setLineTotal(saleItem.net_amount);
+                rows.add(row);
+            }
+        }
+
+        invoiceItemsTableModel = new SaleReturnInvoiceItemsTableModel(rows);
+        saleInvoiceItemsTable.setModel(invoiceItemsTableModel);
+
+        salepanelNetAmtTextField.setText(util.GeneralUtil.getCurrencyString(invoice.net_total));
+
+        returnItemsTableModel.clearAll();
+        updateReturnAmount();
+    }
+
+    private void updateReturnAmount() {
+        saleReturnAmtTextField.setText(util.GeneralUtil.getCurrencyString(returnItemsTableModel.getTotalReturnAmount()));
+    }
+
+    private void resetReturnForm() {
+        currentInvoice = null;
+        salereturnSaleInvoiceNoTextField.setText("");
+        saleReturnItmQtyTextField.setText("");
+        salepanelNetAmtTextField.setText("");
+        invoiceItemsTableModel = new SaleReturnInvoiceItemsTableModel(new ArrayList<>());
+        saleInvoiceItemsTable.setModel(invoiceItemsTableModel);
+        returnItemsTableModel.clearAll();
+        updateReturnAmount();
     }
 
     private void switchLanguage() {
@@ -115,23 +159,34 @@ public class SaleReturnFrame extends javax.swing.JFrame implements control.Langu
 
             jLabel1.setFont(customFont);
             jLabel8.setFont(customFont2);
+            jLabel9.setFont(customFont2);
             salereturnSaleInvoiceInputLabel.setFont(customFont);
             submitSalereturnButton.setFont(customFont);
             jButton2.setFont(customFont);
+            addItemToReturnsButton.setFont(customFont);
 
         } catch (IOException | FontFormatException e) {
             System.err.println(e);
         }
         }
 
-        jLabel1.setText(resourceBundle.getString("SalePaymentFrame.jLabel1.text"));
-        jLabel8.setText(resourceBundle.getString("SalePaymentFrame.jLabel8.text"));
-        salereturnSaleInvoiceInputLabel.setText(resourceBundle.getString("SalePaymentFrame.paymentMethodInputLabel.text"));
-        submitSalereturnButton.setText(resourceBundle.getString("SalePaymentFrame.jButton1.text"));
-        jButton2.setText(resourceBundle.getString("SalePaymentFrame.jButton2.text"));
+        jLabel1.setText(resourceBundle.getString("SaleReturnFrame.jLabel1.text"));
+        jLabel8.setText(resourceBundle.getString("SaleReturnFrame.jLabel8.text"));
+        jLabel9.setText(resourceBundle.getString("SaleReturnFrame.jLabel9.text"));
+        salereturnSaleInvoiceInputLabel.setText(resourceBundle.getString("SaleReturnFrame.salereturnSaleInvoiceInputLabel.text"));
+        submitSalereturnButton.setText(resourceBundle.getString("SaleReturnFrame.submitSalereturnButton.text"));
+        jButton2.setText(resourceBundle.getString("SaleReturnFrame.jButton2.text"));
+        addItemToReturnsButton.setText(resourceBundle.getString("SaleReturnFrame.addItemToReturnsButton.text"));
+
+        if (jPanel2.getBorder() instanceof javax.swing.border.TitledBorder) {
+            ((javax.swing.border.TitledBorder) jPanel2.getBorder()).setTitle(resourceBundle.getString("SaleReturnFrame.jPanel2.border.title"));
+        }
+        if (jPanel3.getBorder() instanceof javax.swing.border.TitledBorder) {
+            ((javax.swing.border.TitledBorder) jPanel3.getBorder()).setTitle(resourceBundle.getString("SaleReturnFrame.jPanel3.border.title"));
+        }
     }
 
-    private boolean printSaleReturnVoucher(Voucher voucher)
+    private boolean printSaleReturnVoucher(String voucherId, double voucherAmount, String voucherDateTime)
     {
         PrinterJob job = PrinterJob.getPrinterJob();
 
@@ -152,6 +207,9 @@ public class SaleReturnFrame extends javax.swing.JFrame implements control.Langu
         receiptCommonData.setFooterLine2(instituteModel.getPrintFooter2());
         receiptCommonData.setServiceProviderLine(instituteModel.getServiceProviderPrintLine());
 
+        String cashierName = ApplicationDataManager.getInstance().getLoggedInUser() != null
+                ? ApplicationDataManager.getInstance().getLoggedInUser().getUserName() : "";
+
         for (PrintService service : printServices) {
             if (service.getName().equalsIgnoreCase(printerName)) {
                 selectedPrinter = service;
@@ -164,16 +222,6 @@ public class SaleReturnFrame extends javax.swing.JFrame implements control.Langu
 
                 job.setPrintService(selectedPrinter);
 
-//                PageFormat pf = new PageFormat();
-//                Paper paper = new Paper();
-//
-//                paper.setSize(760, 800);
-//                paper.setImageableArea(5, 2, 450, 420);
-//
-//                pf.setPaper(paper);
-//                pf.setOrientation(PageFormat.PORTRAIT);
-//
-//                job.setPrintable(new SimpleReceiptPrint(billDataModel, receiptCommonData), pf);
                 PageFormat pf = new PageFormat();
                 Paper paper = new Paper();
 
@@ -183,7 +231,7 @@ public class SaleReturnFrame extends javax.swing.JFrame implements control.Langu
                 pf.setPaper(paper);
                 pf.setOrientation(PageFormat.PORTRAIT);
 
-                job.setPrintable(new SimpleReceiptPrint(billDataModel, receiptCommonData), pf);
+                job.setPrintable(new SaleReturnVoucherPrint(voucherId, voucherAmount, voucherDateTime, receiptCommonData, cashierName), pf);
 
                 job.print(); // 🔹 No dialog
 
@@ -311,10 +359,11 @@ public class SaleReturnFrame extends javax.swing.JFrame implements control.Langu
                     .addComponent(jLabel8)
                     .addComponent(salepanelNetAmtTextField, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addGap(30, 30, 30)
-                .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(addItemToReturnsButton)
-                    .addComponent(saleReturnItmQtyTextField, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(jLabel1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(jLabel1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                        .addComponent(addItemToReturnsButton)
+                        .addComponent(saleReturnItmQtyTextField, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))
                 .addContainerGap())
         );
 
@@ -421,15 +470,186 @@ public class SaleReturnFrame extends javax.swing.JFrame implements control.Langu
     }// </editor-fold>//GEN-END:initComponents
 
     private void submitSalereturnButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_submitSalereturnButtonActionPerformed
-        
+        if (currentInvoice == null) {
+            EasyPOSMessageDialog.showLocalizedWarning(getRootPane(), ApplicationMessages.VALIDATION_SELECT_OR_INSERT_INVOICE);
+            return;
+        }
+
+        if (returnItemsTableModel.getRowCount() == 0) {
+            EasyPOSMessageDialog.showLocalizedWarning(getRootPane(), ApplicationMessages.VALIDATION_INVOICE_EMPTY_ITEMS);
+            return;
+        }
+
+        String requestNo = ApplicationDataManager.getInstance().getNextTransactionId();
+        String requestDateTime = util.DateTimeUtil.getTodayDateDBFormat() + " " + util.DateTimeUtil.getCurrentTimeHHmmss();
+        double totalAmount = returnItemsTableModel.getTotalReturnAmount();
+
+        SaleReturn saleReturn = new SaleReturn();
+        saleReturn.request_no = requestNo;
+        saleReturn.sale_invoice_no = currentInvoice.invoice_no;
+        saleReturn.customer_id = currentInvoice.customer_id;
+        saleReturn.total_amount = totalAmount;
+        saleReturn.request_date_time = requestDateTime;
+        saleReturn.request_by = (ApplicationDataManager.getInstance().getLoggedInUser() != null)
+                ? ApplicationDataManager.getInstance().getLoggedInUser().getUserName() : "";
+
+        List<SaleReturnItem> returnItems = new ArrayList<>();
+        for (SaleReturnLineDataModel line : returnItemsTableModel.getReturnLines()) {
+            SaleReturnItem sri = new SaleReturnItem();
+            sri.item_id = line.getItemId();
+            sri.qty = line.getReturnQty();
+            sri.selling_price = line.getUnitPrice();
+            returnItems.add(sri);
+        }
+        saleReturn.return_items = returnItems;
+
+        JRootPane root = getRootPane();
+        LoadingGlassPane loader = new LoadingGlassPane();
+        root.setGlassPane(loader);
+
+        SwingWorker<CommonResponse, Void> worker = new SwingWorker<CommonResponse, Void>() {
+            @Override
+            protected CommonResponse doInBackground() {
+                loader.start();
+                APIHeaderData aPIHeaderData = new APIHeaderData();
+                aPIHeaderData.setInstituteId(RuntimeDataManager.getInstance().getRuntimeData().getInstituteId());
+                aPIHeaderData.setTerminalId(RuntimeDataManager.getInstance().getRuntimeData().getTerminalId());
+
+                return ServerAPIConnection.getInstance(aPIHeaderData).saleReturn(saleReturn);
+            }
+
+            @Override
+            protected void done() {
+                loader.stop();
+                try {
+                    CommonResponse response = get();
+
+                    if (response.getAPIResponse().isSuccess()) {
+                        EasyPOSMessageDialog.showLocalizedInfo(getRootPane(), ApplicationMessages.INFO_SALE_RETURN_SUCCESS);
+                        printSaleReturnVoucher(requestNo, totalAmount, requestDateTime);
+                        resetReturnForm();
+                    } else {
+                        EasyPOSMessageDialog.showErrorMessageDialog(getRootPane(), response.getAPIResponse());
+                    }
+
+                } catch (InterruptedException | ExecutionException ex) {
+                    EasyPOSMessageDialog.showUnexpectedError(getRootPane(), ex.getMessage());
+                }
+            }
+        };
+        worker.execute();
     }//GEN-LAST:event_submitSalereturnButtonActionPerformed
 
     private void saleInvoiceSearchButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_saleInvoiceSearchButtonActionPerformed
+        String invoiceNo = salereturnSaleInvoiceNoTextField.getText().trim();
 
+        if (invoiceNo.isEmpty()) {
+            EasyPOSMessageDialog.showLocalizedWarning(getRootPane(), ApplicationMessages.VALIDATION_FILL_REQUIRED_FIELDS);
+            return;
+        }
+
+        JRootPane root = getRootPane();
+        LoadingGlassPane loader = new LoadingGlassPane();
+        root.setGlassPane(loader);
+
+        SwingWorker<CommonResponse, Void> worker = new SwingWorker<CommonResponse, Void>() {
+            @Override
+            protected CommonResponse doInBackground() {
+                loader.start();
+                APIHeaderData aPIHeaderData = new APIHeaderData();
+                aPIHeaderData.setInstituteId(RuntimeDataManager.getInstance().getRuntimeData().getInstituteId());
+                aPIHeaderData.setTerminalId(RuntimeDataManager.getInstance().getRuntimeData().getTerminalId());
+
+                return ServerAPIConnection.getInstance(aPIHeaderData).getSaleInvoiceData(invoiceNo);
+            }
+
+            @Override
+            protected void done() {
+                loader.stop();
+                try {
+                    CommonResponse response = get();
+                    String responseCode = (response.getAPIResponse() != null) ? response.getAPIResponse().getResponseCode() : "99";
+
+                    SaleInvoice invoice = null;
+
+                    if (response.getAPIResponse() != null && response.getAPIResponse().isSuccess()) {
+                        invoice = (SaleInvoice) response.getData();
+                    } else if ("96".equals(responseCode) || "97".equals(responseCode) || "98".equals(responseCode)) {
+                        // API unavailable / network unavailable / timeout - fall back to local database
+                        invoice = DatabaseManager.getInstance().getSaleInvoice(invoiceNo);
+                        if (invoice != null) {
+                            invoice.sale_items = DatabaseManager.getInstance().getSaleItems((int) invoice.rec_id);
+                        }
+                    } else if ("07".equals(responseCode) || "20".equals(responseCode)) {
+                        EasyPOSMessageDialog.showLocalizedWarning(getRootPane(), ApplicationMessages.VALIDATION_NO_DATA_FOUND);
+                        return;
+                    } else {
+                        EasyPOSMessageDialog.showErrorMessageDialog(getRootPane(), response.getAPIResponse());
+                        return;
+                    }
+
+                    if (invoice == null) {
+                        EasyPOSMessageDialog.showLocalizedWarning(getRootPane(), ApplicationMessages.VALIDATION_NO_DATA_FOUND);
+                        return;
+                    }
+
+                    loadInvoiceIntoTable(invoice);
+
+                } catch (InterruptedException | ExecutionException ex) {
+                    EasyPOSMessageDialog.showUnexpectedError(getRootPane(), ex.getMessage());
+                }
+            }
+        };
+        worker.execute();
     }//GEN-LAST:event_saleInvoiceSearchButtonActionPerformed
 
     private void addItemToReturnsButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_addItemToReturnsButtonActionPerformed
+        int selectedRow = saleInvoiceItemsTable.getSelectedRow();
 
+        if (selectedRow < 0) {
+            EasyPOSMessageDialog.showLocalizedWarning(getRootPane(), ApplicationMessages.VALIDATION_SELECT_ROW);
+            return;
+        }
+
+        SaleReturnInvoiceItemDataModel selectedItem = invoiceItemsTableModel.getRow(selectedRow);
+
+        double qty;
+        try {
+            qty = Double.parseDouble(saleReturnItmQtyTextField.getText().trim());
+        } catch (NumberFormatException ex) {
+            EasyPOSMessageDialog.showLocalizedWarning(getRootPane(), ApplicationMessages.VALIDATION_RETURN_QTY_INVALID);
+            return;
+        }
+
+        if (qty <= 0) {
+            EasyPOSMessageDialog.showLocalizedWarning(getRootPane(), ApplicationMessages.VALIDATION_RETURN_QTY_POSITIVE);
+            return;
+        }
+
+        if (qty > selectedItem.getQtySold()) {
+            EasyPOSMessageDialog.showLocalizedWarning(getRootPane(), ApplicationMessages.VALIDATION_RETURN_QTY_EXCEEDS_SOLD);
+            return;
+        }
+
+        double alreadyReturned = returnItemsTableModel.getReturnedQtyForItem(selectedItem.getItemId());
+        double remainingReturnable = selectedItem.getQtySold() - alreadyReturned;
+
+        if (qty > remainingReturnable) {
+            EasyPOSMessageDialog.showLocalizedWarning(getRootPane(), ApplicationMessages.VALIDATION_RETURN_QTY_EXCEEDS_REMAINING);
+            return;
+        }
+
+        SaleReturnLineDataModel line = new SaleReturnLineDataModel();
+        line.setItemId(selectedItem.getItemId());
+        line.setBatchId(selectedItem.getBatchId());
+        line.setItemCode(selectedItem.getItemCode());
+        line.setItemName(selectedItem.getItemName());
+        line.setUnitPrice(selectedItem.getUnitPrice());
+        line.setReturnQty(qty);
+
+        returnItemsTableModel.addReturnLine(line);
+        saleReturnItmQtyTextField.setText("");
+        updateReturnAmount();
     }//GEN-LAST:event_addItemToReturnsButtonActionPerformed
 
 

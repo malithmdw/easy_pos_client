@@ -54,6 +54,7 @@ public class ServerAPIConnection {
         LOGIN("login.php"),
         SALE("add-sale-invoice.php"),
         SALE_RETURN("add-sale-return.php"),
+        GET_SALE_INVOICE("get-sale-invoice-data.php"),
         GET_CUSTOMERS("get-customers.php"),
         GET_CUSTOMER("get-customer.php"),
         GET_VOUCHER("get-voucher-details.php"),
@@ -485,6 +486,32 @@ public class ServerAPIConnection {
         return commonResponse;
     }
     
+    public CommonResponse getSaleInvoiceData(String invoiceNo)
+    {
+        WebService webService = new WebService();
+        Map<String, String> bodyData = new HashMap<>();
+
+        bodyData.put("invoice_no", invoiceNo);
+
+        CommonResponse commonResponse = webService.sendPOSTRequest(API_NAME.GET_SALE_INVOICE.getAPIName(), generateHeader(), bodyData);
+
+        if (commonResponse.getAPIResponse().isSuccess()) {
+            // Extract data of response
+            ObjectMapper mapper = new ObjectMapper();
+            SaleInvoice saleInvoice = null;
+
+            try {
+                saleInvoice = mapper.treeToValue((JsonNode) commonResponse.getData(), SaleInvoice.class);
+                commonResponse.setData(saleInvoice);
+            } catch (JsonProcessingException ex) {
+                commonResponse.setAPIResponse(ResponseCodes.get("95"));//Error while converting server data to local data model
+                Logger.getLogger(ServerAPIConnection.class.getName()).log(Level.SEVERE, null, ex);
+            }
+        }
+
+        return commonResponse;
+    }
+
     public CommonResponse addCustomerTransaction(String customerContactno, CustomerLedger customerLedger)
     {
         WebService webService = new WebService();
