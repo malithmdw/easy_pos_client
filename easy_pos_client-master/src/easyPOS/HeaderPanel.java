@@ -20,7 +20,7 @@ import java.util.logging.Logger;
  *
  * @author malit
  */
-public final class HeaderPanel extends javax.swing.JPanel {
+public final class HeaderPanel extends javax.swing.JPanel implements control.LanguageChangeListener {
 
     /**
      * Creates new form HeaderPanel
@@ -29,6 +29,14 @@ public final class HeaderPanel extends javax.swing.JPanel {
         initComponents();
         switchLanguage();
         setTodayDate();
+        control.EventManager.getInstance().addLanguageChangeListener(this);
+    }
+
+    @Override
+    public void onLanguageChanged() {
+        switchLanguage();
+        revalidate();
+        repaint();
     }
 
     @SuppressWarnings("unchecked")

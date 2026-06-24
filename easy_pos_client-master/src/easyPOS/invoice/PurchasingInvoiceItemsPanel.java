@@ -42,7 +42,7 @@ import webService.ServerAPIConnection;
  *
  * @author malit
  */
-public class PurchasingInvoiceItemsPanel extends javax.swing.JPanel {
+public class PurchasingInvoiceItemsPanel extends javax.swing.JPanel implements control.LanguageChangeListener {
 
     private List<PurchaseInvoiceModel> pendingInvoices;
     private JPanel thisPanel;
@@ -57,8 +57,16 @@ public class PurchasingInvoiceItemsPanel extends javax.swing.JPanel {
         initComponents();
         switchLanguage();
         this.thisPanel = this;
+        control.EventManager.getInstance().addLanguageChangeListener(this);
     }
-    
+
+    @Override
+    public void onLanguageChanged() {
+        switchLanguage();
+        revalidate();
+        repaint();
+    }
+
     public void showPanel(PurchaseInvoiceModel pim, InvoicePanelActions invoicePanelActions){
         this.selectedPurchaseInvoiceModel = pim;
         this.invoicePanelActions = invoicePanelActions;

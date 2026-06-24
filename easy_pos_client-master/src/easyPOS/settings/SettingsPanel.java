@@ -19,12 +19,12 @@ import localDatabase.DatabaseManager;
  *
  * @author malit
  */
-public class SettingsPanel extends javax.swing.JPanel {
+public class SettingsPanel extends javax.swing.JPanel implements control.LanguageChangeListener {
 
-    
+
     private LoginDBOperation logScr=new LoginDBOperation();
     private String currentUser="";
-    
+
     /**
      * Creates new form SettingsPanel
      */
@@ -32,6 +32,14 @@ public class SettingsPanel extends javax.swing.JPanel {
         initComponents();
         switchLanguage();
         loadInitialData();
+        control.EventManager.getInstance().addLanguageChangeListener(this);
+    }
+
+    @Override
+    public void onLanguageChanged() {
+        switchLanguage();
+        revalidate();
+        repaint();
     }
 
     
@@ -635,6 +643,9 @@ public class SettingsPanel extends javax.swing.JPanel {
             String value = entry.getValue();
             DatabaseManager.getInstance().insertAppDataRecord(key, value);
         }
+
+        // Broadcast language change to all registered UI panels
+        control.EventManager.getInstance().notifyLanguageChanged();
     }//GEN-LAST:event_jButton1ActionPerformed
 
     void clearFieldsAddNewUser(){

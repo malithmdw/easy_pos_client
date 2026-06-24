@@ -31,7 +31,7 @@ import webService.ServerAPIConnection;
  *
  * @author malit
  */
-public class PurchasingInvoiceDataPanel extends javax.swing.JPanel {
+public class PurchasingInvoiceDataPanel extends javax.swing.JPanel implements control.LanguageChangeListener {
 
     /**
      * Creates new form InvoiceOverviewPanel
@@ -43,8 +43,16 @@ public class PurchasingInvoiceDataPanel extends javax.swing.JPanel {
     public PurchasingInvoiceDataPanel() {
         initComponents();
         switchLanguage();
+        control.EventManager.getInstance().addLanguageChangeListener(this);
     }
-    
+
+    @Override
+    public void onLanguageChanged() {
+        switchLanguage();
+        revalidate();
+        repaint();
+    }
+
     public void showPanel(PurchaseInvoiceModel purchaseInvoiceModel, List<SupplierModel> supplierModels, InvoicePanelActions invoicePanelActions)
     {
         this.supplierModels = supplierModels;

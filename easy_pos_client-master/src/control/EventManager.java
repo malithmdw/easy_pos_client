@@ -24,6 +24,7 @@ public class EventManager {
     private final ArrayList<MenuItemChangeEvent> menuItemChangeEvents = new ArrayList<>();
     private final ArrayList<SalesMenuItemClickListener> salesMenuItemChangeEvents = new ArrayList<>();
     private final ArrayList<NumberPadKeyPressListener> numberPadKeyPressEvents = new ArrayList<>();
+    private final ArrayList<LanguageChangeListener> languageChangeListeners = new ArrayList<>();
     
     public void addLoginEvent(LoginEvent loginEvent){
         loginEvents.add(loginEvent);
@@ -68,6 +69,16 @@ public class EventManager {
     public void notifySalesPanelCustomNumberPadKeyPressed(NumberPadKeyPressListener.NumberPadButton pressed) {
         for (NumberPadKeyPressListener event : numberPadKeyPressEvents) {
             event.onKeyPressed(pressed);
+        }
+    }
+
+    public void addLanguageChangeListener(LanguageChangeListener listener) {
+        languageChangeListeners.add(listener);
+    }
+
+    public void notifyLanguageChanged() {
+        for (LanguageChangeListener listener : languageChangeListeners) {
+            listener.onLanguageChanged();
         }
     }
 }

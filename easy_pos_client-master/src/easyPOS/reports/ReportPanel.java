@@ -28,7 +28,7 @@ import org.jfree.data.category.DefaultCategoryDataset;
  *
  * @author malit
  */
-public class ReportPanel extends javax.swing.JPanel {
+public class ReportPanel extends javax.swing.JPanel implements control.LanguageChangeListener {
 
     ArrayList<SaleDataModel> allSalesList;
     ArrayList<SaleDataModel> dailySalesList;
@@ -44,6 +44,14 @@ public class ReportPanel extends javax.swing.JPanel {
     public ReportPanel() {
         initComponents();
         switchLanguage();
+        control.EventManager.getInstance().addLanguageChangeListener(this);
+    }
+
+    @Override
+    public void onLanguageChanged() {
+        switchLanguage();
+        revalidate();
+        repaint();
     }
 
     /**

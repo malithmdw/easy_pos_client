@@ -26,7 +26,7 @@ import util.DateTimeUtil;
  *
  * @author malit
  */
-public class StockItemForm extends javax.swing.JPanel {
+public class StockItemForm extends javax.swing.JPanel implements control.LanguageChangeListener {
 
     private StockPanel parent;
     
@@ -35,10 +35,10 @@ public class StockItemForm extends javax.swing.JPanel {
      */
     public StockItemForm() {
         initComponents();
-        
+
         try {
             Font customFontSin_20 = Font.createFont(Font.TRUETYPE_FONT, ApplicationDataManager.getInstance().getSinhalaFontFile()).deriveFont(20f);
-            
+
             if (Language.SINHALA.equals(ApplicationDataManager.getInstance().getApplicationLanguage())) {
                 jTextFieldAddToStName1.setFont(customFontSin_20);
                 jComboBoxAddItemCategory.setFont(customFontSin_20);
@@ -46,11 +46,19 @@ public class StockItemForm extends javax.swing.JPanel {
             }
         } catch (FontFormatException | IOException ex) {
             Logger.getLogger(ItemCard.class.getName()).log(Level.SEVERE, null, ex);
-        }    
-        
+        }
+
         clearFieldsAll();
+        control.EventManager.getInstance().addLanguageChangeListener(this);
     }
-    
+
+    @Override
+    public void onLanguageChanged() {
+        switchLanguage();
+        revalidate();
+        repaint();
+    }
+
     public void setInitDataToUI(StockPanel parent)
     {
         this.parent = parent;

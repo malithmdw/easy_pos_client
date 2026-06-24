@@ -59,7 +59,7 @@ import webService.ServerAPIConnection;
  *
  * @author malit
  */
-public class SaleInvoiceJPanel extends javax.swing.JPanel {
+public class SaleInvoiceJPanel extends javax.swing.JPanel implements control.LanguageChangeListener {
 
     
     DecimalFormat df = new DecimalFormat("#0.00");
@@ -153,8 +153,16 @@ public class SaleInvoiceJPanel extends javax.swing.JPanel {
                 }
             }
         });
-    }    
-    
+        control.EventManager.getInstance().addLanguageChangeListener(this);
+    }
+
+    @Override
+    public void onLanguageChanged() {
+        switchLanguage();
+        revalidate();
+        repaint();
+    }
+
     public void setParentSalePanel(SalePanel salePanel) {
         this.parentSalePanel = salePanel;
     }

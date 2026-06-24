@@ -16,7 +16,7 @@ import java.util.ResourceBundle;
  *
  * @author malit
  */
-public class MainMenuPanel extends javax.swing.JPanel {
+public class MainMenuPanel extends javax.swing.JPanel implements control.LanguageChangeListener {
 
     /**
      * Creates new form MainMenuPanel
@@ -24,6 +24,14 @@ public class MainMenuPanel extends javax.swing.JPanel {
     public MainMenuPanel() {
         initComponents();
         switchLanguage();
+        control.EventManager.getInstance().addLanguageChangeListener(this);
+    }
+
+    @Override
+    public void onLanguageChanged() {
+        switchLanguage();
+        revalidate();
+        repaint();
     }
 
     /**

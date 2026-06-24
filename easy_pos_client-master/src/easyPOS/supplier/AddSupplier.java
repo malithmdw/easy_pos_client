@@ -15,14 +15,22 @@ import java.util.Locale;
 import java.util.ResourceBundle;
 import javax.swing.JOptionPane;
 
-public class AddSupplier extends javax.swing.JFrame {
+public class AddSupplier extends javax.swing.JFrame implements control.LanguageChangeListener {
 
     public AddSupplier() {
         initComponents();
         switchLanguage();
         setIcon();
+        control.EventManager.getInstance().addLanguageChangeListener(this);
     }
-    
+
+    @Override
+    public void onLanguageChanged() {
+        switchLanguage();
+        revalidate();
+        repaint();
+    }
+
     void setIcon(){
         this.setIconImage(Toolkit.getDefaultToolkit().getImage(getClass().getResource("/logoes/logo.png")));
     }

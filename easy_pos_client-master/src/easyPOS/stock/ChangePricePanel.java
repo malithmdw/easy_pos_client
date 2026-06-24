@@ -30,7 +30,7 @@ import webService.ServerAPIConnection;
  *
  * @author MalithWanniarachchi
  */
-public class ChangePricePanel extends javax.swing.JPanel {
+public class ChangePricePanel extends javax.swing.JPanel implements control.LanguageChangeListener {
 
     private ItemModel lastSelectedItem;
     private ItemStockModel lastSelectedItemBatch;
@@ -38,6 +38,14 @@ public class ChangePricePanel extends javax.swing.JPanel {
     public ChangePricePanel() {
         initComponents();
         switchLanguage();
+        control.EventManager.getInstance().addLanguageChangeListener(this);
+    }
+
+    @Override
+    public void onLanguageChanged() {
+        switchLanguage();
+        revalidate();
+        repaint();
     }
 
     private void fetchItem()

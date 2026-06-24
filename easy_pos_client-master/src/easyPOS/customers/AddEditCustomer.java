@@ -26,7 +26,7 @@ import webService.ServerAPIConnection;
  *
  * @author malit
  */
-public class AddEditCustomer extends javax.swing.JFrame {
+public class AddEditCustomer extends javax.swing.JFrame implements control.LanguageChangeListener {
     
     public enum MODE{ ADD_CUSTOMER, UPDATE_CUSTOMER}
     
@@ -42,15 +42,23 @@ public class AddEditCustomer extends javax.swing.JFrame {
         initComponents();
         switchLanguage();
         setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
-        
+
         this.mode = mode;
         this.customerModel = customerModel;
-        
+
         if (customerModel != null) {
             setData(customerModel);
         }
+        control.EventManager.getInstance().addLanguageChangeListener(this);
     }
-    
+
+    @Override
+    public void onLanguageChanged() {
+        switchLanguage();
+        revalidate();
+        repaint();
+    }
+
     private void setData(CustomerModel customer) {
         jTextFieldCustomerAddress.setText("");
         jTextFieldCustomerComment.setText("");

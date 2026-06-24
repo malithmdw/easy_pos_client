@@ -46,7 +46,7 @@ import webService.ServerAPIConnection;
  *
  * @author malit
  */
-public class LoginPanel extends javax.swing.JPanel {
+public class LoginPanel extends javax.swing.JPanel implements control.LanguageChangeListener {
 
     LoginDBOperation userRepository = new LoginDBOperation();
     
@@ -56,6 +56,14 @@ public class LoginPanel extends javax.swing.JPanel {
     public LoginPanel() {
         initComponents();
         switchLanguage();
+        control.EventManager.getInstance().addLanguageChangeListener(this);
+    }
+
+    @Override
+    public void onLanguageChanged() {
+        switchLanguage();
+        revalidate();
+        repaint();
     }
 
     @SuppressWarnings("unchecked")

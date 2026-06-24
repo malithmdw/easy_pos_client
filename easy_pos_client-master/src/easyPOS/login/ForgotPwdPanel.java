@@ -19,7 +19,7 @@ import javax.swing.JOptionPane;
  *
  * @author malit
  */
-public class ForgotPwdPanel extends javax.swing.JPanel {
+public class ForgotPwdPanel extends javax.swing.JPanel implements control.LanguageChangeListener {
 
     /**
      * Creates new form ForgotPwdPanel
@@ -27,6 +27,14 @@ public class ForgotPwdPanel extends javax.swing.JPanel {
     public ForgotPwdPanel() {
         initComponents();
         switchLanguage();
+        control.EventManager.getInstance().addLanguageChangeListener(this);
+    }
+
+    @Override
+    public void onLanguageChanged() {
+        switchLanguage();
+        revalidate();
+        repaint();
     }
 
     /**

@@ -49,7 +49,7 @@ import webService.ServerAPIConnection;
  *
  * @author MalithWanniarachchi
  */
-public class SalePaymentFrame extends javax.swing.JFrame {
+public class SalePaymentFrame extends javax.swing.JFrame implements control.LanguageChangeListener {
 
     private SaleInvoiceJPanel parentPanel;
     private BillDataModel billDataModel;
@@ -68,6 +68,14 @@ public class SalePaymentFrame extends javax.swing.JFrame {
         this.billDataModel = billDataModel;
         setInitData();
         calculateAmounts();
+        control.EventManager.getInstance().addLanguageChangeListener(this);
+    }
+
+    @Override
+    public void onLanguageChanged() {
+        switchLanguage();
+        revalidate();
+        repaint();
     }
 
     private void setInitData(){

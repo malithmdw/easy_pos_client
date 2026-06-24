@@ -45,7 +45,7 @@ import webService.ServerAPIConnection;
  *
  * @author malit
  */
-public class Customer extends javax.swing.JPanel {
+public class Customer extends javax.swing.JPanel implements control.LanguageChangeListener {
 
     private StockPanel parent;
     private CustomerModel selectedCustomer;
@@ -59,8 +59,16 @@ public class Customer extends javax.swing.JPanel {
         customerDetailsPanel.setVisible(false);
         customerTransactionsPanel.setVisible(false);
         jPanelCustPayment.setVisible(false);
+        control.EventManager.getInstance().addLanguageChangeListener(this);
     }
-    
+
+    @Override
+    public void onLanguageChanged() {
+        switchLanguage();
+        revalidate();
+        repaint();
+    }
+
     public void setInitDataToUI(StockPanel parent)
     {
         this.parent = parent;

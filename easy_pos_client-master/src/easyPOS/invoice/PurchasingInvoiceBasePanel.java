@@ -29,7 +29,7 @@ import webService.ServerAPIConnection;
  *
  * @author malit
  */
-public class PurchasingInvoiceBasePanel extends javax.swing.JPanel {
+public class PurchasingInvoiceBasePanel extends javax.swing.JPanel implements control.LanguageChangeListener {
 
     private InvoiceWizardStage currentWizardStage;
     private List<SupplierModel> suppliers;
@@ -39,8 +39,16 @@ public class PurchasingInvoiceBasePanel extends javax.swing.JPanel {
     public PurchasingInvoiceBasePanel() {
         initComponents();
         switchLanguage();
+        control.EventManager.getInstance().addLanguageChangeListener(this);
     }
-    
+
+    @Override
+    public void onLanguageChanged() {
+        switchLanguage();
+        revalidate();
+        repaint();
+    }
+
     public void showPanel() {
         changePanel(InvoiceWizardStage.PENDING_INVOICES);
         loadAllSuppliersAction();
