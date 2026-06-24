@@ -8,6 +8,7 @@ import java.awt.Font;
 import java.awt.FontFormatException;
 import java.awt.GraphicsEnvironment;
 import java.io.IOException;
+import dataModels.Language;
 import java.util.Locale;
 import java.util.ResourceBundle;
 import java.util.concurrent.ExecutionException;
@@ -231,8 +232,10 @@ public class AddEditCustomer extends javax.swing.JFrame {
     }// </editor-fold>//GEN-END:initComponents
 
     private void switchLanguage() {
-        Locale locale = new Locale("si", "LK");
+        Language appLang = ApplicationDataManager.getInstance().getApplicationLanguage();
+        Locale locale = (appLang == Language.SINHALA) ? new Locale("si", "LK") : Locale.ENGLISH;
         ResourceBundle resourceBundle = ResourceBundle.getBundle("easyPOS/customers/Bundle", locale);
+        if (appLang == Language.SINHALA) {
         try {
             Font customFont = Font.createFont(Font.TRUETYPE_FONT,
                     ApplicationDataManager.getInstance().getSinhalaFontFile()).deriveFont(18f);
@@ -247,6 +250,7 @@ public class AddEditCustomer extends javax.swing.JFrame {
             jButton1.setFont(customFont);
         } catch (IOException | FontFormatException e) {
             System.err.println(e);
+        }
         }
         jLabel18.setText(resourceBundle.getString("Customer.jLabel18.text"));
         jLabel25.setText(resourceBundle.getString("Customer.jLabel25.text"));

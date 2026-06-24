@@ -18,6 +18,7 @@ import java.awt.GraphicsEnvironment;
 import java.awt.event.KeyEvent;
 import java.awt.print.PageFormat;
 import java.io.IOException;
+import dataModels.Language;
 import java.util.Locale;
 import java.util.ResourceBundle;
 import java.awt.print.Paper;
@@ -812,8 +813,10 @@ public class Customer extends javax.swing.JPanel {
     }
 
     private void switchLanguage() {
-        Locale locale = new Locale("si", "LK");
+        Language appLang = ApplicationDataManager.getInstance().getApplicationLanguage();
+        Locale locale = (appLang == Language.SINHALA) ? new Locale("si", "LK") : Locale.ENGLISH;
         ResourceBundle resourceBundle = ResourceBundle.getBundle("easyPOS/customers/Bundle", locale);
+        if (appLang == Language.SINHALA) {
         try {
             Font customFont = Font.createFont(Font.TRUETYPE_FONT,
                     ApplicationDataManager.getInstance().getSinhalaFontFile()).deriveFont(18f);
@@ -831,6 +834,7 @@ public class Customer extends javax.swing.JPanel {
             jTextFieldCustomerSearch1.setFont(customFont);
         } catch (IOException | FontFormatException e) {
             System.err.println(e);
+        }
         }
         jLabel18.setText(resourceBundle.getString("Customer.jLabel18.text"));
         jLabel25.setText(resourceBundle.getString("Customer.jLabel25.text"));

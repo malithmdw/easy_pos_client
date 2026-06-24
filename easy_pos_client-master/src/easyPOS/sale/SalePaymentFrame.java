@@ -22,6 +22,7 @@ import java.awt.print.PrinterJob;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
+import dataModels.Language;
 import java.util.Locale;
 import java.util.ResourceBundle;
 import java.util.concurrent.ExecutionException;
@@ -150,14 +151,15 @@ public class SalePaymentFrame extends javax.swing.JFrame {
     }
 
     private void switchLanguage() {
-        Locale locale = new Locale("si", "LK");
+        Language appLang = ApplicationDataManager.getInstance().getApplicationLanguage();
+        Locale locale = (appLang == Language.SINHALA) ? new Locale("si", "LK") : Locale.ENGLISH;
         ResourceBundle resourceBundle = ResourceBundle.getBundle("easyPOS/sale/Bundle", locale);
-
+        if (appLang == Language.SINHALA) {
         try {
             Font customFont = Font.createFont(Font.TRUETYPE_FONT, ApplicationDataManager.getInstance().getSinhalaFontFile()).deriveFont(16f);
             GraphicsEnvironment ge = GraphicsEnvironment.getLocalGraphicsEnvironment();
             ge.registerFont(customFont);
-            
+
             Font customFont2 = Font.createFont(Font.TRUETYPE_FONT, ApplicationDataManager.getInstance().getSinhalaFontFile()).deriveFont(18f);
             GraphicsEnvironment ge2 = GraphicsEnvironment.getLocalGraphicsEnvironment();
             ge2.registerFont(customFont2);
@@ -183,6 +185,7 @@ public class SalePaymentFrame extends javax.swing.JFrame {
 
         } catch (IOException | FontFormatException e) {
             System.err.println(e);
+        }
         }
 
         jLabel1.setText(resourceBundle.getString("SalePaymentFrame.jLabel1.text"));

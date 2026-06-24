@@ -613,17 +613,18 @@ public class SaleInvoiceJPanel extends javax.swing.JPanel {
     } 
     
     private void switchLanguage() {
-        Locale locale = new Locale("si", "LK");
+        Language appLang = ApplicationDataManager.getInstance().getApplicationLanguage();
+        Locale locale = (appLang == Language.SINHALA) ? new Locale("si", "LK") : Locale.ENGLISH;
         ResourceBundle resourceBundle = ResourceBundle.getBundle("easyPOS/sale/Bundle", locale);
-                        
+        if (appLang == Language.SINHALA) {
         try {
             //create the font to use. Specify the size!
-            
+
             Font customFont1 = Font.createFont(Font.TRUETYPE_FONT, ApplicationDataManager.getInstance().getSinhalaFontFile()).deriveFont(18f);
             Font customFont2 = Font.createFont(Font.TRUETYPE_FONT, ApplicationDataManager.getInstance().getSinhalaFontFile()).deriveFont(20f);
             GraphicsEnvironment ge = GraphicsEnvironment.getLocalGraphicsEnvironment();
             //register the font
-            ge.registerFont(customFont1);            
+            ge.registerFont(customFont1);
             jLabelInvoiceNo.setFont(customFont1);
             jLabelCustomerNo.setFont(customFont1);
             jLabelItemName.setFont(customFont1);
@@ -641,14 +642,15 @@ public class SaleInvoiceJPanel extends javax.swing.JPanel {
             jLabelNetTotal.setFont(customFont2);
             jLabelMoneyReceived.setFont(customFont2);
             jLabelBalance.setFont(customFont2);
-            
+
             jButtonIssueBill.setFont(customFont1);
-            
-            
+
+
         } catch (IOException | FontFormatException e) {
             System.err.println(e);
         }
- 
+        }
+
         //use the font
         
         jLabelInvoiceNo.setText(resourceBundle.getString("SaleInvoiceJPanel.jLabelInvoiceNo.text"));

@@ -11,6 +11,7 @@ import java.awt.GraphicsEnvironment;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
+import dataModels.Language;
 import java.util.Locale;
 import java.util.ResourceBundle;
 import java.util.concurrent.ExecutionException;
@@ -468,12 +469,13 @@ public class PurchasingInvoiceBasePanel extends javax.swing.JPanel {
     }
     
     private void switchLanguage() {
-        Locale locale = new Locale("si", "LK");
+        Language appLang = ApplicationDataManager.getInstance().getApplicationLanguage();
+        Locale locale = (appLang == Language.SINHALA) ? new Locale("si", "LK") : Locale.ENGLISH;
         ResourceBundle resourceBundle = ResourceBundle.getBundle("easyPOS/invoice/Bundle", locale);
-                        
+        if (appLang == Language.SINHALA) {
         try {
             //create the font to use. Specify the size!
-            
+
             Font customFont1 = Font.createFont(Font.TRUETYPE_FONT, ApplicationDataManager.getInstance().getSinhalaFontFile()).deriveFont(18f);
             Font customFont2 = Font.createFont(Font.TRUETYPE_FONT, ApplicationDataManager.getInstance().getSinhalaFontFile()).deriveFont(20f);
             GraphicsEnvironment ge = GraphicsEnvironment.getLocalGraphicsEnvironment();
@@ -489,12 +491,13 @@ public class PurchasingInvoiceBasePanel extends javax.swing.JPanel {
             jRadioButtonInvoiceOverview.setFont(customFont2);
             jRadioButtonInvoiceItem.setFont(customFont2);
             jRadioButtonInvoiceComplete.setFont(customFont2);
-            
-            
+
+
         } catch (IOException | FontFormatException e) {
             System.err.println(e);
         }
- 
+        }
+
         //use the font
         jRadioButtonPendingInvoices.setText(resourceBundle.getString("PurchasingInvoiceBasePanel.PendingInvoices"));
         jRadioButtonInvoiceOverview.setText(resourceBundle.getString("PurchasingInvoiceBasePanel.InvoiceDetails"));

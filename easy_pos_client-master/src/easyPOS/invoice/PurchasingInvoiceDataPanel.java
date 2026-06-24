@@ -13,6 +13,7 @@ import java.awt.GraphicsEnvironment;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
+import dataModels.Language;
 import java.util.Locale;
 import java.util.ResourceBundle;
 import java.util.concurrent.ExecutionException;
@@ -420,16 +421,17 @@ public class PurchasingInvoiceDataPanel extends javax.swing.JPanel {
     }
 
     private void switchLanguage() {
-        Locale locale = new Locale("si", "LK");
+        Language appLang = ApplicationDataManager.getInstance().getApplicationLanguage();
+        Locale locale = (appLang == Language.SINHALA) ? new Locale("si", "LK") : Locale.ENGLISH;
         ResourceBundle resourceBundle = ResourceBundle.getBundle("easyPOS/invoice/Bundle", locale);
-                        
+        if (appLang == Language.SINHALA) {
         try {
             //create the font to use. Specify the size!
-            
+
             Font customFont1 = Font.createFont(Font.TRUETYPE_FONT, ApplicationDataManager.getInstance().getSinhalaFontFile()).deriveFont(18f);
             GraphicsEnvironment ge = GraphicsEnvironment.getLocalGraphicsEnvironment();
             //register the font
-            ge.registerFont(customFont1);            
+            ge.registerFont(customFont1);
             jLabelPIDataSupplier.setFont(customFont1);
             jLabelPIDataDate.setFont(customFont1);
             jLabelPIDataInvNo.setFont(customFont1);
@@ -441,13 +443,14 @@ public class PurchasingInvoiceDataPanel extends javax.swing.JPanel {
             jLabelPIDataBalance.setFont(customFont1);
             jLabelPIDataPaymentDueDate.setFont(customFont1);
             jLabelPIDataAlertDate.setFont(customFont1);
-            
+
             jButtonPIDataSave.setFont(customFont1);
-            
+
         } catch (IOException | FontFormatException e) {
             System.err.println(e);
         }
- 
+        }
+
         //use the font
         jLabelPIDataSupplier.setText(resourceBundle.getString("PurchasingInvoiceDataPanel.Supplier"));
         jLabelPIDataDate.setText(resourceBundle.getString("PurchasingInvoiceDataPanel.Date"));

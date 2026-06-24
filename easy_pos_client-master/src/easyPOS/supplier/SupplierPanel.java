@@ -15,6 +15,7 @@ import java.awt.event.KeyEvent;
 import java.io.IOException;
 import java.text.DecimalFormat;
 import java.util.ArrayList;
+import dataModels.Language;
 import java.util.Locale;
 import java.util.ResourceBundle;
 import javax.swing.JOptionPane;
@@ -1871,8 +1872,10 @@ public class SupplierPanel extends javax.swing.JPanel {
     
     
     private void switchLanguage() {
-        Locale locale = new Locale("si", "LK");
+        Language appLang = ApplicationDataManager.getInstance().getApplicationLanguage();
+        Locale locale = (appLang == Language.SINHALA) ? new Locale("si", "LK") : Locale.ENGLISH;
         ResourceBundle resourceBundle = ResourceBundle.getBundle("easyPOS/supplier/Bundle", locale);
+        if (appLang == Language.SINHALA) {
         try {
             Font customFont = Font.createFont(Font.TRUETYPE_FONT,
                     ApplicationDataManager.getInstance().getSinhalaFontFile()).deriveFont(12f);
@@ -1926,6 +1929,7 @@ public class SupplierPanel extends javax.swing.JPanel {
             jButton23.setFont(customFont);
         } catch (IOException | FontFormatException e) {
             System.err.println(e);
+        }
         }
         jTabbedPane1.setTitleAt(0, resourceBundle.getString("SupplierPanel.tab.suppliers"));
         jTabbedPane1.setTitleAt(1, resourceBundle.getString("SupplierPanel.tab.supplies"));

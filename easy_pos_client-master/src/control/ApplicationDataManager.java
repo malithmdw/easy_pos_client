@@ -19,8 +19,6 @@ import java.util.List;
 import java.util.Locale;
 import java.util.Map;
 import java.util.ResourceBundle;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import util.DateTimeUtil;
 
 /**
@@ -56,6 +54,7 @@ public class ApplicationDataManager {
     private Language receiptItemLanguage=Language.SINHALA;
     private Language receiptFooterLanguage=Language.SINHALA;
     private String receiptPrinterName = "BIXOLON SRP-E302";
+    private String labelPrinterName = "ZDesigner ZD888-203dpi ZPL";
     private int lastInvoiceNumber = 0;
     private File receiptLogo;
     
@@ -71,8 +70,8 @@ public class ApplicationDataManager {
         appData.put("RECEIPT_ITEM_LANGUAGE", receiptItemLanguage.name());
         appData.put("RECEIPT_FOOTER_LANGUAGE", getReceiptFooterLanguage().name());
         appData.put("LAST_INVOICE_NUMBER", Integer.toString(lastInvoiceNumber));
-        appData.put("RECEIPT_PRINTER_NAME", getReceiptFooterLanguage().name());
         appData.put("RECEIPT_PRINTER_NAME", receiptPrinterName);
+        appData.put("LABEL_PRINTER_NAME", labelPrinterName);
         return appData;
     }
     
@@ -108,6 +107,9 @@ public class ApplicationDataManager {
                     break;
                 case "RECEIPT_PRINTER_NAME":
                     receiptPrinterName =  value;
+                    break;
+                case "LABEL_PRINTER_NAME":
+                    labelPrinterName =  value;
                     break;
         
                 default:
@@ -329,4 +331,17 @@ public class ApplicationDataManager {
         this.receiptLogo = receiptLogo;
     }
 
+    /**
+     * @return the labelPrinterName
+     */
+    public String getLabelPrinterName() {
+        return labelPrinterName;
+    }
+
+    /**
+     * @param labelPrinterName the labelPrinterName to set
+     */
+    public void setLabelPrinterName(String labelPrinterName) {
+        this.labelPrinterName = labelPrinterName;
+    }
 }

@@ -14,6 +14,7 @@ import java.awt.GraphicsEnvironment;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
+import dataModels.Language;
 import java.util.Locale;
 import java.util.ResourceBundle;
 import java.util.concurrent.ExecutionException;
@@ -412,16 +413,17 @@ public class PurchasingInvoiceOverviewPanel extends javax.swing.JPanel {
     }
     
     private void switchLanguage() {
-        Locale locale = new Locale("si", "LK");
+        Language appLang = ApplicationDataManager.getInstance().getApplicationLanguage();
+        Locale locale = (appLang == Language.SINHALA) ? new Locale("si", "LK") : Locale.ENGLISH;
         ResourceBundle resourceBundle = ResourceBundle.getBundle("easyPOS/invoice/Bundle", locale);
-                        
+        if (appLang == Language.SINHALA) {
         try {
             //create the font to use. Specify the size!
-            
+
             Font customFont1 = Font.createFont(Font.TRUETYPE_FONT, ApplicationDataManager.getInstance().getSinhalaFontFile()).deriveFont(18f);
             GraphicsEnvironment ge = GraphicsEnvironment.getLocalGraphicsEnvironment();
             //register the font
-            ge.registerFont(customFont1);            
+            ge.registerFont(customFont1);
             jLabelPIOverviewSupplier.setFont(customFont1);
             jLabelPIOverviewDate.setFont(customFont1);
             jLabelPIOverviewInvNo.setFont(customFont1);
@@ -433,13 +435,14 @@ public class PurchasingInvoiceOverviewPanel extends javax.swing.JPanel {
             jLabelPIOverviewBalance.setFont(customFont1);
             jLabelPIOverviewPaymentDueDate.setFont(customFont1);
             jLabelPIOverviewAlertDate.setFont(customFont1);
-            
+
             jButtonPIOverviewComplete.setFont(customFont1);
-            
+
         } catch (IOException | FontFormatException e) {
             System.err.println(e);
         }
- 
+        }
+
         //use the font
         jLabelPIOverviewSupplier.setText(resourceBundle.getString("PurchasingInvoiceDataPanel.Supplier"));
         jLabelPIOverviewDate.setText(resourceBundle.getString("PurchasingInvoiceDataPanel.Date"));

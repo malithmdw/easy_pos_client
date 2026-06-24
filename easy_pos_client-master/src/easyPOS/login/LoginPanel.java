@@ -28,6 +28,7 @@ import java.io.File;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
+import dataModels.Language;
 import java.util.Locale;
 import java.util.Map;
 import java.util.ResourceBundle;
@@ -220,8 +221,10 @@ public class LoginPanel extends javax.swing.JPanel {
     }//GEN-LAST:event_jButtonLoginKeyPressed
 
     private void switchLanguage() {
-        Locale locale = new Locale("si", "LK");
+        Language appLang = ApplicationDataManager.getInstance().getApplicationLanguage();
+        Locale locale = (appLang == Language.SINHALA) ? new Locale("si", "LK") : Locale.ENGLISH;
         ResourceBundle resourceBundle = ResourceBundle.getBundle("easyPOS/login/Bundle", locale);
+        if (appLang == Language.SINHALA) {
         try {
             Font customFont = Font.createFont(Font.TRUETYPE_FONT,
                     ApplicationDataManager.getInstance().getSinhalaFontFile()).deriveFont(14f);
@@ -233,6 +236,7 @@ public class LoginPanel extends javax.swing.JPanel {
             jButtonPwdFogot.setFont(customFont);
         } catch (IOException | FontFormatException e) {
             System.err.println(e);
+        }
         }
         jLabelLoginUserName.setText(resourceBundle.getString("LoginPanel.jLabelLoginUserName.text"));
         jLabelLoginPwd.setText(resourceBundle.getString("LoginPanel.jLabelLoginPwd.text"));

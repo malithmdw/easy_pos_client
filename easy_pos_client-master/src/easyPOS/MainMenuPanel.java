@@ -8,6 +8,7 @@ import java.awt.Font;
 import java.awt.FontFormatException;
 import java.awt.GraphicsEnvironment;
 import java.io.IOException;
+import dataModels.Language;
 import java.util.Locale;
 import java.util.ResourceBundle;
 
@@ -242,8 +243,10 @@ public class MainMenuPanel extends javax.swing.JPanel {
     }//GEN-LAST:event_jButtonSettings2ActionPerformed
 
     private void switchLanguage() {
-        Locale locale = new Locale("si", "LK");
+        Language appLang = ApplicationDataManager.getInstance().getApplicationLanguage();
+        Locale locale = (appLang == Language.SINHALA) ? new Locale("si", "LK") : Locale.ENGLISH;
         ResourceBundle resourceBundle = ResourceBundle.getBundle("easyPOS/Bundle", locale);
+        if (appLang == Language.SINHALA) {
         try {
             Font customFont = Font.createFont(Font.TRUETYPE_FONT,
                     ApplicationDataManager.getInstance().getSinhalaFontFile()).deriveFont(18f);
@@ -261,6 +264,7 @@ public class MainMenuPanel extends javax.swing.JPanel {
             jButtonSettings2.setFont(customFont);
         } catch (IOException | FontFormatException e) {
             System.err.println(e);
+        }
         }
         jLabel16.setText(resourceBundle.getString("MainMenuPanel.jLabel16.text"));
         jButtonDailyTrans.setText(resourceBundle.getString("MainMenuPanel.jButtonDailyTrans.text"));

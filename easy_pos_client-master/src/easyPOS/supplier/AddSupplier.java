@@ -10,6 +10,7 @@ import java.awt.GraphicsEnvironment;
 import java.awt.Toolkit;
 import java.awt.event.KeyEvent;
 import java.io.IOException;
+import dataModels.Language;
 import java.util.Locale;
 import java.util.ResourceBundle;
 import javax.swing.JOptionPane;
@@ -722,8 +723,10 @@ public class AddSupplier extends javax.swing.JFrame {
     }
 
     private void switchLanguage() {
-        Locale locale = new Locale("si", "LK");
+        Language appLang = ApplicationDataManager.getInstance().getApplicationLanguage();
+        Locale locale = (appLang == Language.SINHALA) ? new Locale("si", "LK") : Locale.ENGLISH;
         ResourceBundle resourceBundle = ResourceBundle.getBundle("easyPOS/supplier/Bundle", locale);
+        if (appLang == Language.SINHALA) {
         try {
             Font customFont = Font.createFont(Font.TRUETYPE_FONT,
                     ApplicationDataManager.getInstance().getSinhalaFontFile()).deriveFont(12f);
@@ -745,6 +748,7 @@ public class AddSupplier extends javax.swing.JFrame {
             jButtonDelete.setFont(customFont);
         } catch (IOException | FontFormatException e) {
             System.err.println(e);
+        }
         }
         jLabel1.setText(resourceBundle.getString("AddSupplier.jLabel1.text"));
         jLabel2.setText(resourceBundle.getString("AddSupplier.jLabel2.text"));

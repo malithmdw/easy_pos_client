@@ -13,6 +13,7 @@ import java.awt.FontFormatException;
 import java.awt.GraphicsEnvironment;
 import java.io.IOException;
 import java.util.ArrayList;
+import dataModels.Language;
 import java.util.Locale;
 import java.util.ResourceBundle;
 import javax.swing.JOptionPane;
@@ -784,8 +785,10 @@ public class ReportPanel extends javax.swing.JPanel {
 //        }
     }
     private void switchLanguage() {
-        Locale locale = new Locale("si", "LK");
+        Language appLang = ApplicationDataManager.getInstance().getApplicationLanguage();
+        Locale locale = (appLang == Language.SINHALA) ? new Locale("si", "LK") : Locale.ENGLISH;
         ResourceBundle resourceBundle = ResourceBundle.getBundle("easyPOS/reports/Bundle", locale);
+        if (appLang == Language.SINHALA) {
         try {
             Font customFont = Font.createFont(Font.TRUETYPE_FONT,
                     ApplicationDataManager.getInstance().getSinhalaFontFile()).deriveFont(14f);
@@ -804,6 +807,7 @@ public class ReportPanel extends javax.swing.JPanel {
             jLabel84.setFont(customFont);
         } catch (IOException | FontFormatException e) {
             System.err.println(e);
+        }
         }
         jLabel4.setText(resourceBundle.getString("ReportPanel.jLabel4.text"));
         jLabel32.setText(resourceBundle.getString("ReportPanel.jLabel32.text"));

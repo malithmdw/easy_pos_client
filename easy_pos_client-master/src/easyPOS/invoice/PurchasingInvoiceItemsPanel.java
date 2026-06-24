@@ -18,6 +18,7 @@ import java.awt.event.KeyEvent;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
+import dataModels.Language;
 import java.util.Locale;
 import java.util.ResourceBundle;
 import java.util.concurrent.ExecutionException;
@@ -1032,19 +1033,20 @@ public class PurchasingInvoiceItemsPanel extends javax.swing.JPanel {
     }
             
     private void switchLanguage() {
-        Locale locale = new Locale("si", "LK");
+        Language appLang = ApplicationDataManager.getInstance().getApplicationLanguage();
+        Locale locale = (appLang == Language.SINHALA) ? new Locale("si", "LK") : Locale.ENGLISH;
         ResourceBundle resourceBundle = ResourceBundle.getBundle("easyPOS/invoice/Bundle", locale);
-                        
+        if (appLang == Language.SINHALA) {
         try {
             //create the font to use. Specify the size!
-            
+
             Font customFont1 = Font.createFont(Font.TRUETYPE_FONT, ApplicationDataManager.getInstance().getSinhalaFontFile()).deriveFont(18f);
             GraphicsEnvironment ge = GraphicsEnvironment.getLocalGraphicsEnvironment();
             //register the font
-            ge.registerFont(customFont1);    
-            
+            ge.registerFont(customFont1);
+
             jTextFieldInvItmItmName2.setFont(customFont1);
-            
+
             jLabelPIItemBarcode.setFont(customFont1);
             jLabelPIItemBatch.setFont(customFont1);
             jLabelPIItemName.setFont(customFont1);
@@ -1055,7 +1057,7 @@ public class PurchasingInvoiceItemsPanel extends javax.swing.JPanel {
             jLabelPIItemQtyAvail.setFont(customFont1);
             jLabelPIItemPurchasingUnitPrice.setFont(customFont1);
             jLabelPIItemExpDate.setFont(customFont1);
-            
+
             jLabelPIItemNewPurchasingUnitPrice.setFont(customFont1);
             jLabelPIItemNewLabelUnitPrice.setFont(customFont1);
             jLabelPIItemNewDiscount.setFont(customFont1);
@@ -1063,13 +1065,14 @@ public class PurchasingInvoiceItemsPanel extends javax.swing.JPanel {
             jLabelPIItemNewWholeSalePrice.setFont(customFont1);
             jLabelPIItemNewQty.setFont(customFont1);
             jLabelPIItemNewExpDate.setFont(customFont1);
-            
-            jButtonPIItemAddToStock.setFont(customFont1);            
-            
+
+            jButtonPIItemAddToStock.setFont(customFont1);
+
         } catch (IOException | FontFormatException e) {
             System.err.println(e);
         }
- 
+        }
+
         //use the font
         
         jLabelPIItemBarcode.setText(resourceBundle.getString("PurchasingInvoiceItemPanel.Barcode"));

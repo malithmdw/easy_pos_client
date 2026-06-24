@@ -10,6 +10,7 @@ import java.io.IOException;
 import static java.lang.Thread.sleep;
 import java.util.Calendar;
 import java.util.GregorianCalendar;
+import dataModels.Language;
 import java.util.Locale;
 import java.util.ResourceBundle;
 import java.util.logging.Level;
@@ -139,8 +140,10 @@ public final class HeaderPanel extends javax.swing.JPanel {
     }//GEN-LAST:event_jLabelHeaderLogoMouseClicked
 
     private void switchLanguage() {
-        Locale locale = new Locale("si", "LK");
+        Language appLang = ApplicationDataManager.getInstance().getApplicationLanguage();
+        Locale locale = (appLang == Language.SINHALA) ? new Locale("si", "LK") : Locale.ENGLISH;
         ResourceBundle resourceBundle = ResourceBundle.getBundle("easyPOS/Bundle", locale);
+        if (appLang == Language.SINHALA) {
         try {
             Font customFont = Font.createFont(Font.TRUETYPE_FONT,
                     ApplicationDataManager.getInstance().getSinhalaFontFile()).deriveFont(18f);
@@ -151,6 +154,7 @@ public final class HeaderPanel extends javax.swing.JPanel {
             jButtonHeaderLogOut.setFont(customFont);
         } catch (IOException | FontFormatException e) {
             System.err.println(e);
+        }
         }
         jLabelHeaderBusinessName.setText(resourceBundle.getString("HeaderPanel.jLabelHeaderBusinessName.text"));
         jButtonHeaderHome.setText(resourceBundle.getString("HeaderPanel.jButtonHeaderHome.text"));

@@ -86,12 +86,13 @@ public class StockItemForm extends javax.swing.JPanel {
     }
     
     private void switchLanguage() {
-        Locale locale = new Locale("si", "LK");
+        Language appLang = ApplicationDataManager.getInstance().getApplicationLanguage();
+        Locale locale = (appLang == Language.SINHALA) ? new Locale("si", "LK") : Locale.ENGLISH;
         ResourceBundle resourceBundle = ResourceBundle.getBundle("easyPOS/stock/Bundle", locale);
-                        
+        if (appLang == Language.SINHALA) {
         try {
             //create the font to use. Specify the size!
-            
+
             Font customFont1 = Font.createFont(Font.TRUETYPE_FONT, ApplicationDataManager.getInstance().getSinhalaFontFile()).deriveFont(18f);
             Font customFont2 = Font.createFont(Font.TRUETYPE_FONT, ApplicationDataManager.getInstance().getSinhalaFontFile()).deriveFont(20f);
             GraphicsEnvironment ge = GraphicsEnvironment.getLocalGraphicsEnvironment();
@@ -106,12 +107,13 @@ public class StockItemForm extends javax.swing.JPanel {
             jLabelNewItemCat.setFont(customFont1);
             jLabelNewItemMUnit.setFont(customFont1);
             jLabelNewItemComment.setFont(customFont1);
-            
-            
+
+
         } catch (IOException | FontFormatException e) {
             System.err.println(e);
         }
- 
+        }
+
         //use the font
         jLabelNewItemItemCode.setText(resourceBundle.getString("StockItemForm.jLabelNewItemItemCode.text"));
         jLabelNewItemBarcode.setText(resourceBundle.getString("StockItemForm.jLabelNewItemBarcode.text"));
