@@ -13,7 +13,9 @@ import java.io.IOException;
 import dataModels.Language;
 import java.util.Locale;
 import java.util.ResourceBundle;
+import easyPOS.localization.ApplicationMessages;
 import javax.swing.JOptionPane;
+import uiUtil.EasyPOSMessageDialog;
 
 public class AddSupplier extends javax.swing.JFrame implements control.LanguageChangeListener {
 
@@ -349,10 +351,10 @@ public class AddSupplier extends javax.swing.JFrame implements control.LanguageC
     private void jButtonAddSuppActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonAddSuppActionPerformed
         //add data to DB
         if(jTextFieldSuppCode.getText().equals("") || jTextFieldSuppName.getText().equals("")){
-            JOptionPane.showMessageDialog(rootPane, "Fill the required fields !");//suppcode and suppname nessasary to fill
+            EasyPOSMessageDialog.showLocalizedWarning(rootPane, ApplicationMessages.VALIDATION_FILL_REQUIRED_FIELDS);
         }else{
             if(s.checkSupplierExist(jTextFieldSuppCode.getText())==true){
-               JOptionPane.showMessageDialog(rootPane, "Supplier is already exist!\nCheck the Supplier Code again !"); 
+               EasyPOSMessageDialog.showLocalizedWarning(rootPane, ApplicationMessages.VALIDATION_SUPPLIER_DUPLICATE);
             }else{
                 supVar.setSupplierCode(Integer.parseInt(jTextFieldSuppCode.getText()));
                 supVar.setSupplierName(jTextFieldSuppName.getText());
@@ -366,11 +368,11 @@ public class AddSupplier extends javax.swing.JFrame implements control.LanguageC
 
                 boolean result=s.addSupplier(supVar);
                 if(result==true){
-                    JOptionPane.showMessageDialog(rootPane, "Successfully inserted.");
+                    EasyPOSMessageDialog.showLocalizedInfo(rootPane, ApplicationMessages.INFO_INSERT_SUCCESS);
                     clearFields();
                     os.loadSSupplierTble(0,"","");  
                 }else{
-                     JOptionPane.showMessageDialog(rootPane, "Error occur while inserting.");
+                     EasyPOSMessageDialog.showLocalizedError(rootPane, ApplicationMessages.ERROR_INSERT_FAILED);
                 }   
             }
         }
@@ -389,7 +391,7 @@ public class AddSupplier extends javax.swing.JFrame implements control.LanguageC
     private void jButtonSaveChangeActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonSaveChangeActionPerformed
         //change data in DB
         if(jTextFieldSuppCode.getText().equals("") || jTextFieldSuppName.getText().equals("")){
-            JOptionPane.showMessageDialog(rootPane, "Fill the required fields !");
+            EasyPOSMessageDialog.showLocalizedWarning(rootPane, ApplicationMessages.VALIDATION_FILL_REQUIRED_FIELDS);
         }else{         
             supVar.setSupplierCode(Integer.parseInt(jTextFieldSuppCode.getText()));
             supVar.setSupplierName(jTextFieldSuppName.getText());
@@ -404,12 +406,12 @@ public class AddSupplier extends javax.swing.JFrame implements control.LanguageC
             
             boolean result=s.editSupplier(supVar,jTextFieldSuppCode.getText());
             if(result==true){
-                JOptionPane.showMessageDialog(rootPane, "Successfully updated.");
+                EasyPOSMessageDialog.showLocalizedInfo(rootPane, ApplicationMessages.INFO_UPDATE_SUCCESS);
                 clearFields();
                 os.loadSSupplierTble(0,"",""); 
                 this.dispose();
             }else{
-                 JOptionPane.showMessageDialog(rootPane, "Error occur while updating !");
+                 EasyPOSMessageDialog.showLocalizedError(rootPane, ApplicationMessages.ERROR_UPDATE_FAILED);
             }
         }
         
@@ -422,12 +424,12 @@ public class AddSupplier extends javax.swing.JFrame implements control.LanguageC
         if(ans==JOptionPane.YES_OPTION){
             boolean result=s.deleteSupplier(jTextFieldSuppCode.getText());
             if(result==true){
-                JOptionPane.showMessageDialog(rootPane, "Successfully deleted.");
+                EasyPOSMessageDialog.showLocalizedInfo(rootPane, ApplicationMessages.INFO_DELETE_SUCCESS);
                 os.loadSSupplierTble(0,"","");
                 clearFields();
                 this.dispose();
             }else{
-                JOptionPane.showMessageDialog(rootPane, "Error occur while deleting !");
+                EasyPOSMessageDialog.showLocalizedError(rootPane, ApplicationMessages.ERROR_DELETE_FAILED);
             }
         }
         

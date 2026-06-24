@@ -4,7 +4,9 @@ import dbOperations.StockDBOperation;
 import dbOperations.SuppliesDBOperation;
 import java.awt.HeadlessException;
 import java.awt.print.PrinterException;
+import easyPOS.localization.ApplicationMessages;
 import javax.swing.JOptionPane;
+import uiUtil.EasyPOSMessageDialog;
 
 /**
  *
@@ -292,10 +294,10 @@ public class StockPanel extends javax.swing.JPanel {
                 boolean result=jTableToOrder.print();
                 if(result){
                 }else{
-                    JOptionPane.showMessageDialog(this, "Printer has stopped working !");
+                    EasyPOSMessageDialog.showLocalizedError(this, ApplicationMessages.ERROR_PRINTER_STOPPED);
                 }
             }catch(HeadlessException | PrinterException e){
-                JOptionPane.showMessageDialog(this, "Error occur..\nCan not do your printing process !");
+                EasyPOSMessageDialog.showLocalizedError(this, ApplicationMessages.ERROR_PRINT_PROCESS_FAILED);
             }
         }
 
@@ -308,10 +310,10 @@ public class StockPanel extends javax.swing.JPanel {
                 boolean result=jTableExpStocks.print();
                 if(result){
                 }else{
-                    JOptionPane.showMessageDialog(this, "Printer has stopped working !");
+                    EasyPOSMessageDialog.showLocalizedError(this, ApplicationMessages.ERROR_PRINTER_STOPPED);
                 }
             }catch(Exception e){
-                JOptionPane.showMessageDialog(this, "Error occur..\nCan not do your printing process !");
+                EasyPOSMessageDialog.showLocalizedError(this, ApplicationMessages.ERROR_PRINT_PROCESS_FAILED);
             }
         }
     }//GEN-LAST:event_jButtonPrintExpStActionPerformed

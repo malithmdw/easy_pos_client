@@ -13,7 +13,9 @@ import java.io.IOException;
 import dataModels.Language;
 import java.util.Locale;
 import java.util.ResourceBundle;
+import easyPOS.localization.ApplicationMessages;
 import javax.swing.JOptionPane;
+import uiUtil.EasyPOSMessageDialog;
 
 /**
  *
@@ -207,9 +209,9 @@ public class ForgotPwdPanel extends javax.swing.JPanel implements control.Langua
 //            }
             //load old pwd to change pwd
         }else if(dbResult==1){
-            JOptionPane.showMessageDialog(this, "Your submition is missmatching !");
+            EasyPOSMessageDialog.showLocalizedWarning(this, ApplicationMessages.VALIDATION_SUBMISSION_MISMATCH);
         }else if(dbResult==2){
-            JOptionPane.showMessageDialog(this, "Error occur while connecting data storage!");
+            EasyPOSMessageDialog.showLocalizedError(this, ApplicationMessages.ERROR_DATA_CONNECTION);
         }
 
     }//GEN-LAST:event_jButtonFogotLoginActionPerformed

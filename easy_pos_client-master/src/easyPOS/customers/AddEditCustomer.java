@@ -18,6 +18,7 @@ import javax.swing.JOptionPane;
 import javax.swing.JRootPane;
 import javax.swing.SwingWorker;
 import serverResponseDataModel.CommonResponse;
+import uiUtil.EasyPOSMessageDialog;
 import uiUtil.LoadingGlassPane;
 import util.DateTimeUtil;
 import webService.ServerAPIConnection;
@@ -308,27 +309,10 @@ public class AddEditCustomer extends javax.swing.JFrame implements control.Langu
                 try {
                     CommonResponse response = get();
 
-                    JLabel label = new JLabel(response.getAPIResponse().getMessageWithErrorCodeSinhala());
-                    try {
-                        
-                        Font customFont = Font.createFont(
-                                Font.TRUETYPE_FONT,
-                                ApplicationDataManager.getInstance().getSinhalaFontFile()
-                        ).deriveFont(12f);
-                        GraphicsEnvironment ge = GraphicsEnvironment.getLocalGraphicsEnvironment();
-                        ge.registerFont(customFont);
-                        label.setFont(customFont);
-                    } catch (IOException | FontFormatException ignored) {}
-
-                    if (response.getAPIResponse().isSuccess()) {
-                        JOptionPane.showMessageDialog(jPanel1.getRootPane(), label, "Success", JOptionPane.INFORMATION_MESSAGE);
-                    } else {
-                        JOptionPane.showMessageDialog(jPanel1.getRootPane(), label, "Error", JOptionPane.ERROR_MESSAGE);
-                    }
+                    EasyPOSMessageDialog.showApiResponseDialog(jPanel1.getRootPane(), response.getAPIResponse());
 
                 } catch (InterruptedException | ExecutionException ex) {
-                    JOptionPane.showMessageDialog(jPanel1.getRootPane(), "Unexpected error: " + ex.getMessage(),
-                            "Error", JOptionPane.ERROR_MESSAGE);
+                    EasyPOSMessageDialog.showUnexpectedError(jPanel1.getRootPane(), ex.getMessage());
                 }
             }
         };
@@ -365,27 +349,10 @@ public class AddEditCustomer extends javax.swing.JFrame implements control.Langu
                 try {
                     CommonResponse response = get();
 
-                    JLabel label = new JLabel(response.getAPIResponse().getMessageWithErrorCodeSinhala());
-                    try {
-                        
-                        Font customFont = Font.createFont(
-                                Font.TRUETYPE_FONT,
-                                ApplicationDataManager.getInstance().getSinhalaFontFile()
-                        ).deriveFont(12f);
-                        GraphicsEnvironment ge = GraphicsEnvironment.getLocalGraphicsEnvironment();
-                        ge.registerFont(customFont);
-                        label.setFont(customFont);
-                    } catch (IOException | FontFormatException ignored) {}
-
-                    if (response.getAPIResponse().isSuccess()) {
-                        JOptionPane.showMessageDialog(jPanel1.getRootPane(), label, "Success", JOptionPane.INFORMATION_MESSAGE);
-                    } else {
-                        JOptionPane.showMessageDialog(jPanel1.getRootPane(), label, "Error", JOptionPane.ERROR_MESSAGE);
-                    }
+                    EasyPOSMessageDialog.showApiResponseDialog(jPanel1.getRootPane(), response.getAPIResponse());
 
                 } catch (InterruptedException | ExecutionException ex) {
-                    JOptionPane.showMessageDialog(jPanel1.getRootPane(), "Unexpected error: " + ex.getMessage(),
-                            "Error", JOptionPane.ERROR_MESSAGE);
+                    EasyPOSMessageDialog.showUnexpectedError(jPanel1.getRootPane(), ex.getMessage());
                 }
             }
         };

@@ -14,6 +14,8 @@ import javax.swing.JOptionPane;
 import javax.swing.JRootPane;
 import javax.swing.SwingWorker;
 
+import easyPOS.localization.ApplicationMessages;
+import uiUtil.EasyPOSMessageDialog;
 import uiUtil.LoadingGlassPane;
 import serverResponseDataModel.CommonResponse;
 import appDataModels.APIHeaderData;
@@ -318,17 +320,6 @@ public class LoginPanel extends javax.swing.JPanel implements control.LanguageCh
                 try {
                     LoginResponseModel loginResponseModel = get();
 
-                    JLabel label = new JLabel("Local data error - Please connect to valid internet connection");
-                    try {                        
-                        Font customFont = Font.createFont(
-                                Font.TRUETYPE_FONT,
-                                ApplicationDataManager.getInstance().getSinhalaFontFile()
-                        ).deriveFont(12f);
-                        GraphicsEnvironment ge = GraphicsEnvironment.getLocalGraphicsEnvironment();
-                        ge.registerFont(customFont);
-                        label.setFont(customFont);
-                    } catch (IOException | FontFormatException ignored) {}
-
                     if (loginResponseModel != null) {
                         
                         //Fire login event
@@ -338,14 +329,16 @@ public class LoginPanel extends javax.swing.JPanel implements control.LanguageCh
                         jTextFieldLoginUserName.setText("");
                         jPasswordFieldLoginPwd.setText("");
                         
+                        // Broadcast language change to all registered UI panels
+                        control.EventManager.getInstance().notifyLanguageChanged();
+                        
                         EventManager.getInstance().notifyLoginSuccess(userAccountModel);
                     } else {
-                        JOptionPane.showMessageDialog(jPanelLogin.getRootPane(), label, "Error", JOptionPane.ERROR_MESSAGE);
+                        EasyPOSMessageDialog.showRawError(jPanelLogin.getRootPane(), "Local data error - Please connect to valid internet connection");
                     }
 
                 } catch (InterruptedException | ExecutionException ex) {
-                    JOptionPane.showMessageDialog(jPanelLogin.getRootPane(), "Unexpected error: " + ex.getMessage(),
-                            "Error", JOptionPane.ERROR_MESSAGE);
+                    EasyPOSMessageDialog.showUnexpectedError(jPanelLogin.getRootPane(), ex.getMessage());
                 }
             }
         };
@@ -353,7 +346,7 @@ public class LoginPanel extends javax.swing.JPanel implements control.LanguageCh
         loader.start(); // show before execution
         worker.execute();
     }
-    
+
     private void onlineLoginAction(String userName, String password) {
         EasyPosLogger.getInstance().log(EasyPosLogger.LogLevel.INFO, "User online login");
         
@@ -484,17 +477,6 @@ public class LoginPanel extends javax.swing.JPanel implements control.LanguageCh
                     
                     EasyPosLogger.getInstance().log(EasyPosLogger.LogLevel.INFO, "User Login Action Status : " + response.getAPIResponse().getResponseCode() + " - " + response.getAPIResponse().getMessage());
 
-                    JLabel label = new JLabel(response.getAPIResponse().getMessageWithErrorCodeSinhala());
-                    try {                        
-                        Font customFont = Font.createFont(
-                                Font.TRUETYPE_FONT,
-                                ApplicationDataManager.getInstance().getSinhalaFontFile()
-                        ).deriveFont(12f);
-                        GraphicsEnvironment ge = GraphicsEnvironment.getLocalGraphicsEnvironment();
-                        ge.registerFont(customFont);
-                        label.setFont(customFont);
-                    } catch (IOException | FontFormatException ignored) {}
-
                     if (response.getAPIResponse().isSuccess()) {
                         
                         //Fire login event
@@ -503,19 +485,21 @@ public class LoginPanel extends javax.swing.JPanel implements control.LanguageCh
                         userAccountModel.setPassword(password);
                         
                         jTextFieldLoginUserName.setText("");
-                        jPasswordFieldLoginPwd.setText("");
+                        jPasswordFieldLoginPwd.setText("");                        
+                        
+                        // Broadcast language change to all registered UI panels
+                        control.EventManager.getInstance().notifyLanguageChanged();
                         
                         EventManager.getInstance().notifyLoginSuccess(userAccountModel);
                         
                         ServerDataSubmissionQueue.getInstance().notifyAction(() -> ServerDataSubmissionQueue.getInstance().doImageSync());
                         ServerDataSubmissionQueue.getInstance().notifyAction(() -> ServerDataSubmissionQueue.getInstance().doChangeLogSaleDataSync());
                     } else {
-                        JOptionPane.showMessageDialog(jPanelLogin.getRootPane(), label, "Error", JOptionPane.ERROR_MESSAGE);
+                        EasyPOSMessageDialog.showErrorMessageDialog(jPanelLogin.getRootPane(), response.getAPIResponse());
                     }
 
                 } catch (InterruptedException | ExecutionException ex) {
-                    JOptionPane.showMessageDialog(jPanelLogin.getRootPane(), "Unexpected error: " + ex.getMessage(),
-                            "Error", JOptionPane.ERROR_MESSAGE);
+                    EasyPOSMessageDialog.showUnexpectedError(jPanelLogin.getRootPane(), ex.getMessage());
                     EasyPosLogger.getInstance().log(EasyPosLogger.LogLevel.ERROR, ex.toString());
                 }
             }
@@ -535,10 +519,10 @@ public class LoginPanel extends javax.swing.JPanel implements control.LanguageCh
                 EventManager.getInstance().notifyForgotPassword(userName);
                 break;
             case 2:
-                JOptionPane.showMessageDialog(this, ApplicationDataManager.getInstance().getResourceBundle().getString("Error.DataConnectionError"));
+                EasyPOSMessageDialog.showRawError(this, ApplicationDataManager.getInstance().getResourceBundle().getString("Error.DataConnectionError"));
                 break;
             default:
-                JOptionPane.showMessageDialog(this, "Can not find your account!");
+                EasyPOSMessageDialog.showLocalizedError(this, ApplicationMessages.ERROR_ACCOUNT_NOT_FOUND);
                 jTextFieldLoginUserName.setText("");
                 jPasswordFieldLoginPwd.setText("");
                 break;

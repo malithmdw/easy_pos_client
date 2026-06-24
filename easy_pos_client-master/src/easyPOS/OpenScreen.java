@@ -22,7 +22,9 @@ import static dataModels.MenuItemType.STOCK;
 import static dataModels.MenuItemType.SUPPLIER;
 import appDataModels.Permission;
 import java.awt.Toolkit;
+import easyPOS.localization.ApplicationMessages;
 import javax.swing.JOptionPane;
+import uiUtil.EasyPOSMessageDialog;
 import javax.swing.JPanel;
 import javax.swing.UIManager;
 import javax.swing.UnsupportedLookAndFeelException;
@@ -91,7 +93,7 @@ public class OpenScreen extends javax.swing.JFrame{
     void changePanelOnClickMenuItem(MenuItemType menuItemType){
         
         if (!checkMenuPermission(menuItemType)) {
-            JOptionPane.showMessageDialog(this, ApplicationDataManager.getInstance().getResourceBundle().getString("Error.AccessDenied"));
+            EasyPOSMessageDialog.showRawError(this, ApplicationDataManager.getInstance().getResourceBundle().getString("Error.AccessDenied"));
             return;
         }
         switch (menuItemType) {
@@ -269,12 +271,12 @@ public class OpenScreen extends javax.swing.JFrame{
                 
                 SaleDataModel res1=sdbops.todayTotalSales(day);
                 if(res1==null){
-                    JOptionPane.showMessageDialog(rootPane, "Error Occur while getting data from sales table to add daily sales !");
+                    EasyPOSMessageDialog.showLocalizedError(rootPane, ApplicationMessages.ERROR_DAILY_SALES_GET_FAILED);
                 }else{
                     boolean res2=sdbops.addToDailySales(day,res1.getIncome(),res1.getCost(),res1.getProfit());
                     if(res2==true){                        
                     }else{
-                        JOptionPane.showMessageDialog(rootPane, "Error Occur while inserting data to daily sales !");
+                        EasyPOSMessageDialog.showLocalizedError(rootPane, ApplicationMessages.ERROR_DAILY_SALES_INSERT_FAILED);
                     }
                 }
             }
@@ -325,7 +327,7 @@ public class OpenScreen extends javax.swing.JFrame{
                 SaleDataModel res1=sdbops.thisMonthTotalSales(yyyy,mm);
                 
                 if(res1==null){
-                    JOptionPane.showMessageDialog(rootPane, "Error Occur while getting data from sales table to add daily sales !");
+                    EasyPOSMessageDialog.showLocalizedError(rootPane, ApplicationMessages.ERROR_DAILY_SALES_GET_FAILED);
                 }else{
                     if(m==2){//arrange for february
                         day2=""+yyyy+"-"+mm+"-28";
@@ -333,7 +335,7 @@ public class OpenScreen extends javax.swing.JFrame{
                     boolean res2=sdbops.addToMonthlySales(monthName, day2, res1.getIncome(), res1.getCost(),res1.getProfit());
                     if(res2==true){                        
                     }else{
-                        JOptionPane.showMessageDialog(rootPane, "Error Occur while inserting data to daily sales !");
+                        EasyPOSMessageDialog.showLocalizedError(rootPane, ApplicationMessages.ERROR_DAILY_SALES_INSERT_FAILED);
                     }
                 }
                 
@@ -358,12 +360,12 @@ public class OpenScreen extends javax.swing.JFrame{
                 
                 SaleDataModel res1=sdbops.thisYearTotalSales(yyyy);
                 if(res1==null){
-                    JOptionPane.showMessageDialog(rootPane, "Error Occur while getting data from sales table to add daily sales !");
+                    EasyPOSMessageDialog.showLocalizedError(rootPane, ApplicationMessages.ERROR_DAILY_SALES_GET_FAILED);
                 }else{
                     boolean res2=sdbops.addToAnnualySales(y,day1,res1.getIncome(),res1.getCost(),res1.getProfit());
                     if(res2==true){                        
                     }else{
-                        JOptionPane.showMessageDialog(rootPane, "Error Occur while inserting data to daily sales !");
+                        EasyPOSMessageDialog.showLocalizedError(rootPane, ApplicationMessages.ERROR_DAILY_SALES_INSERT_FAILED);
                     }
                 }
                 
@@ -378,7 +380,7 @@ public class OpenScreen extends javax.swing.JFrame{
             boolean res2=sdbops.deleteInvoiceData();
             if(res2==true){  
             }else{
-                JOptionPane.showMessageDialog(rootPane, "Olden Invoice data deleting process is not working!\n Please use the manual process");
+                EasyPOSMessageDialog.showLocalizedError(rootPane, ApplicationMessages.ERROR_OLD_INVOICE_DELETE_FAILED);
             }
         }else if(res1==-1){
             
@@ -392,7 +394,7 @@ public class OpenScreen extends javax.swing.JFrame{
             boolean res2=sdbops.deleteInvoice();
             if(res2==true){  
             }else{
-                JOptionPane.showMessageDialog(rootPane, "Olden Invoice deleting process is not working!\n Please use the manually process");
+                EasyPOSMessageDialog.showLocalizedError(rootPane, ApplicationMessages.ERROR_OLD_INVOICE_DELETE_FAILED);
             }
         }else if(res1==-1){
             

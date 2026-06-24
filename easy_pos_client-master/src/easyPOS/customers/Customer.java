@@ -30,7 +30,9 @@ import java.util.concurrent.ExecutionException;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.print.PrintService;
+import easyPOS.localization.ApplicationMessages;
 import javax.swing.JOptionPane;
+import uiUtil.EasyPOSMessageDialog;
 import javax.swing.JRootPane;
 import javax.swing.SwingWorker;
 import serverDataModels.CustomerLedger;
@@ -545,11 +547,11 @@ public class Customer extends javax.swing.JPanel implements control.LanguageChan
             }
             
             if (amount == 0) {
-                JOptionPane.showMessageDialog(this, "Incorrect payment amount");
+                EasyPOSMessageDialog.showLocalizedWarning(this, ApplicationMessages.VALIDATION_PAYMENT_AMOUNT_INCORRECT);
                 return;
             }
         } catch (NumberFormatException e) {
-            JOptionPane.showMessageDialog(this, "Incorrect payment amount");
+            EasyPOSMessageDialog.showLocalizedWarning(this, ApplicationMessages.VALIDATION_PAYMENT_AMOUNT_INCORRECT);
             return;
         }
         
@@ -567,7 +569,7 @@ public class Customer extends javax.swing.JPanel implements control.LanguageChan
 
     private void jButtonPrintStickerActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonPrintStickerActionPerformed
         if (selectedCustomer == null) {
-            JOptionPane.showMessageDialog(parent, "Please select the customer");
+            EasyPOSMessageDialog.showLocalizedWarning(parent, ApplicationMessages.VALIDATION_SELECT_CUSTOMER);
             return;            
         }
         // Print All 
@@ -692,10 +694,10 @@ public class Customer extends javax.swing.JPanel implements control.LanguageChan
                 return true;
 
             } catch (PrinterException e) {
-                JOptionPane.showMessageDialog(this, "Printer unable to do your task !");
+                EasyPOSMessageDialog.showLocalizedError(this, ApplicationMessages.ERROR_PRINTER_FAILED_TASK);
             }
         } else {
-            JOptionPane.showMessageDialog(this, "Printer not found !");
+            EasyPOSMessageDialog.showLocalizedError(this, ApplicationMessages.ERROR_PRINTER_NOT_FOUND);
         }
         return false;
     }
@@ -792,8 +794,7 @@ public class Customer extends javax.swing.JPanel implements control.LanguageChan
                     }
 
                 } catch (InterruptedException | ExecutionException ex) {
-                    JOptionPane.showMessageDialog(jPanelCustomer.getRootPane(), "Unexpected error: " + ex.getMessage(),
-                            "Error", JOptionPane.ERROR_MESSAGE);
+                    EasyPOSMessageDialog.showUnexpectedError(jPanelCustomer.getRootPane(), ex.getMessage());
                 }
             }
         };

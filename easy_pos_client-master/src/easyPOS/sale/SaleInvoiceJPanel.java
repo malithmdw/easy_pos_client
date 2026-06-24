@@ -50,10 +50,12 @@ import serverDataModels.SaleInvoice;
 import serverDataModels.SaleItem;
 import serverResponseDataModel.CommonResponse;
 import tableModels.SaleInvoiceItemTbl;
+import uiUtil.EasyPOSMessageDialog;
 import uiUtil.LoadingGlassPane;
 import util.DateTimeUtil;
 import util.GeneralUtil;
 import webService.ServerAPIConnection;
+import easyPOS.localization.ApplicationMessages;
 
 /**
  *
@@ -207,10 +209,10 @@ public class SaleInvoiceJPanel extends javax.swing.JPanel implements control.Lan
         }
         
         if (itemModel == null) {
-            JOptionPane.showMessageDialog(null, "Item not found !");
+            EasyPOSMessageDialog.showLocalizedError(null, ApplicationMessages.ERROR_ITEM_NOT_FOUND);
         }
         else if (itemModel.getStock().isEmpty()) {
-            JOptionPane.showMessageDialog(null, "Stock unavailable !");            
+            EasyPOSMessageDialog.showLocalizedError(null, ApplicationMessages.ERROR_STOCK_UNAVAILABLE);            
         }
         else if (itemModel.getStock().size() == 1) {
             loadItemToAddToBill(itemModel, itemModel.getStock().get(0));
@@ -316,9 +318,9 @@ public class SaleInvoiceJPanel extends javax.swing.JPanel implements control.Lan
                 
                 netAmount = amount * qty;
 
-                if (netAmount <= 0) 
+                if (netAmount <= 0)
                 {
-                    JOptionPane.showMessageDialog(null, "Invalid Amount");
+                    EasyPOSMessageDialog.showLocalizedError(null, ApplicationMessages.ERROR_INVALID_AMOUNT);
                     return;
                 }
                 
@@ -416,7 +418,7 @@ public class SaleInvoiceJPanel extends javax.swing.JPanel implements control.Lan
         if(jTextFieldGrossAmount.getText().equals("")||jTextFieldTotalDis.getText().equals("")||jTextFieldSalesNoOfItms.getText().equals("")||
                 jTextFieldNetTot.getText().equals("")||jTextFieldMRecieve.getText().equals("")||jTextFieldBal.getText().equals("")||
                 jTextFieldInvNo.getText().equals("")){
-            JOptionPane.showMessageDialog(this, "Fill the required fields ! !");
+            EasyPOSMessageDialog.showLocalizedWarning(this, ApplicationMessages.VALIDATION_FILL_REQUIRED_FIELDS);
         }else{            
             try{
                 // Prepare Bill data model
@@ -457,20 +459,20 @@ public class SaleInvoiceJPanel extends javax.swing.JPanel implements control.Lan
                         resetUIForNewCustomer();
                         
                 }else{
-                    JOptionPane.showMessageDialog(this, "Printer has stopped working !");
+                    EasyPOSMessageDialog.showLocalizedError(this, ApplicationMessages.ERROR_PRINTER_STOPPED);
                 }
-                
+
             }catch(HeadlessException | IllegalArgumentException e){
-                JOptionPane.showMessageDialog(this, "Can not provide a printed bill !");
+                EasyPOSMessageDialog.showLocalizedError(this, ApplicationMessages.ERROR_PRINT_BILL_FAILED);
             }
-        } 
+        }
     }
-    
+
     private boolean btnActionProcessBill2(){
         if(jTextFieldGrossAmount.getText().equals("")||jTextFieldTotalDis.getText().equals("")||jTextFieldSalesNoOfItms.getText().equals("")||
                 jTextFieldNetTot.getText().equals("")||jTextFieldMRecieve.getText().equals("")||jTextFieldBal.getText().equals("")||
                 jTextFieldInvNo.getText().equals("")){
-            JOptionPane.showMessageDialog(this, "Fill the required fields ! !");
+            EasyPOSMessageDialog.showLocalizedWarning(this, ApplicationMessages.VALIDATION_FILL_REQUIRED_FIELDS);
         }else{            
             try{
                 // Prepare Bill data model
@@ -494,9 +496,9 @@ public class SaleInvoiceJPanel extends javax.swing.JPanel implements control.Lan
                 billDataModel.setBillDiscount(Double.parseDouble(jTextFieldTotalDis.getText()));
                 billDataModel.setTotalGrossAmount(Double.parseDouble(jTextFieldGrossAmount.getText()));
                 
-                return true;                                
+                return true;
             }catch(HeadlessException | IllegalArgumentException e){
-                JOptionPane.showMessageDialog(this, "Can not provide a printed bill !");
+                EasyPOSMessageDialog.showLocalizedError(this, ApplicationMessages.ERROR_PRINT_BILL_FAILED);
             }
         }
         return false;
@@ -573,10 +575,10 @@ public class SaleInvoiceJPanel extends javax.swing.JPanel implements control.Lan
                 return true;
 
             } catch (PrinterException e) {
-                JOptionPane.showMessageDialog(this, "Printer unable to do your task !");
+                EasyPOSMessageDialog.showLocalizedError(this, ApplicationMessages.ERROR_PRINTER_FAILED_TASK);
             }
         } else {
-            JOptionPane.showMessageDialog(this, "Printer not found !");
+            EasyPOSMessageDialog.showLocalizedError(this, ApplicationMessages.ERROR_PRINTER_NOT_FOUND);
         }
         return false;
     }
@@ -767,31 +769,20 @@ public class SaleInvoiceJPanel extends javax.swing.JPanel implements control.Lan
                 try {
                     CommonResponse response = get();
 
-                    JLabel label = new JLabel(response.getAPIResponse().getMessageWithErrorCodeSinhala());
                     jTextFieldCustName.setText("");
                     selectedCustomer = null;
-                    try {                        
-                        Font customFont = Font.createFont(
-                                Font.TRUETYPE_FONT,
-                                ApplicationDataManager.getInstance().getSinhalaFontFile()
-                        ).deriveFont(12f);
-                        GraphicsEnvironment ge = GraphicsEnvironment.getLocalGraphicsEnvironment();
-                        ge.registerFont(customFont);
-                        label.setFont(customFont);
-                    } catch (IOException | FontFormatException ignored) {}
 
                     if (response.getAPIResponse().isSuccess()) {
                         selectedCustomer = (serverDataModels.Customer) response.getData();
                         if (selectedCustomer != null) {
                             jTextFieldCustName.setText(selectedCustomer.customer_name);
-                        }                        
+                        }
                     } else {
-                        JOptionPane.showMessageDialog(jPanelSaleInvoiceBase.getRootPane(), label, "Error", JOptionPane.ERROR_MESSAGE);
+                        EasyPOSMessageDialog.showErrorMessageDialog(jPanelSaleInvoiceBase.getRootPane(), response.getAPIResponse());
                     }
 
                 } catch (InterruptedException | ExecutionException ex) {
-                    JOptionPane.showMessageDialog(jPanelSaleInvoiceBase.getRootPane(), "Unexpected error: " + ex.getMessage(),
-                            "Error", JOptionPane.ERROR_MESSAGE);
+                    EasyPOSMessageDialog.showUnexpectedError(jPanelSaleInvoiceBase.getRootPane(), ex.getMessage());
                 }
             }
         };
@@ -1458,7 +1449,7 @@ public class SaleInvoiceJPanel extends javax.swing.JPanel implements control.Lan
             arrangeTotalValues();
 
         }catch(Exception e){
-            JOptionPane.showMessageDialog(this, "Select the row !");
+            EasyPOSMessageDialog.showLocalizedWarning(this, ApplicationMessages.VALIDATION_SELECT_ROW);
         }
 
     }//GEN-LAST:event_jButton34ActionPerformed

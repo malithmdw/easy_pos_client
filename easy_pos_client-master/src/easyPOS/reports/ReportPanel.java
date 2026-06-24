@@ -16,7 +16,9 @@ import java.util.ArrayList;
 import dataModels.Language;
 import java.util.Locale;
 import java.util.ResourceBundle;
+import easyPOS.localization.ApplicationMessages;
 import javax.swing.JOptionPane;
+import uiUtil.EasyPOSMessageDialog;
 import org.jfree.chart.ChartFactory;
 import org.jfree.chart.ChartFrame;
 import org.jfree.chart.JFreeChart;
@@ -356,7 +358,7 @@ public class ReportPanel extends javax.swing.JPanel implements control.LanguageC
                     case 3:annualSalesLoadTable(2,"","");break;//annual
                     case 4:suppliesLoadTableForReport(0,"","","");break;//
                     case 5:suppliesLoadTableForReport(0,"","","");break;//
-                    default:JOptionPane.showMessageDialog(this, "Error occur...!");break;
+                    default:EasyPOSMessageDialog.showLocalizedError(this, ApplicationMessages.ERROR_GENERIC);break;
                 }
             }else{
                 String dateFrom="";
@@ -376,11 +378,11 @@ public class ReportPanel extends javax.swing.JPanel implements control.LanguageC
                     case 3:annualSalesLoadTable(5,dateFrom,dateTo);break;//annual
                     case 4:suppliesLoadTableForReport(0,"","","");break;//
                     case 5:suppliesLoadTableForReport(1,dateFrom,dateTo,"");break;//
-                    default:JOptionPane.showMessageDialog(this, "Error occur...!");break;
+                    default:EasyPOSMessageDialog.showLocalizedError(this, ApplicationMessages.ERROR_GENERIC);break;
                 }
             }
         }catch(Exception e){
-            JOptionPane.showMessageDialog(this, "Incorrect input method for 'Date' !");
+            EasyPOSMessageDialog.showLocalizedWarning(this, ApplicationMessages.VALIDATION_DATE_INPUT_INVALID);
         }
 
     }//GEN-LAST:event_jButton26ActionPerformed
@@ -648,7 +650,7 @@ public class ReportPanel extends javax.swing.JPanel implements control.LanguageC
                 break;
             }
         }catch(Exception e){
-            JOptionPane.showMessageDialog(this, "System can not show graphs for reports!");
+            EasyPOSMessageDialog.showLocalizedError(this, ApplicationMessages.ERROR_REPORT_GRAPH_FAILED);
         }
     }//GEN-LAST:event_jButton27ActionPerformed
 
@@ -657,10 +659,10 @@ public class ReportPanel extends javax.swing.JPanel implements control.LanguageC
             boolean result=jTableReport.print();
             if(result){
             }else{
-                JOptionPane.showMessageDialog(this, "Printer has stopped working !");
+                EasyPOSMessageDialog.showLocalizedError(this, ApplicationMessages.ERROR_PRINTER_STOPPED);
             }
         }catch(Exception e){
-            JOptionPane.showMessageDialog(this, "Error occur..\nCan not do your printing process !");
+            EasyPOSMessageDialog.showLocalizedError(this, ApplicationMessages.ERROR_PRINT_PROCESS_FAILED);
         }
     }//GEN-LAST:event_jButton7ActionPerformed
 

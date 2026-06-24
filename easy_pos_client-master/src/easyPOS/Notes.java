@@ -13,7 +13,9 @@ import static java.awt.print.Printable.NO_SUCH_PAGE;
 import static java.awt.print.Printable.PAGE_EXISTS;
 import java.awt.print.PrinterException;
 import java.awt.print.PrinterJob;
+import easyPOS.localization.ApplicationMessages;
 import javax.swing.JOptionPane;
+import uiUtil.EasyPOSMessageDialog;
 
 
 public class Notes extends javax.swing.JFrame {
@@ -121,10 +123,10 @@ public class Notes extends javax.swing.JFrame {
     private void jButtonSaveActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonSaveActionPerformed
         boolean res=ls.changeNote(curUser, jTextArea1.getText());
         if(res==true){
-            JOptionPane.showMessageDialog(rootPane, "Successfully Saved !");
+            EasyPOSMessageDialog.showLocalizedInfo(rootPane, ApplicationMessages.INFO_SAVE_SUCCESS);
             this.dispose();
         }else{
-            JOptionPane.showMessageDialog(rootPane, "Can not save your notes !");
+            EasyPOSMessageDialog.showLocalizedError(rootPane, ApplicationMessages.ERROR_NOTES_SAVE_FAILED);
         }
     }//GEN-LAST:event_jButtonSaveActionPerformed
 
@@ -133,10 +135,10 @@ public class Notes extends javax.swing.JFrame {
         if(ans==0){//save 
             boolean res=ls.changeNote(curUser, jTextArea1.getText());
             if(res==true){
-                JOptionPane.showMessageDialog(rootPane, "Successfully Saved !");
+                EasyPOSMessageDialog.showLocalizedInfo(rootPane, ApplicationMessages.INFO_SAVE_SUCCESS);
                 this.dispose();
             }else{
-                JOptionPane.showMessageDialog(rootPane, "Can not save your notes !");
+                EasyPOSMessageDialog.showLocalizedError(rootPane, ApplicationMessages.ERROR_NOTES_SAVE_FAILED);
             }    
         }else if(ans==2){//cancel
             //close the msg box

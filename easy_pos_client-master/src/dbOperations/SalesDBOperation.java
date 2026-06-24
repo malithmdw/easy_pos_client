@@ -17,7 +17,8 @@ import dataModels.BillDataModel;
 import dataModels.BillItemDataModel;
 import dataModels.SaleDataModel;
 import java.sql.SQLException;
-import javax.swing.JOptionPane;
+import uiUtil.EasyPOSMessageDialog;
+import easyPOS.localization.ApplicationMessages;
 
 public class SalesDBOperation {
     DecimalFormat df = new DecimalFormat("#0.00");
@@ -379,7 +380,7 @@ public class SalesDBOperation {
                 document.close(); 
 
             } catch(Exception e){
-                JOptionPane.showMessageDialog(null, "Can not create Text backup file !");
+                EasyPOSMessageDialog.showLocalizedError(null, ApplicationMessages.ERROR_BACKUP_FILE_CREATE_FAILED);
             }
             String query="DELETE FROM sales ";
             

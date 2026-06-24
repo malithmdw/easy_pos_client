@@ -15,6 +15,7 @@ import javax.swing.JRootPane;
 import javax.swing.SwingWorker;
 import serverDataModels.Item;
 import serverResponseDataModel.CommonResponse;
+import uiUtil.EasyPOSMessageDialog;
 import uiUtil.LoadingGlassPane;
 import webService.ServerAPIConnection;
 
@@ -116,27 +117,10 @@ public class AddNewItemPanel extends javax.swing.JPanel {
                 try {
                     CommonResponse response = get();
 
-                    JLabel label = new JLabel(response.getAPIResponse().getMessageWithErrorCodeSinhala());
-                    try {
-                        
-                        Font customFont = Font.createFont(
-                                Font.TRUETYPE_FONT,
-                                ApplicationDataManager.getInstance().getSinhalaFontFile()
-                        ).deriveFont(12f);
-                        GraphicsEnvironment ge = GraphicsEnvironment.getLocalGraphicsEnvironment();
-                        ge.registerFont(customFont);
-                        label.setFont(customFont);
-                    } catch (IOException | FontFormatException ignored) {}
-
-                    if (response.getAPIResponse().isSuccess()) {
-                        JOptionPane.showMessageDialog(AddNewItemPanel.this.getRootPane(), label, "Success", JOptionPane.INFORMATION_MESSAGE);
-                    } else {
-                        JOptionPane.showMessageDialog(AddNewItemPanel.this.getRootPane(), label, "Error", JOptionPane.ERROR_MESSAGE);
-                    }
+                    EasyPOSMessageDialog.showApiResponseDialog(AddNewItemPanel.this.getRootPane(), response.getAPIResponse());
 
                 } catch (InterruptedException | ExecutionException ex) {
-                    JOptionPane.showMessageDialog(AddNewItemPanel.this.getRootPane(), "Unexpected error: " + ex.getMessage(),
-                            "Error", JOptionPane.ERROR_MESSAGE);
+                    EasyPOSMessageDialog.showUnexpectedError(AddNewItemPanel.this.getRootPane(), ex.getMessage());
                 }
             }
         };

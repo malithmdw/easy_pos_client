@@ -18,7 +18,9 @@ import java.util.ArrayList;
 import dataModels.Language;
 import java.util.Locale;
 import java.util.ResourceBundle;
+import easyPOS.localization.ApplicationMessages;
 import javax.swing.JOptionPane;
+import uiUtil.EasyPOSMessageDialog;
 import javax.swing.table.DefaultTableCellRenderer;
 import tableModels.SupplierLoadTbl;
 import tableModels.SuppliesLoadTbl;
@@ -1059,7 +1061,7 @@ public class SupplierPanel extends javax.swing.JPanel implements control.Languag
             loadSupplierItemsTble(supplierCode);
 
         }catch(Exception e){
-            JOptionPane.showMessageDialog(this, "Select the row !");
+            EasyPOSMessageDialog.showLocalizedWarning(this, ApplicationMessages.VALIDATION_SELECT_ROW);
         }
     }//GEN-LAST:event_jTableSuppliersMouseClicked
 
@@ -1072,7 +1074,7 @@ public class SupplierPanel extends javax.swing.JPanel implements control.Languag
                 loadSupplierItemsTble(supplierCode);
 
             }catch(Exception e){
-                JOptionPane.showMessageDialog(this, "Select the row !");
+                EasyPOSMessageDialog.showLocalizedWarning(this, ApplicationMessages.VALIDATION_SELECT_ROW);
             }
 
         }
@@ -1085,7 +1087,7 @@ public class SupplierPanel extends javax.swing.JPanel implements control.Languag
             as.setVisible(true);
             as.setDefaultCloseOperation(WIDTH);
         }catch(Exception e){
-            JOptionPane.showMessageDialog(this, "Select the row !");
+            EasyPOSMessageDialog.showLocalizedWarning(this, ApplicationMessages.VALIDATION_SELECT_ROW);
         }
     }//GEN-LAST:event_jButton11ActionPerformed
 
@@ -1104,7 +1106,7 @@ public class SupplierPanel extends javax.swing.JPanel implements control.Languag
             as.setVisible(true);
             as.setDefaultCloseOperation(WIDTH);
         }catch(Exception e){
-            JOptionPane.showMessageDialog(this, "Select the row !");
+            EasyPOSMessageDialog.showLocalizedWarning(this, ApplicationMessages.VALIDATION_SELECT_ROW);
         }
 
     }//GEN-LAST:event_jButton13ActionPerformed
@@ -1116,7 +1118,7 @@ public class SupplierPanel extends javax.swing.JPanel implements control.Languag
             as.setVisible(true);
             as.setDefaultCloseOperation(WIDTH);
         }catch(Exception e){
-            JOptionPane.showMessageDialog(this, "Select the row !");
+            EasyPOSMessageDialog.showLocalizedWarning(this, ApplicationMessages.VALIDATION_SELECT_ROW);
         }
     }//GEN-LAST:event_jButton14ActionPerformed
 
@@ -1127,7 +1129,7 @@ public class SupplierPanel extends javax.swing.JPanel implements control.Languag
             String supplierCode=(String) jTableSuppliers.getValueAt(rowNumber, 1);
             loadSupplierItemsTble(supplierCode);
         }catch(Exception e){
-            JOptionPane.showMessageDialog(this, "Select the row !");
+            EasyPOSMessageDialog.showLocalizedWarning(this, ApplicationMessages.VALIDATION_SELECT_ROW);
         }
 
     }//GEN-LAST:event_jButton18ActionPerformed
@@ -1324,20 +1326,20 @@ public class SupplierPanel extends javax.swing.JPanel implements control.Languag
         boolean permission=true;
         if(jTextFieldSuppNetTot.getText().equals("") || jTextFieldSuppCode.getText().equals("") || jTextFieldSuppInvNo.getText().equals("")){
             permission=false;
-            JOptionPane.showMessageDialog(this, "Fill the required fields ! !");
+            EasyPOSMessageDialog.showLocalizedWarning(this, ApplicationMessages.VALIDATION_FILL_REQUIRED_FIELDS);
         }else{
         }
         boolean result1=supp.checkSupplierExist(jTextFieldSuppCode.getText());
         if(jCheckBoxSuppAlert.isSelected()){
             if(jTextFieldSuppAlertDate.getText().equals("")){
                 permission=false;
-                JOptionPane.showMessageDialog(this, "Set the Alert date !");
+                EasyPOSMessageDialog.showLocalizedWarning(this, ApplicationMessages.VALIDATION_SET_ALERT_DATE);
             }
         }else{
         }
         if(result1==false ){
             permission=false;
-            JOptionPane.showMessageDialog(this, "Supplieer code does not exist !");
+            EasyPOSMessageDialog.showLocalizedWarning(this, ApplicationMessages.VALIDATION_SUPPLIER_CODE_NOT_FOUND);
         }else{
         }
 
@@ -1375,7 +1377,7 @@ public class SupplierPanel extends javax.swing.JPanel implements control.Languag
 
                 boolean result2=supp.addSupply(suppVar);
                 if(result2==true){
-                    JOptionPane.showMessageDialog(this, "Successfully inserted !");
+                    EasyPOSMessageDialog.showLocalizedInfo(this, ApplicationMessages.INFO_INSERT_SUCCESS);
                     clearFieldsSupply();
                     jButtonEditSupply2.setVisible(false);
                     jButtonDeleteSupply2.setVisible(false);
@@ -1385,11 +1387,11 @@ public class SupplierPanel extends javax.swing.JPanel implements control.Languag
 
                     suppliesLoadTableForSuppliers(0,"","","");
                 }else{
-                    JOptionPane.showMessageDialog(this, "Error occur while storing data !");
+                    EasyPOSMessageDialog.showLocalizedError(this, ApplicationMessages.ERROR_STORE_FAILED);
                 }
 
             }catch(Exception e){
-                JOptionPane.showMessageDialog(this, "Invalid input !");
+                EasyPOSMessageDialog.showLocalizedError(this, ApplicationMessages.ERROR_INVALID_INPUT);
             }
 
         }
@@ -1400,20 +1402,20 @@ public class SupplierPanel extends javax.swing.JPanel implements control.Languag
         boolean permission=true;
         if(jTextFieldSuppNetTot.getText().equals("") || jTextFieldSuppCode.getText().equals("") || jTextFieldSuppInvNo.getText().equals("")){
             permission=false;
-            JOptionPane.showMessageDialog(this, "Fill the required fields ! !");
+            EasyPOSMessageDialog.showLocalizedWarning(this, ApplicationMessages.VALIDATION_FILL_REQUIRED_FIELDS);
         }else{
         }
         boolean result1=supp.checkSupplierExist(jTextFieldSuppCode.getText());
         if(jCheckBoxSuppAlert.isSelected()){
             if(jTextFieldSuppAlertDate.getText().equals("")){
                 permission=false;
-                JOptionPane.showMessageDialog(this, "Set the Alert date !");
+                EasyPOSMessageDialog.showLocalizedWarning(this, ApplicationMessages.VALIDATION_SET_ALERT_DATE);
             }
         }else{
         }
         if(result1==false ){
             permission=false;
-            JOptionPane.showMessageDialog(this, "Supplieer code does not exist !");
+            EasyPOSMessageDialog.showLocalizedWarning(this, ApplicationMessages.VALIDATION_SUPPLIER_CODE_NOT_FOUND);
         }else{
         }
 
@@ -1447,7 +1449,7 @@ public class SupplierPanel extends javax.swing.JPanel implements control.Languag
 
                 boolean result2=supp.editSupply(suppVar);
                 if(result2==true){
-                    JOptionPane.showMessageDialog(this, "Successfully updated !");
+                    EasyPOSMessageDialog.showLocalizedInfo(this, ApplicationMessages.INFO_UPDATE_SUCCESS);
                     clearFieldsSupply();
                     jButtonEditSupply2.setVisible(false);
                     jButtonDeleteSupply2.setVisible(false);
@@ -1457,10 +1459,10 @@ public class SupplierPanel extends javax.swing.JPanel implements control.Languag
 
                     suppliesLoadTableForSuppliers(0,"","","");
                 }else{
-                    JOptionPane.showMessageDialog(this, "Error occur while updating data !");
+                    EasyPOSMessageDialog.showLocalizedError(this, ApplicationMessages.ERROR_UPDATE_FAILED);
                 }
             }catch(Exception e){
-                JOptionPane.showMessageDialog(this, "Invalid input !");
+                EasyPOSMessageDialog.showLocalizedError(this, ApplicationMessages.ERROR_INVALID_INPUT);
             }
         }
     }//GEN-LAST:event_jButtonEditSupply2ActionPerformed
@@ -1470,7 +1472,7 @@ public class SupplierPanel extends javax.swing.JPanel implements control.Languag
         if(ans==JOptionPane.YES_OPTION){
             boolean res=supp.deleteSupply(jTextFieldSuppInvNo.getText());
             if(res==true){
-                JOptionPane.showMessageDialog(this, "Successfully deleted !");
+                EasyPOSMessageDialog.showLocalizedInfo(this, ApplicationMessages.INFO_DELETE_SUCCESS);
                 suppliesLoadTableForSuppliers(0,"","","");
                 clearFieldsSupply();
                 jButtonEditSupply2.setVisible(false);
@@ -1479,7 +1481,7 @@ public class SupplierPanel extends javax.swing.JPanel implements control.Languag
                 jTextFieldSuppDate.setText(DateTimeUtil.getTodayDateDBFormat());
                 jTextFieldSuppInvNo.setEditable(true);
             }else{
-                JOptionPane.showMessageDialog(this, "Error occur while deleting !");
+                EasyPOSMessageDialog.showLocalizedError(this, ApplicationMessages.ERROR_DELETE_FAILED);
             }
         }else{
             clearFieldsSupply();
@@ -1498,7 +1500,7 @@ public class SupplierPanel extends javax.swing.JPanel implements control.Languag
             jButtonEditSupply2.setVisible(false);
             jButtonDeleteSupply2.setVisible(true);
         }catch(Exception e){
-            JOptionPane.showMessageDialog(this, "Select the row !");
+            EasyPOSMessageDialog.showLocalizedWarning(this, ApplicationMessages.VALIDATION_SELECT_ROW);
         }
     }//GEN-LAST:event_jButton43ActionPerformed
 
@@ -1512,7 +1514,7 @@ public class SupplierPanel extends javax.swing.JPanel implements control.Languag
             jTextFieldSuppInvNo.setEditable(true);
 
         }catch(Exception e){
-            JOptionPane.showMessageDialog(this, "Select the row !");
+            EasyPOSMessageDialog.showLocalizedWarning(this, ApplicationMessages.VALIDATION_SELECT_ROW);
         }
 
     }//GEN-LAST:event_jButton32ActionPerformed
@@ -1524,7 +1526,7 @@ public class SupplierPanel extends javax.swing.JPanel implements control.Languag
             jButtonEditSupply2.setVisible(false);
             jButtonDeleteSupply2.setVisible(false);
         }catch(Exception e){
-            JOptionPane.showMessageDialog(this, "Select the row !");
+            EasyPOSMessageDialog.showLocalizedWarning(this, ApplicationMessages.VALIDATION_SELECT_ROW);
         }
 
     }//GEN-LAST:event_jButton25ActionPerformed
@@ -1532,21 +1534,21 @@ public class SupplierPanel extends javax.swing.JPanel implements control.Languag
     private void jButtonAutoInvActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonAutoInvActionPerformed
         if(jCheckBoxAutoInv.isSelected() && jTextFieldSuppTot1.getText().equals("")){
             if(jTextFieldSuppDate1.getText().equals("") || jTextFieldSuppInvNo1.getText().equals("") || jTextFieldSuppCode1.getText().equals("")){
-                JOptionPane.showMessageDialog(this, "Fill the first four fields !");
+                EasyPOSMessageDialog.showLocalizedWarning(this, ApplicationMessages.VALIDATION_FILL_FIRST_FOUR_FIELDS);
             }else{
 //                startAutoCreateInv=1;
                 boolean res=supp.addNewTemp(ApplicationDataManager.getInstance().getLoggedInUser().getUserName(),jTextFieldSuppInvNo1.getText(),jTextFieldSuppCode1.getText());
                 if(res==true){
-                    JOptionPane.showMessageDialog(this, "Auto invoice generating process started !");
+                    EasyPOSMessageDialog.showLocalizedInfo(this, ApplicationMessages.INFO_AUTO_INVOICE_STARTED);
                 }else{
-                    JOptionPane.showMessageDialog(this, "Error occur !");
+                    EasyPOSMessageDialog.showLocalizedError(this, ApplicationMessages.ERROR_GENERIC);
                 }
             }
         }else if(jTextFieldSuppTot1.getText().equals("")){
-            JOptionPane.showMessageDialog(this, "Select the check box !");
+            EasyPOSMessageDialog.showLocalizedWarning(this, ApplicationMessages.VALIDATION_SELECT_CHECKBOX);
         }else{
 //            startAutoCreateInv=1;
-            JOptionPane.showMessageDialog(this, "Auto invoice generating process started !");
+            EasyPOSMessageDialog.showLocalizedInfo(this, ApplicationMessages.INFO_AUTO_INVOICE_STARTED);
         }
     }//GEN-LAST:event_jButtonAutoInvActionPerformed
 
@@ -1688,20 +1690,20 @@ public class SupplierPanel extends javax.swing.JPanel implements control.Languag
         boolean permission=true;
         if(jTextFieldSuppNetTot1.getText().equals("") || jTextFieldSuppCode1.getText().equals("") || jTextFieldSuppInvNo1.getText().equals("")){
             permission=false;
-            JOptionPane.showMessageDialog(this, "Fill the required fields ! !");
+            EasyPOSMessageDialog.showLocalizedWarning(this, ApplicationMessages.VALIDATION_FILL_REQUIRED_FIELDS);
         }else{
         }
         boolean result1=supp.checkSupplierExist(jTextFieldSuppCode1.getText());
         if(jCheckBoxSuppAlert1.isSelected()){
             if(jTextFieldSuppAlertDate1.getText().equals("")){
                 permission=false;
-                JOptionPane.showMessageDialog(this, "Set the Alert date !");
+                EasyPOSMessageDialog.showLocalizedWarning(this, ApplicationMessages.VALIDATION_SET_ALERT_DATE);
             }
         }else{
         }
         if(result1==false ){
             permission=false;
-            JOptionPane.showMessageDialog(this, "Supplieer code does not exist !");
+            EasyPOSMessageDialog.showLocalizedWarning(this, ApplicationMessages.VALIDATION_SUPPLIER_CODE_NOT_FOUND);
         }else{
         }
 
@@ -1741,7 +1743,7 @@ public class SupplierPanel extends javax.swing.JPanel implements control.Languag
 
                 boolean result2=supp.addSupply(suppVar);//insert to supplies table
                 if(result2==true){
-                    JOptionPane.showMessageDialog(this, "Successfully inserted !");
+                    EasyPOSMessageDialog.showLocalizedInfo(this, ApplicationMessages.INFO_INSERT_SUCCESS);
                     boolean res=supp.deleteTemp(jTextFieldSuppInvNo1.getText());//delete temp
                     if(res==true){
                         //clear fields
@@ -1758,15 +1760,15 @@ public class SupplierPanel extends javax.swing.JPanel implements control.Languag
                         jTextFieldSuppAlertDate1.setText("");
                         jCheckBoxAutoInv.setSelected(false);
                     }else{
-                        JOptionPane.showMessageDialog(this, "Error occur while deleting temporary invoice!");
+                        EasyPOSMessageDialog.showLocalizedError(this, ApplicationMessages.ERROR_TEMP_INVOICE_DELETE_FAILED);
                     }
                     suppliesLoadTableForSuppliers(0,"","","");
                 }else{
-                    JOptionPane.showMessageDialog(this, "Error occur while storing data !");
+                    EasyPOSMessageDialog.showLocalizedError(this, ApplicationMessages.ERROR_STORE_FAILED);
                 }
 
             }catch(Exception e){
-                JOptionPane.showMessageDialog(this, "Invalid input !");
+                EasyPOSMessageDialog.showLocalizedError(this, ApplicationMessages.ERROR_INVALID_INPUT);
             }
 
         } // TODO add your handling code here:
@@ -1790,7 +1792,7 @@ public class SupplierPanel extends javax.swing.JPanel implements control.Languag
                 jTextFieldSuppAlertDate1.setText("");
                 jCheckBoxAutoInv.setSelected(false);
             }else{
-                JOptionPane.showMessageDialog(this, "Error occur while deleting !");
+                EasyPOSMessageDialog.showLocalizedError(this, ApplicationMessages.ERROR_DELETE_FAILED);
             }
 
         }else{
@@ -1826,7 +1828,7 @@ public class SupplierPanel extends javax.swing.JPanel implements control.Languag
     void suppliesLoadTableForSuppliers(int situation,String searchInput1,String searchInput2,String searchInput3){
         suppliesList=supp.getSuppliesData(situation,searchInput1,searchInput2,searchInput3);
         if(suppliesList==null){
-            JOptionPane.showMessageDialog(this, "No any data according to your input !");
+            EasyPOSMessageDialog.showLocalizedWarning(this, ApplicationMessages.VALIDATION_NO_DATA_FOUND);
         }else{
             SuppliesLoadTbl sltbl=new SuppliesLoadTbl(suppliesList);
             jTableSupplies.setModel(sltbl);

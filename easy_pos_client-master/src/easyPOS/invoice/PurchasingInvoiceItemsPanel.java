@@ -34,6 +34,7 @@ import localDatabase.DatabaseManager;
 import serverDataModels.Item;
 import serverResponseDataModel.CommonResponse;
 import tableModels.PurchasingInvoiceItemsTbl;
+import easyPOS.localization.ApplicationMessages;
 import uiUtil.EasyPOSMessageDialog;
 import uiUtil.LoadingGlassPane;
 import webService.ServerAPIConnection;
@@ -101,7 +102,7 @@ public class PurchasingInvoiceItemsPanel extends javax.swing.JPanel implements c
         }
         
         if (itemModel == null) {
-            JOptionPane.showMessageDialog(null, "Item not found in Local Machine!");
+            EasyPOSMessageDialog.showLocalizedError(null, ApplicationMessages.ERROR_ITEM_NOT_FOUND_LOCAL);
             loadNewItemFromServer(jTextFieldItmCode.getText());
             // Find in server
         }else {
@@ -147,22 +148,10 @@ public class PurchasingInvoiceItemsPanel extends javax.swing.JPanel implements c
                 try {
                     CommonResponse response = get();
 
-                    JLabel label = new JLabel(response.getAPIResponse().getMessageWithErrorCodeSinhala());
-                    try {
-                        
-                        Font customFont = Font.createFont(
-                                Font.TRUETYPE_FONT,
-                                ApplicationDataManager.getInstance().getSinhalaFontFile()
-                        ).deriveFont(12f);
-                        GraphicsEnvironment ge = GraphicsEnvironment.getLocalGraphicsEnvironment();
-                        ge.registerFont(customFont);
-                        label.setFont(customFont);
-                    } catch (IOException | FontFormatException ignored) {}
-
                     if (response.getAPIResponse().isSuccess()) {
-                        
+
                         lastSelectedItem = new ItemModel((Item) response.getData());
-            
+
                         // Display details
                         List<String> dropdownItems = new ArrayList<>();
                         for (ItemStockModel itemStockModel : lastSelectedItem.getStock()) {
@@ -171,19 +160,18 @@ public class PurchasingInvoiceItemsPanel extends javax.swing.JPanel implements c
                         DefaultComboBoxModel<String> model = new DefaultComboBoxModel<>(dropdownItems.toArray(new String[0]));
                         jComboBoxPIItemBatches.setModel(model);
 
-                        if (lastSelectedItem.getStock().size() == 1) {                                
+                        if (lastSelectedItem.getStock().size() == 1) {
                             setItemStockDataToUI(lastSelectedItem, 0);
                         }
-                        
+
                         jTextFieldInvItemItmName.setText(lastSelectedItem.getItemName());
                         jTextFieldInvItmItmName2.setText(lastSelectedItem.getItemNameSin());
                     } else {
-                        JOptionPane.showMessageDialog(PurchasingInvoiceItemsPanel.this.getRootPane(), label, "Error", JOptionPane.ERROR_MESSAGE);
+                        EasyPOSMessageDialog.showErrorMessageDialog(PurchasingInvoiceItemsPanel.this.getRootPane(), response.getAPIResponse());
                     }
 
                 } catch (InterruptedException | ExecutionException ex) {
-                    JOptionPane.showMessageDialog(PurchasingInvoiceItemsPanel.this.getRootPane(), "Unexpected error: " + ex.getMessage(),
-                            "Error", JOptionPane.ERROR_MESSAGE);
+                    EasyPOSMessageDialog.showUnexpectedError(PurchasingInvoiceItemsPanel.this.getRootPane(), ex.getMessage());
                 }
             }
         };
@@ -935,14 +923,14 @@ public class PurchasingInvoiceItemsPanel extends javax.swing.JPanel implements c
         }
                 
         if (!isValid) {
-            JOptionPane.showMessageDialog(this, errorMsg);
+            EasyPOSMessageDialog.showRawError(this, errorMsg);
         }
         return isValid;
     }
     
     private void addToTempItemTable() {
         if (lastSelectedItem == null) {
-            JOptionPane.showMessageDialog(this, "Select the item to proceed");
+            EasyPOSMessageDialog.showLocalizedWarning(this, ApplicationMessages.VALIDATION_SELECT_ITEM_PROCEED);
         }
         else{
             purchaseItems.add(new PurchasingInvoiceItemUIDataModel (lastSelectedItem, getDataFromUI()));
@@ -979,7 +967,7 @@ public class PurchasingInvoiceItemsPanel extends javax.swing.JPanel implements c
             
         } catch (NumberFormatException e) {
             EasyPosLogger.getInstance().log(EasyPosLogger.LogLevel.ERROR, e.toString());
-            JOptionPane.showMessageDialog(this, "Invalid Input");
+            EasyPOSMessageDialog.showLocalizedError(this, ApplicationMessages.ERROR_INVALID_INPUT);
         }
         
         

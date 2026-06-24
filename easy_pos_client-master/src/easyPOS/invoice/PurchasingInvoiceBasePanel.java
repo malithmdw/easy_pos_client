@@ -17,7 +17,9 @@ import java.util.ResourceBundle;
 import java.util.concurrent.ExecutionException;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import easyPOS.localization.ApplicationMessages;
 import javax.swing.JOptionPane;
+import uiUtil.EasyPOSMessageDialog;
 import javax.swing.JPanel;
 import javax.swing.JRootPane;
 import javax.swing.SwingWorker;
@@ -261,7 +263,7 @@ public class PurchasingInvoiceBasePanel extends javax.swing.JPanel implements co
                 pendingInvoicesPanel.showPanel(new InvoicePanelActions() {
                     @Override
                     public void dataloadingFailed() {
-                        JOptionPane.showMessageDialog(PurchasingInvoiceBasePanel.this, "Failed to load data");
+                        EasyPOSMessageDialog.showLocalizedError(PurchasingInvoiceBasePanel.this, ApplicationMessages.ERROR_LOAD_FAILED);
                     }
 
                     @Override
@@ -291,7 +293,7 @@ public class PurchasingInvoiceBasePanel extends javax.swing.JPanel implements co
             {
                 if (pendingInvoicesPanel.getSelectedRecord() == null
                         && !pendingInvoicesPanel.isNewInvoiceRequest()) {
-                    JOptionPane.showMessageDialog(this, "Please select the Invoice Record to proceed!");
+                    EasyPOSMessageDialog.showLocalizedWarning(this, ApplicationMessages.VALIDATION_SELECT_INVOICE_RECORD);
                     return;
                 }
                 jRadioButtonPendingInvoices.setSelected(false);
@@ -337,7 +339,7 @@ public class PurchasingInvoiceBasePanel extends javax.swing.JPanel implements co
             case ITEM_DATA:
             {
                 if (invoiceDataPanel.getInsertedPurchaseInvoiceModel() == null) {
-                    JOptionPane.showMessageDialog(this, "Please select or Insert the Invoice Record to proceed!");
+                    EasyPOSMessageDialog.showLocalizedWarning(this, ApplicationMessages.VALIDATION_SELECT_OR_INSERT_INVOICE);
                     return;
                 }
                 jRadioButtonPendingInvoices.setSelected(false);

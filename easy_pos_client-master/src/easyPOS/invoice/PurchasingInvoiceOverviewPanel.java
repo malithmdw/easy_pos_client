@@ -20,7 +20,9 @@ import java.util.ResourceBundle;
 import java.util.concurrent.ExecutionException;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import easyPOS.localization.ApplicationMessages;
 import javax.swing.JOptionPane;
+import uiUtil.EasyPOSMessageDialog;
 import javax.swing.JRootPane;
 import javax.swing.SwingWorker;
 import localDatabase.DatabaseManager;
@@ -368,7 +370,7 @@ public class PurchasingInvoiceOverviewPanel extends javax.swing.JPanel implement
             processCompleteInvoiceAction(purchaseInvoiceModel.getSystemInvoiceNumber());
         }
         else{
-            JOptionPane.showMessageDialog(this, "Incomplete Invoice - Empty Items");
+            EasyPOSMessageDialog.showLocalizedWarning(this, ApplicationMessages.VALIDATION_INVOICE_EMPTY_ITEMS);
         }
     }//GEN-LAST:event_jButtonPIOverviewCompleteActionPerformed
 

@@ -42,8 +42,10 @@ import serverDataModels.SaleItem;
 import serverDataModels.Voucher;
 import serverResponseDataModel.CommonResponse;
 import tableModels.SalesVoucherRedeemTbl;
+import uiUtil.EasyPOSMessageDialog;
 import uiUtil.LoadingGlassPane;
 import webService.ServerAPIConnection;
+import easyPOS.localization.ApplicationMessages;
 
 /**
  *
@@ -407,7 +409,7 @@ public class SalePaymentFrame extends javax.swing.JFrame implements control.Lang
     private boolean validateUIInputs(){
 
         if (Double.parseDouble(salepanelBalanceTextField.getText()) < 0) {
-            JOptionPane.showMessageDialog(parentPanel, "Customer Number is required for Credit Sale");
+            EasyPOSMessageDialog.showLocalizedWarning(parentPanel, ApplicationMessages.VALIDATION_CUSTOMER_REQUIRED_CREDIT);
             return false;
         }
 
@@ -441,29 +443,29 @@ public class SalePaymentFrame extends javax.swing.JFrame implements control.Lang
 
         if(billTotal != (billTotalOld - billDiscountOld))
         {
-            JOptionPane.showMessageDialog(parentPanel, "Calculation Error. [billTotal != (billTotalOld - billDiscountOld)]");
+            EasyPOSMessageDialog.showRawError(parentPanel, "Calculation Error. [billTotal != (billTotalOld - billDiscountOld)]");
             return false;
         }
-        
+
         if(newNetAmount != (billTotal - ruleDiscountValue))
         {
-            JOptionPane.showMessageDialog(parentPanel, "Calculation Error. [newNetAmount != (billTotal - ruleDiscountValue)]");
+            EasyPOSMessageDialog.showRawError(parentPanel, "Calculation Error. [newNetAmount != (billTotal - ruleDiscountValue)]");
             return false;
         }
-        
+
         if(newNetAmount > (totalPaid + credit))
         {
-            JOptionPane.showMessageDialog(parentPanel, "Calculation Error. [newNetAmount > (totalPaid + credit)]");
+            EasyPOSMessageDialog.showRawError(parentPanel, "Calculation Error. [newNetAmount > (totalPaid + credit)]");
             return false;
         }
 
         if (credit > 0 && cashBalance > 0) {
-            JOptionPane.showMessageDialog(parentPanel, "Credit Sale can not have cash balance");
+            EasyPOSMessageDialog.showLocalizedWarning(parentPanel, ApplicationMessages.VALIDATION_CREDIT_SALE_NO_CASH_BALANCE);
             return false;
         }
-        
+
         if (cashPaid != cashAmountValue) {
-            JOptionPane.showMessageDialog(parentPanel, "Calculation Error. [cashAmountValue(LHS) != cashPaid(RHS)");
+            EasyPOSMessageDialog.showRawError(parentPanel, "Calculation Error. [cashAmountValue(LHS) != cashPaid(RHS)]");
             return false;
         }
 
@@ -516,11 +518,11 @@ public class SalePaymentFrame extends javax.swing.JFrame implements control.Lang
                     // Close this window
                     this.dispose();
             }else{
-                JOptionPane.showMessageDialog(this, "Printer has stopped working !");
+                EasyPOSMessageDialog.showLocalizedError(this, ApplicationMessages.ERROR_PRINTER_STOPPED);
             }
 
         }catch(HeadlessException | IllegalArgumentException e){
-            JOptionPane.showMessageDialog(this, "Can not provide a printed bill !");
+            EasyPOSMessageDialog.showLocalizedError(this, ApplicationMessages.ERROR_PRINT_BILL_FAILED);
         }
     }
 
@@ -655,10 +657,10 @@ public class SalePaymentFrame extends javax.swing.JFrame implements control.Lang
                 return true;
 
             } catch (PrinterException e) {
-                JOptionPane.showMessageDialog(this, "Printer unable to do your task !");
+                EasyPOSMessageDialog.showLocalizedError(this, ApplicationMessages.ERROR_PRINTER_FAILED_TASK);
             }
         } else {
-            JOptionPane.showMessageDialog(this, "Printer not found !");
+            EasyPOSMessageDialog.showLocalizedError(this, ApplicationMessages.ERROR_PRINTER_NOT_FOUND);
         }
         return false;
     }
@@ -686,36 +688,25 @@ public class SalePaymentFrame extends javax.swing.JFrame implements control.Lang
                 try {
                     CommonResponse response = get();
 
-                    JLabel label = new JLabel(response.getAPIResponse().getMessageWithErrorCodeSinhala());
                     voucherNumInputTextField.setText("");
-                    
-                    try {
-                        Font customFont = Font.createFont(
-                                Font.TRUETYPE_FONT,
-                                ApplicationDataManager.getInstance().getSinhalaFontFile()
-                        ).deriveFont(12f);
-                        GraphicsEnvironment ge = GraphicsEnvironment.getLocalGraphicsEnvironment();
-                        ge.registerFont(customFont);
-                        label.setFont(customFont);
-                    } catch (IOException | FontFormatException ignored) {}
 
                     if (response.getAPIResponse().isSuccess()) {
                         Voucher voucher = (serverDataModels.Voucher) response.getData();
                         if (voucher != null) {
                             if (voucherTableModel.isDuplicateVoucher(voucher.voucher_id)) {
-                                JOptionPane.showMessageDialog(SalePaymentFrame.this.getRootPane(), "Voucher already added to this sale.");
+                                EasyPOSMessageDialog.showLocalizedWarning(SalePaymentFrame.this.getRootPane(), ApplicationMessages.VALIDATION_VOUCHER_ALREADY_ADDED);
                                 return;
                             }
 
                             if (voucher.voucher_status != 1) {
-                                JOptionPane.showMessageDialog(SalePaymentFrame.this.getRootPane(), "Voucher is not active or has already been redeemed.");
+                                EasyPOSMessageDialog.showLocalizedWarning(SalePaymentFrame.this.getRootPane(), ApplicationMessages.VALIDATION_VOUCHER_NOT_ACTIVE);
                                 return;
                             }
 
                             try {
                                 java.time.LocalDate expireDate = java.time.LocalDate.parse(voucher.expire_date);
                                 if (expireDate.isBefore(java.time.LocalDate.now())) {
-                                    JOptionPane.showMessageDialog(SalePaymentFrame.this.getRootPane(), "Voucher has expired.");
+                                    EasyPOSMessageDialog.showLocalizedWarning(SalePaymentFrame.this.getRootPane(), ApplicationMessages.VALIDATION_VOUCHER_EXPIRED);
                                     return;
                                 }
                             } catch (java.time.format.DateTimeParseException e) {
@@ -727,12 +718,11 @@ public class SalePaymentFrame extends javax.swing.JFrame implements control.Lang
                             updateVoucherTotalField();
                         }
                     } else {
-                        JOptionPane.showMessageDialog(SalePaymentFrame.this.getRootPane(), label, "Error", JOptionPane.ERROR_MESSAGE);
+                        EasyPOSMessageDialog.showErrorMessageDialog(SalePaymentFrame.this.getRootPane(), response.getAPIResponse());
                     }
 
                 } catch (InterruptedException | ExecutionException ex) {
-                    JOptionPane.showMessageDialog(SalePaymentFrame.this.getRootPane(), "Unexpected error: " + ex.getMessage(),
-                            "Error", JOptionPane.ERROR_MESSAGE);
+                    EasyPOSMessageDialog.showUnexpectedError(SalePaymentFrame.this.getRootPane(), ex.getMessage());
                 }
             }
         };
@@ -764,18 +754,8 @@ public class SalePaymentFrame extends javax.swing.JFrame implements control.Lang
                 try {
                     CommonResponse response = get();
 
-                    JLabel label = new JLabel(response.getAPIResponse().getMessageWithErrorCodeSinhala());
                     salepanelCustNameTextField.setText("");
                     selectedCustomer = null;
-                    try {
-                        Font customFont = Font.createFont(
-                                Font.TRUETYPE_FONT,
-                                ApplicationDataManager.getInstance().getSinhalaFontFile()
-                        ).deriveFont(12f);
-                        GraphicsEnvironment ge = GraphicsEnvironment.getLocalGraphicsEnvironment();
-                        ge.registerFont(customFont);
-                        label.setFont(customFont);
-                    } catch (IOException | FontFormatException ignored) {}
 
                     if (response.getAPIResponse().isSuccess()) {
                         selectedCustomer = (serverDataModels.Customer) response.getData();
@@ -783,12 +763,11 @@ public class SalePaymentFrame extends javax.swing.JFrame implements control.Lang
                             salepanelCustNameTextField.setText(selectedCustomer.customer_name);
                         }
                     } else {
-                        JOptionPane.showMessageDialog(SalePaymentFrame.this.getRootPane(), label, "Error", JOptionPane.ERROR_MESSAGE);
+                        EasyPOSMessageDialog.showErrorMessageDialog(SalePaymentFrame.this.getRootPane(), response.getAPIResponse());
                     }
 
                 } catch (InterruptedException | ExecutionException ex) {
-                    JOptionPane.showMessageDialog(SalePaymentFrame.this.getRootPane(), "Unexpected error: " + ex.getMessage(),
-                            "Error", JOptionPane.ERROR_MESSAGE);
+                    EasyPOSMessageDialog.showUnexpectedError(SalePaymentFrame.this.getRootPane(), ex.getMessage());
                 }
             }
         };
@@ -1330,7 +1309,7 @@ public class SalePaymentFrame extends javax.swing.JFrame implements control.Lang
     private void voucherSearchButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_voucherSearchButtonActionPerformed
         String voucherName = voucherNumInputTextField.getText().trim();
         if (voucherName.isEmpty()) {
-            JOptionPane.showMessageDialog(this, "Please enter a voucher number.");
+            EasyPOSMessageDialog.showLocalizedWarning(this, ApplicationMessages.VALIDATION_ENTER_VOUCHER_NUMBER);
             return;
         }
 

@@ -12,7 +12,9 @@ import java.util.Locale;
 import java.util.Map;
 import java.util.ResourceBundle;
 import javax.swing.DefaultComboBoxModel;
+import easyPOS.localization.ApplicationMessages;
 import javax.swing.JOptionPane;
+import uiUtil.EasyPOSMessageDialog;
 import localDatabase.DatabaseManager;
 
 /**
@@ -478,21 +480,21 @@ public class SettingsPanel extends javax.swing.JPanel implements control.Languag
                 //change account password
                 boolean res2=logScr.changeUserPwd(currentUser, jPasswordFieldChangePwd.getText());
                 if(res2==true){
-                    JOptionPane.showMessageDialog(this, "Password has been changed !");
+                    EasyPOSMessageDialog.showLocalizedInfo(this, ApplicationMessages.INFO_PASSWORD_CHANGED);
                     //clear fields
                     jTextField25.setText("");
                     jPasswordFieldCurPwd.setText("");
                     jPasswordFieldChangePwd.setText("");
                     jPasswordFieldChangePwd2.setText("");
                 }else{
-                    JOptionPane.showMessageDialog(this, "Can not do your process now !");
+                    EasyPOSMessageDialog.showLocalizedError(this, ApplicationMessages.ERROR_PROCESS_FAILED);
                 }
 
             }else{
-                JOptionPane.showMessageDialog(this, "Current password does not match !");
+                EasyPOSMessageDialog.showLocalizedWarning(this, ApplicationMessages.VALIDATION_PASSWORD_CURRENT_MISMATCH);
             }
         }else{
-            JOptionPane.showMessageDialog(this, "New passwords do not match !");
+            EasyPOSMessageDialog.showLocalizedWarning(this, ApplicationMessages.VALIDATION_PASSWORD_NEW_MISMATCH);
         }
     }
     
@@ -503,21 +505,21 @@ public class SettingsPanel extends javax.swing.JPanel implements control.Languag
                 //delete account
                 boolean res2=logScr.deleteUserAccount(currentUser);
                 if(res2==true){
-                    JOptionPane.showMessageDialog(this, "Your account is deleted !");
+                    EasyPOSMessageDialog.showLocalizedInfo(this, ApplicationMessages.INFO_ACCOUNT_DELETED);
                     //clear fields
                     jTextField25.setText("");
                     jPasswordFieldCurPwd.setText("");
                     jPasswordFieldChangePwd.setText("");
                     jPasswordFieldChangePwd2.setText("");
                 }else{
-                    JOptionPane.showMessageDialog(this, "Can not do your process now !");
+                    EasyPOSMessageDialog.showLocalizedError(this, ApplicationMessages.ERROR_PROCESS_FAILED);
                 }
 
             }else{
-                JOptionPane.showMessageDialog(this, "Current password does not match !");
+                EasyPOSMessageDialog.showLocalizedWarning(this, ApplicationMessages.VALIDATION_PASSWORD_CURRENT_MISMATCH);
             }
         }else{
-            JOptionPane.showMessageDialog(this, "New passwords do not match !");
+            EasyPOSMessageDialog.showLocalizedWarning(this, ApplicationMessages.VALIDATION_PASSWORD_NEW_MISMATCH);
         }
     }
     

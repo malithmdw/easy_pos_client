@@ -23,6 +23,8 @@ import javax.swing.JRootPane;
 import javax.swing.SwingWorker;
 import localDatabase.DatabaseManager;
 import serverResponseDataModel.CommonResponse;
+import easyPOS.localization.ApplicationMessages;
+import uiUtil.EasyPOSMessageDialog;
 import uiUtil.LoadingGlassPane;
 import webService.ServerAPIConnection;
 
@@ -63,7 +65,7 @@ public class ChangePricePanel extends javax.swing.JPanel implements control.Lang
         }
         
         if (itemModel == null) {
-            JOptionPane.showMessageDialog(null, "Item not found !");
+            EasyPOSMessageDialog.showLocalizedError(null, ApplicationMessages.ERROR_ITEM_NOT_FOUND);
         }else {
             lastSelectedItem = itemModel;
             
@@ -912,27 +914,10 @@ public class ChangePricePanel extends javax.swing.JPanel implements control.Lang
                 try {
                     CommonResponse response = get();
 
-                    JLabel label = new JLabel(response.getAPIResponse().getMessageWithErrorCodeSinhala());
-                    try {
-                        
-                        Font customFont = Font.createFont(
-                                Font.TRUETYPE_FONT,
-                                ApplicationDataManager.getInstance().getSinhalaFontFile()
-                        ).deriveFont(12f);
-                        GraphicsEnvironment ge = GraphicsEnvironment.getLocalGraphicsEnvironment();
-                        ge.registerFont(customFont);
-                        label.setFont(customFont);
-                    } catch (IOException | FontFormatException ignored) {}
-
-                    if (response.getAPIResponse().isSuccess()) {
-                        JOptionPane.showMessageDialog(ChangePricePanel.this.getRootPane(), label, "Success", JOptionPane.INFORMATION_MESSAGE);
-                    } else {
-                        JOptionPane.showMessageDialog(ChangePricePanel.this.getRootPane(), label, "Error", JOptionPane.ERROR_MESSAGE);
-                    }
+                    EasyPOSMessageDialog.showApiResponseDialog(ChangePricePanel.this.getRootPane(), response.getAPIResponse());
 
                 } catch (InterruptedException | ExecutionException ex) {
-                    JOptionPane.showMessageDialog(ChangePricePanel.this.getRootPane(), "Unexpected error: " + ex.getMessage(),
-                            "Error", JOptionPane.ERROR_MESSAGE);
+                    EasyPOSMessageDialog.showUnexpectedError(ChangePricePanel.this.getRootPane(), ex.getMessage());
                 }
             }
         };

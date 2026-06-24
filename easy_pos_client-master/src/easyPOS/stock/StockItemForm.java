@@ -16,7 +16,9 @@ import java.util.ResourceBundle;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.swing.DefaultComboBoxModel;
+import easyPOS.localization.ApplicationMessages;
 import javax.swing.JOptionPane;
+import uiUtil.EasyPOSMessageDialog;
 import localDatabase.DatabaseManager;
 import serverDataModels.Item;
 import serverDataModels.MeasureUnit;
@@ -663,24 +665,24 @@ public class StockItemForm extends javax.swing.JPanel implements control.Languag
     
     private boolean validateUIData(Item item){
         if (item.barcode == null || item.barcode.isEmpty()) {
-            JOptionPane.showMessageDialog(parent, "Barcode required");
+            EasyPOSMessageDialog.showLocalizedWarning(parent, ApplicationMessages.VALIDATION_BARCODE_REQUIRED);
             return false;
         }
         if (item.item_name == null || item.item_name.isEmpty()) {
-            JOptionPane.showMessageDialog(parent, "Item Name required");
+            EasyPOSMessageDialog.showLocalizedWarning(parent, ApplicationMessages.VALIDATION_ITEM_NAME_REQUIRED);
             return false;
         }
         if (item.item_name_sin == null || item.item_name_sin.isEmpty()) {
-            JOptionPane.showMessageDialog(parent, "Item Name Sinhala required");
+            EasyPOSMessageDialog.showLocalizedWarning(parent, ApplicationMessages.VALIDATION_ITEM_NAME_SINHALA_REQUIRED);
             return false;
         }
         
         if (item.category_id == 0) {
-            JOptionPane.showMessageDialog(parent, "Incorrect Category");
+            EasyPOSMessageDialog.showLocalizedWarning(parent, ApplicationMessages.VALIDATION_CATEGORY_INCORRECT);
             return false;
         }
         if (item.measure_unit_id == 0) {
-            JOptionPane.showMessageDialog(parent, "Incorrcet Measure Unit");
+            EasyPOSMessageDialog.showLocalizedWarning(parent, ApplicationMessages.VALIDATION_MEASURE_UNIT_INCORRECT);
             return false;
         }
         
