@@ -5,7 +5,9 @@
 package easyPOS.stock;
 
 import appDataModels.BarcodeLableItemDataModel;
+import easyPOS.localization.ApplicationMessages;
 import javax.swing.JOptionPane;
+import uiUtil.EasyPOSMessageDialog;
 
 /**
  *
@@ -103,7 +105,7 @@ public class BarcodeStickerCountWindow extends javax.swing.JFrame {
             barcodeLablePrintPanel.addItem(dataModel);
             this.dispose();
         } catch (Exception e) {
-            JOptionPane.showMessageDialog(rootPane, "Invalid input");
+            EasyPOSMessageDialog.showLocalizedError(rootPane, ApplicationMessages.ERROR_INVALID_INPUT);
         }
     }//GEN-LAST:event_jButton1ActionPerformed
 

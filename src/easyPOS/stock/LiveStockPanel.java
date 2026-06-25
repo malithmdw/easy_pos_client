@@ -27,7 +27,9 @@ import localDatabase.DatabaseManager;
 import serverDataModels.Category;
 import serverDataModels.Item;
 import serverDataModels.ItemStock;
+import easyPOS.localization.ApplicationMessages;
 import serverResponseDataModel.CommonResponse;
+import uiUtil.EasyPOSMessageDialog;
 import tableModels.LiveStockBatchTbl;
 import tableModels.LiveStockItemTbl;
 import uiUtil.LoadingGlassPane;
@@ -81,19 +83,8 @@ public class LiveStockPanel extends javax.swing.JPanel {
                 try {
                     CommonResponse response = get();
                     
-                    JLabel label = new JLabel(response.getAPIResponse().getMessageWithErrorCodeSinhala());
-                    try {                        
-                        Font customFont = Font.createFont(
-                                Font.TRUETYPE_FONT,
-                                ApplicationDataManager.getInstance().getSinhalaFontFile()
-                        ).deriveFont(12f);
-                        GraphicsEnvironment ge = GraphicsEnvironment.getLocalGraphicsEnvironment();
-                        ge.registerFont(customFont);
-                        label.setFont(customFont);
-                    } catch (IOException | FontFormatException ignored) {}
-
                     if (response.getAPIResponse().isSuccess()) {
-                        // Load table 
+                        // Load table
                         itemDataList = (ArrayList<Item>) response.getData();
                         List<CategoryModel> categorys = DatabaseManager.getInstance().getCategories();
                         
@@ -108,12 +99,11 @@ public class LiveStockPanel extends javax.swing.JPanel {
                         loadStockTable();
                         
                     } else {
-                        JOptionPane.showMessageDialog(LiveStockPanel.this.getRootPane(), label, "Error", JOptionPane.ERROR_MESSAGE);
+                        EasyPOSMessageDialog.showErrorMessageDialog(LiveStockPanel.this.getRootPane(), response.getAPIResponse());
                     }
 
                 } catch (InterruptedException | ExecutionException ex) {
-                    JOptionPane.showMessageDialog(LiveStockPanel.this.getRootPane(), "Unexpected error: " + ex.getMessage(),
-                            "Error", JOptionPane.ERROR_MESSAGE);
+                    EasyPOSMessageDialog.showUnexpectedError(LiveStockPanel.this.getRootPane(), ex.getMessage());
                     EasyPosLogger.getInstance().log(EasyPosLogger.LogLevel.ERROR, ex.toString());
                 }
             }
@@ -472,10 +462,10 @@ public class LiveStockPanel extends javax.swing.JPanel {
             boolean result=jTableCurStockItems.print();
             if(result){
             }else{
-                JOptionPane.showMessageDialog(this, "Printer has stopped working !");
+                EasyPOSMessageDialog.showLocalizedError(this, ApplicationMessages.ERROR_PRINTER_STOPPED);
             }
         }catch(Exception e){
-            JOptionPane.showMessageDialog(this, "Error occur..\nCan not do your printing process !");
+            EasyPOSMessageDialog.showLocalizedError(this, ApplicationMessages.ERROR_PRINT_PROCESS_FAILED);
         }
     }//GEN-LAST:event_jButtonStockFullPrintActionPerformed
 
@@ -508,10 +498,10 @@ public class LiveStockPanel extends javax.swing.JPanel {
 
     private void jButtonStockBarcodePrintActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonStockBarcodePrintActionPerformed
         if (jTableLiveStockItemBatches.getSelectedRow() < 0) {
-            JOptionPane.showMessageDialog(parent, "Please select the batch");
+            EasyPOSMessageDialog.showLocalizedWarning(parent, ApplicationMessages.VALIDATION_SELECT_BATCH);
         }
         else if (jTableCurStockItems.getSelectedRow() < 0) {
-            JOptionPane.showMessageDialog(parent, "Please select the Item");
+            EasyPOSMessageDialog.showLocalizedWarning(parent, ApplicationMessages.VALIDATION_SELECT_ITEM);
         }
         else{
             Item selectedItem = itemDataList.get(jTableCurStockItems.getSelectedRow());

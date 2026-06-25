@@ -26,9 +26,6 @@ public class ZebraStickerPrinter {
     // PRINTER CONFIGURATION
     // =========================================================
 
-    private static final String PRINTER_NAME =
-            "ZDesigner ZD888-203dpi ZPL";
-
     private static final int PAPER_WIDTH = 880;
     private static final int LABEL_WIDTH = 272;
     private static final int LABEL_HEIGHT = 200;
@@ -75,7 +72,7 @@ public class ZebraStickerPrinter {
 
                 String zpl = buildRowJob(chunk, businessName);
 
-                printToZebra(PRINTER_NAME, zpl);
+                printToZebra(ApplicationDataManager.getInstance().getLabelPrinterName(), zpl);
             }
 
             System.out.println("Printed Successfully");
