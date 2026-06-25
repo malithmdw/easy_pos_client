@@ -472,11 +472,11 @@ public class ServerAPIConnection {
         if (commonResponse.getAPIResponse().isSuccess()) {
             // Extract data of response
             ObjectMapper mapper = new ObjectMapper();
-            InsertRecordResponse insertRecordResponse = null;
+            Voucher voucherForReturn = null;
             
             try {
-                insertRecordResponse = mapper.treeToValue((JsonNode) commonResponse.getData(), InsertRecordResponse.class);
-                commonResponse.setData(insertRecordResponse);
+                voucherForReturn = mapper.treeToValue((JsonNode) commonResponse.getData(), Voucher.class);
+                commonResponse.setData(voucherForReturn);
             } catch (JsonProcessingException ex) {
                 commonResponse.setAPIResponse(ResponseCodes.get("95"));//Error while converting server data to local data model
                 Logger.getLogger(ServerAPIConnection.class.getName()).log(Level.SEVERE, null, ex);

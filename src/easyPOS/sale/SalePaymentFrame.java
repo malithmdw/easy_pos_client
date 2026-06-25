@@ -14,7 +14,6 @@ import java.awt.Font;
 import java.awt.FontFormatException;
 import java.awt.GraphicsEnvironment;
 import java.awt.HeadlessException;
-import java.awt.event.ActionListener;
 import java.awt.print.PageFormat;
 import java.awt.print.Paper;
 import java.awt.print.PrinterException;
@@ -27,8 +26,6 @@ import java.util.Locale;
 import java.util.ResourceBundle;
 import java.util.concurrent.ExecutionException;
 import javax.print.PrintService;
-import javax.swing.JLabel;
-import javax.swing.JOptionPane;
 import javax.swing.JRootPane;
 import javax.swing.JTextField;
 import javax.swing.SwingWorker;
@@ -100,7 +97,8 @@ public class SalePaymentFrame extends javax.swing.JFrame implements control.Lang
 
         jTextField9.setEnabled(true);
         jTextField9.setEditable(false);
-        jTextField9.setText("0.00");
+        jTextField9.setText("0.00");        
+        jTextField7.setText("0.00");
         setupVouchersTable();
         
         JTextField[] mopAmtTextFields = new JTextField[2];
@@ -251,26 +249,56 @@ public class SalePaymentFrame extends javax.swing.JFrame implements control.Lang
         }
 
         double totalRuleDiscount = 0;
-
+        
         for(DiscountRule disRule : localDatabase.DatabaseManager.getInstance().getDiscountRules())
         {
+            double cashAmount = Double.parseDouble(jTextField6.getText());
+            double cardAmount = Double.parseDouble(jTextField7.getText());
+            double voucherAmount = Double.parseDouble(jTextField9.getText());
+            
+            // Define the liable amount for discount rules
+            double billTotal = billDataModel.getNetTotal();
+            double liableCashAmount = (billTotal > cashAmount)?cashAmount:billTotal;
+            double liableCardAmount = (billTotal > cardAmount)?cardAmount:billTotal;
+            double liableVoucherAmount = (billTotal > voucherAmount)?voucherAmount:billTotal;
+                        
             for (Integer selectedMOPID : selectedMOPIDs) {
                 if (billDataModel.getNetTotal() > disRule.bill_above // Bill Above
                         && (disRule.only_for_mop == 0 || selectedMOPID == disRule.only_for_mop) // MOP
                         && (disRule.only_for_loyalty_customers == 0 || (disRule.only_for_loyalty_customers == 1 && selectedCustomer != null))// loyalty customer check
                         ) {
+                    
+                    double liableAmount;
+                    switch (disRule.only_for_mop) {
+                        case 1:
+                            liableAmount = liableCashAmount;
+                            break;
+                        case 2:
+                            liableAmount = liableCardAmount;
+                            break;
+                        case 3:
+                            liableAmount = liableVoucherAmount;
+                            break;
+                        default:
+                            liableAmount = billTotal;
+                            break;
+                    }
+                    
                     // Category check
                     if (disRule.only_for_category == 0) {
                         // Apply for ALL CATEGORIES
-                        double totalRulePercDis = (billDataModel.getNetTotal()*disRule.discount_percentage/100);
+                        double totalRulePercDis = (liableAmount * disRule.discount_percentage/100);
                         double totalRuleFixDis = disRule.fix_discount;
                         totalRuleDiscount = totalRulePercDis + totalRuleFixDis;
                         discountRulesApplied.add(disRule);
                         
                         if (applyChangesForBillData) {
                             for (BillItemDataModel billItem : billDataModel.getBillItems()) {
-//                                billItem.setDiscountPerone(0);/
-//                                billItem.setNetAmount(0);/
+                                // Apply the discount for each item because it is required for returns to decide the amounts
+                                double discountForAllQty = (billItem.getNetAmount() * disRule.discount_percentage/100);
+                                billItem.setDiscountPerone(billItem.getDiscountPerone() + (discountForAllQty/billItem.getQty()));
+                                billItem.setAmount(billItem.getUnitPrice() - billItem.getDiscountPerone());
+                                billItem.setNetAmount(billItem.getNetAmount() - discountForAllQty);
                             }
                         }
                     }
@@ -285,18 +313,39 @@ public class SalePaymentFrame extends javax.swing.JFrame implements control.Lang
                                 billItemsOfCategory.add(billItem);
                             }
                         }
-
+                        
                         if (categorynetTotal > disRule.bill_above && categorynetTotal > 0) {
                             
-                            double totalRulePercDis = (categorynetTotal * disRule.discount_percentage/100);
+                            liableCashAmount = (categorynetTotal > cashAmount)?cashAmount:categorynetTotal;
+                            liableCardAmount = (categorynetTotal > cardAmount)?cardAmount:categorynetTotal;
+                            liableVoucherAmount = (categorynetTotal > voucherAmount)?voucherAmount:categorynetTotal;
+                            
+                            switch (disRule.only_for_mop) {
+                                case 1:
+                                    liableAmount = liableCashAmount;
+                                    break;
+                                case 2:
+                                    liableAmount = liableCardAmount;
+                                    break;
+                                case 3:
+                                    liableAmount = liableVoucherAmount;
+                                    break;
+                                default:
+                                    liableAmount = billTotal;
+                                    break;
+                            }
+                        
+                            double totalRulePercDis = (liableAmount * disRule.discount_percentage/100);
                             double totalRuleFixDis = disRule.fix_discount;
                             totalRuleDiscount = totalRulePercDis + totalRuleFixDis;
                             discountRulesApplied.add(disRule);
                                 
                             if (applyChangesForBillData) {
                                 for (BillItemDataModel billItem : billItemsOfCategory) {
-//                                    billItem.setDiscountPerone(billItem.getDiscountPerone() + ());
-//                                    billItem.setNetAmount(0);
+                                    double discountForAllQty = (billItem.getNetAmount() * disRule.discount_percentage/100);
+                                    billItem.setDiscountPerone(billItem.getDiscountPerone() + (discountForAllQty/billItem.getQty()));
+                                    billItem.setAmount(billItem.getUnitPrice() - billItem.getDiscountPerone());
+                                    billItem.setNetAmount(billItem.getNetAmount() - discountForAllQty);
                                 }
                             }
                         }
@@ -591,7 +640,7 @@ public class SalePaymentFrame extends javax.swing.JFrame implements control.Lang
             si.selling_price = billItem.getUnitPrice();
             si.discount = billItem.getDiscountPerone();
             si.billing_price = billItem.getAmount();
-            si.net_amount = billItem.getAmount();
+            si.net_amount = billItem.getNetAmount();
             si.cost_for_unit = billItem.getCostOfUnit();
             si.total_cost = si.cost_for_unit * si.qty;
             si.status = 1;
@@ -887,7 +936,7 @@ public class SalePaymentFrame extends javax.swing.JFrame implements control.Lang
         jLabel8.setText("NET AMOUNT :");
 
         salepanelNetAmtTextField.setEditable(false);
-        salepanelNetAmtTextField.setFont(new java.awt.Font("Segoe UI", 0, 16)); // NOI18N
+        salepanelNetAmtTextField.setFont(new java.awt.Font("Segoe UI", 1, 16)); // NOI18N
         salepanelNetAmtTextField.setHorizontalAlignment(javax.swing.JTextField.RIGHT);
 
         jLabel9.setFont(new java.awt.Font("Segoe UI", 0, 16)); // NOI18N
@@ -1104,22 +1153,24 @@ public class SalePaymentFrame extends javax.swing.JFrame implements control.Lang
                         .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addComponent(jScrollPaneVoucherTbl, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, 0, Short.MAX_VALUE)
                             .addGroup(jPanel3Layout.createSequentialGroup()
-                                .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                                    .addComponent(visaRadioButton, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                                    .addComponent(amexRadioButton, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                                 .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                    .addComponent(jcbRadioButton)
-                                    .addComponent(masterRadioButton, javax.swing.GroupLayout.Alignment.TRAILING))
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                    .addComponent(otherRadioButton)
-                                    .addComponent(upiRadioButton))
-                                .addGap(0, 0, Short.MAX_VALUE))
-                            .addGroup(jPanel3Layout.createSequentialGroup()
-                                .addComponent(paymentMethodInputLabel1)
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                .addComponent(cardLast4DigInputTextField, javax.swing.GroupLayout.PREFERRED_SIZE, 117, javax.swing.GroupLayout.PREFERRED_SIZE)))))
+                                    .addGroup(jPanel3Layout.createSequentialGroup()
+                                        .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                                            .addComponent(visaRadioButton, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                                            .addComponent(amexRadioButton, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                        .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                            .addComponent(jcbRadioButton)
+                                            .addComponent(masterRadioButton, javax.swing.GroupLayout.Alignment.TRAILING))
+                                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                        .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                            .addComponent(otherRadioButton)
+                                            .addComponent(upiRadioButton)))
+                                    .addGroup(jPanel3Layout.createSequentialGroup()
+                                        .addComponent(paymentMethodInputLabel1)
+                                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                        .addComponent(cardLast4DigInputTextField, javax.swing.GroupLayout.PREFERRED_SIZE, 117, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                                .addGap(0, 0, Short.MAX_VALUE)))))
                 .addContainerGap())
         );
         jPanel3Layout.setVerticalGroup(
@@ -1290,7 +1341,7 @@ public class SalePaymentFrame extends javax.swing.JFrame implements control.Lang
             jTextField6.setEditable(true);
         }
         else{
-            jTextField6.setText("");
+            jTextField6.setText("0.00");
             jTextField6.setEditable(false);
         }
         arrangeUIBasedOnMOPSelection();
@@ -1298,11 +1349,18 @@ public class SalePaymentFrame extends javax.swing.JFrame implements control.Lang
     }//GEN-LAST:event_salePaymentCashRadioButtonStateChanged
 
     private void salePaymentCardRadioButtonStateChanged(javax.swing.event.ChangeEvent evt) {//GEN-FIRST:event_salePaymentCardRadioButtonStateChanged
+        double voucherAmount = 0;
+        try {
+            voucherAmount = Double.parseDouble(jTextField9.getText());
+        } catch (NumberFormatException e) {
+        }
+        
         if (salePaymentCardRadioButton.isSelected()) {
+            jTextField7.setText(util.GeneralUtil.getCurrencyString(billDataModel.getNetTotal() - voucherAmount));
             jTextField7.setEditable(true);
         }
         else{
-            jTextField7.setText("");
+            jTextField7.setText("0.00");
             jTextField7.setEditable(false);
         }
         arrangeUIBasedOnMOPSelection();
@@ -1321,13 +1379,13 @@ public class SalePaymentFrame extends javax.swing.JFrame implements control.Lang
     }//GEN-LAST:event_salePaymentVoucherRadioButtonStateChanged
 
     private void voucherSearchButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_voucherSearchButtonActionPerformed
-        String voucherName = voucherNumInputTextField.getText().trim();
-        if (voucherName.isEmpty()) {
+        String voucherID = voucherNumInputTextField.getText().trim();
+        if (voucherID.isEmpty()) {
             EasyPOSMessageDialog.showLocalizedWarning(this, ApplicationMessages.VALIDATION_ENTER_VOUCHER_NUMBER);
             return;
         }
 
-        onlineSearchVoucherAction(voucherName);
+        onlineSearchVoucherAction(voucherID);
     }//GEN-LAST:event_voucherSearchButtonActionPerformed
 
 
