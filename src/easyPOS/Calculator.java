@@ -1,6 +1,7 @@
 
 package easyPOS;
 
+import control.EasyPosLogger;
 import java.awt.Toolkit;
 import java.awt.event.KeyEvent;
 
@@ -539,13 +540,13 @@ public class Calculator extends javax.swing.JFrame {
                 }
             }
         } catch (ClassNotFoundException ex) {
-            java.util.logging.Logger.getLogger(Calculator.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+            EasyPosLogger.getInstance().error("", ex);
         } catch (InstantiationException ex) {
-            java.util.logging.Logger.getLogger(Calculator.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+            EasyPosLogger.getInstance().error("", ex);
         } catch (IllegalAccessException ex) {
-            java.util.logging.Logger.getLogger(Calculator.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+            EasyPosLogger.getInstance().error("", ex);
         } catch (javax.swing.UnsupportedLookAndFeelException ex) {
-            java.util.logging.Logger.getLogger(Calculator.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+            EasyPosLogger.getInstance().error("", ex);
         }
         //</editor-fold>
 

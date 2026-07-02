@@ -9,8 +9,7 @@ import java.awt.Image;
 import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
-import java.util.logging.Level;
-import java.util.logging.Logger;
+import control.EasyPosLogger;
 import javax.imageio.ImageIO;
 import javax.swing.ImageIcon;
 
@@ -33,7 +32,7 @@ public class CategoryItemCard extends javax.swing.JPanel {
                 itemCardNameLabel.setFont(customFontSin);
             }
         } catch (FontFormatException | IOException ex) {
-            Logger.getLogger(ItemCard.class.getName()).log(Level.SEVERE, null, ex);
+            EasyPosLogger.getInstance().error("", ex);
         }
     }
 
@@ -88,7 +87,7 @@ public class CategoryItemCard extends javax.swing.JPanel {
             itemCardImageLabel.setIcon(icon);
         } catch (IOException ex) {
             System.err.println("Image not found");
-            Logger.getLogger(CategoryItemCard.class.getName()).log(Level.SEVERE, null, ex);
+            EasyPosLogger.getInstance().error("", ex);
         }
     }
 }

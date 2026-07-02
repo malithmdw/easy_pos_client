@@ -11,8 +11,7 @@ import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
 import java.util.concurrent.ExecutionException;
-import java.util.logging.Level;
-import java.util.logging.Logger;
+import control.EasyPosLogger;
 import javax.imageio.ImageIO;
 import javax.swing.ImageIcon;
 import javax.swing.SwingUtilities;
@@ -36,7 +35,7 @@ public class ItemCard extends javax.swing.JPanel {
                 itemCardNameLabel.setFont(customFont1);
             }
         } catch (FontFormatException | IOException ex) {
-            Logger.getLogger(ItemCard.class.getName()).log(Level.SEVERE, null, ex);
+            EasyPosLogger.getInstance().error("", ex);
         }
     }
 

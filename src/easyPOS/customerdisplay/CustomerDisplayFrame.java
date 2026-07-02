@@ -4,6 +4,8 @@
  */
 package easyPOS.customerdisplay;
 
+import control.EasyPosLogger;
+
 /**
  *
  * @author malit
@@ -72,13 +74,13 @@ public class CustomerDisplayFrame extends javax.swing.JFrame {
                 }
             }
         } catch (ClassNotFoundException ex) {
-            java.util.logging.Logger.getLogger(CustomerDisplayFrame.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+            EasyPosLogger.getInstance().error("", ex);
         } catch (InstantiationException ex) {
-            java.util.logging.Logger.getLogger(CustomerDisplayFrame.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+            EasyPosLogger.getInstance().error("", ex);
         } catch (IllegalAccessException ex) {
-            java.util.logging.Logger.getLogger(CustomerDisplayFrame.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+            EasyPosLogger.getInstance().error("", ex);
         } catch (javax.swing.UnsupportedLookAndFeelException ex) {
-            java.util.logging.Logger.getLogger(CustomerDisplayFrame.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+            EasyPosLogger.getInstance().error("", ex);
         }
         //</editor-fold>
 

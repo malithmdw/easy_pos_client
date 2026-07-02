@@ -13,8 +13,7 @@ import java.io.IOException;
 import java.util.List;
 import java.util.Locale;
 import java.util.ResourceBundle;
-import java.util.logging.Level;
-import java.util.logging.Logger;
+import control.EasyPosLogger;
 import javax.swing.DefaultComboBoxModel;
 import easyPOS.localization.ApplicationMessages;
 import javax.swing.JOptionPane;
@@ -47,7 +46,7 @@ public class StockItemForm extends javax.swing.JPanel implements control.Languag
                 jComboBoxAddItemMesUnit.setFont(customFontSin_20);
             }
         } catch (FontFormatException | IOException ex) {
-            Logger.getLogger(ItemCard.class.getName()).log(Level.SEVERE, null, ex);
+            EasyPosLogger.getInstance().error("", ex);
         }
 
         clearFieldsAll();

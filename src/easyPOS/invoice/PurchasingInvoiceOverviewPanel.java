@@ -18,8 +18,7 @@ import dataModels.Language;
 import java.util.Locale;
 import java.util.ResourceBundle;
 import java.util.concurrent.ExecutionException;
-import java.util.logging.Level;
-import java.util.logging.Logger;
+import control.EasyPosLogger;
 import easyPOS.localization.ApplicationMessages;
 import javax.swing.JOptionPane;
 import uiUtil.EasyPOSMessageDialog;
@@ -410,7 +409,7 @@ public class PurchasingInvoiceOverviewPanel extends javax.swing.JPanel implement
                         EasyPOSMessageDialog.showErrorMessageDialog(PurchasingInvoiceOverviewPanel.this, commonResponse.getAPIResponse());
                     }
                 } catch (InterruptedException | ExecutionException ex) {
-                    Logger.getLogger(PendingPurchasingInvoicesPanel.class.getName()).log(Level.SEVERE, null, ex);
+                    EasyPosLogger.getInstance().error("", ex);
                 }
                     
                 

@@ -7,9 +7,8 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import appDataModels.APIHeaderData;
+import control.EasyPosLogger;
 import control.RuntimeDataManager;
 import java.util.ArrayList;
 import serverDataModels.Category;
@@ -123,8 +122,7 @@ public class ServerAPIConnection {
                 commonResponse.setData(items);
             } catch (IllegalArgumentException ex) {
                 commonResponse.setAPIResponse(ResponseCodes.get("95"));//Error while converting server data to local data model
-                Logger.getLogger(ServerAPIConnection.class.getName())
-                      .log(Level.SEVERE, null, ex);
+                EasyPosLogger.getInstance().error("", ex);
             }
 
             // Save data for application use
@@ -155,8 +153,7 @@ public class ServerAPIConnection {
                 commonResponse.setData(suppliers);
             } catch (IllegalArgumentException ex) {
                 commonResponse.setAPIResponse(ResponseCodes.get("95"));//Error while converting server data to local data model
-                Logger.getLogger(ServerAPIConnection.class.getName())
-                      .log(Level.SEVERE, null, ex);
+                EasyPosLogger.getInstance().error("", ex);
             }
 
             // Save data for application use
@@ -183,7 +180,7 @@ public class ServerAPIConnection {
                 commonResponse.setData(terminal);
             } catch (JsonProcessingException ex) {
                 commonResponse.setAPIResponse(ResponseCodes.get("95"));//Error while converting server data to local data model
-                Logger.getLogger(ServerAPIConnection.class.getName()).log(Level.SEVERE, null, ex);
+                EasyPosLogger.getInstance().error("", ex);
             }
 
             // Save data for application use
@@ -214,8 +211,7 @@ public class ServerAPIConnection {
                 commonResponse.setData(customers);
             } catch (IllegalArgumentException ex) {
                 commonResponse.setAPIResponse(ResponseCodes.get("95"));//Error while converting server data to local data model
-                Logger.getLogger(ServerAPIConnection.class.getName())
-                      .log(Level.SEVERE, null, ex);
+                EasyPosLogger.getInstance().error("", ex);
             }
 
             // Save data for application use
@@ -246,8 +242,7 @@ public class ServerAPIConnection {
                 commonResponse.setData(purchaseInvoices);
             } catch (IllegalArgumentException ex) {
                 commonResponse.setAPIResponse(ResponseCodes.get("95"));//Error while converting server data to local data model
-                Logger.getLogger(ServerAPIConnection.class.getName())
-                      .log(Level.SEVERE, null, ex);
+                EasyPosLogger.getInstance().error("", ex);
             }
         }
 
@@ -273,7 +268,7 @@ public class ServerAPIConnection {
                 commonResponse.setData(customer);
             } catch (JsonProcessingException ex) {
                 commonResponse.setAPIResponse(ResponseCodes.get("95"));//Error while converting server data to local data model
-                Logger.getLogger(ServerAPIConnection.class.getName()).log(Level.SEVERE, null, ex);
+                EasyPosLogger.getInstance().error("", ex);
             }
         }
         
@@ -299,7 +294,7 @@ public class ServerAPIConnection {
                 commonResponse.setData(voucher);
             } catch (JsonProcessingException ex) {
                 commonResponse.setAPIResponse(ResponseCodes.get("95"));//Error while converting server data to local data model
-                Logger.getLogger(ServerAPIConnection.class.getName()).log(Level.SEVERE, null, ex);
+                EasyPosLogger.getInstance().error("", ex);
             }
         }
         
@@ -322,7 +317,7 @@ public class ServerAPIConnection {
                 commonResponse.setData(institute);
             } catch (JsonProcessingException ex) {
                 commonResponse.setAPIResponse(ResponseCodes.get("95"));//Error while converting server data to local data model
-                Logger.getLogger(ServerAPIConnection.class.getName()).log(Level.SEVERE, null, ex);
+                EasyPosLogger.getInstance().error("", ex);
             }
         }
         
@@ -346,7 +341,7 @@ public class ServerAPIConnection {
                 commonResponse.setData(measureUnit);
             } catch (IllegalArgumentException ex) {
                 commonResponse.setAPIResponse(ResponseCodes.get("95"));//Error while converting server data to local data model
-                Logger.getLogger(ServerAPIConnection.class.getName()).log(Level.SEVERE, null, ex);
+                EasyPosLogger.getInstance().error("", ex);
             }
         }
         
@@ -373,8 +368,7 @@ public class ServerAPIConnection {
             } catch (IllegalArgumentException ex) {
                 commonResponse.setAPIResponse(ResponseCodes.get("95"));//Error while converting server data to local data model
                 
-                Logger.getLogger(ServerAPIConnection.class.getName())
-                      .log(Level.SEVERE, null, ex);
+                EasyPosLogger.getInstance().error("", ex);
             }
         }
 
@@ -401,8 +395,7 @@ public class ServerAPIConnection {
             } catch (IllegalArgumentException ex) {
                 commonResponse.setAPIResponse(ResponseCodes.get("95"));//Error while converting server data to local data model
                 
-                Logger.getLogger(ServerAPIConnection.class.getName())
-                      .log(Level.SEVERE, null, ex);
+                EasyPosLogger.getInstance().error("", ex);
             }
         }
 
@@ -430,7 +423,7 @@ public class ServerAPIConnection {
                 commonResponse.setData(loginResponse);
             } catch (JsonProcessingException ex) {
                 commonResponse.setAPIResponse(ResponseCodes.get("95"));//Error while converting server data to local data model
-                Logger.getLogger(ServerAPIConnection.class.getName()).log(Level.SEVERE, null, ex);
+                EasyPosLogger.getInstance().error("", ex);
             }
 
             // Save data for application use
@@ -456,7 +449,7 @@ public class ServerAPIConnection {
                 commonResponse.setData(insertRecordResponse);
             } catch (JsonProcessingException ex) {
                 commonResponse.setAPIResponse(ResponseCodes.get("95"));//Error while converting server data to local data model
-                Logger.getLogger(ServerAPIConnection.class.getName()).log(Level.SEVERE, null, ex);
+                EasyPosLogger.getInstance().error("", ex);
             }
         }
         
@@ -479,7 +472,7 @@ public class ServerAPIConnection {
                 commonResponse.setData(voucherForReturn);
             } catch (JsonProcessingException ex) {
                 commonResponse.setAPIResponse(ResponseCodes.get("95"));//Error while converting server data to local data model
-                Logger.getLogger(ServerAPIConnection.class.getName()).log(Level.SEVERE, null, ex);
+                EasyPosLogger.getInstance().error("", ex);
             }
         }
         
@@ -505,7 +498,7 @@ public class ServerAPIConnection {
                 commonResponse.setData(saleInvoice);
             } catch (JsonProcessingException ex) {
                 commonResponse.setAPIResponse(ResponseCodes.get("95"));//Error while converting server data to local data model
-                Logger.getLogger(ServerAPIConnection.class.getName()).log(Level.SEVERE, null, ex);
+                EasyPosLogger.getInstance().error("", ex);
             }
         }
 
@@ -532,7 +525,7 @@ public class ServerAPIConnection {
                 commonResponse.setData(insertRecordResponse);
             } catch (JsonProcessingException ex) {
                 commonResponse.setAPIResponse(ResponseCodes.get("95"));//Error while converting server data to local data model
-                Logger.getLogger(ServerAPIConnection.class.getName()).log(Level.SEVERE, null, ex);
+                EasyPosLogger.getInstance().error("", ex);
             }
         }
         
@@ -564,8 +557,7 @@ public class ServerAPIConnection {
                 commonResponse.setData(customerLedgers);
             } catch (IllegalArgumentException ex) {
                 commonResponse.setAPIResponse(ResponseCodes.get("95"));//Error while converting server data to local data model
-                Logger.getLogger(ServerAPIConnection.class.getName())
-                      .log(Level.SEVERE, null, ex);
+                EasyPosLogger.getInstance().error("", ex);
             }
         }
 
@@ -588,7 +580,7 @@ public class ServerAPIConnection {
                 commonResponse.setData(insertRecordResponse);
             } catch (JsonProcessingException ex) {
                 commonResponse.setAPIResponse(ResponseCodes.get("95"));//Error while converting server data to local data model
-                Logger.getLogger(ServerAPIConnection.class.getName()).log(Level.SEVERE, null, ex);
+                EasyPosLogger.getInstance().error("", ex);
             }
         }
         
@@ -616,7 +608,7 @@ public class ServerAPIConnection {
                 commonResponse.setData(insertRecordResponse);
             } catch (JsonProcessingException ex) {
                 commonResponse.setAPIResponse(ResponseCodes.get("95"));//Error while converting server data to local data model
-                Logger.getLogger(ServerAPIConnection.class.getName()).log(Level.SEVERE, null, ex);
+                EasyPosLogger.getInstance().error("", ex);
             }
         }
         
@@ -639,7 +631,7 @@ public class ServerAPIConnection {
                 commonResponse.setData(insertRecordResponse);
             } catch (JsonProcessingException ex) {
                 commonResponse.setAPIResponse(ResponseCodes.get("95"));//Error while converting server data to local data model
-                Logger.getLogger(ServerAPIConnection.class.getName()).log(Level.SEVERE, null, ex);
+                EasyPosLogger.getInstance().error("", ex);
             }
         }
         
@@ -666,7 +658,7 @@ public class ServerAPIConnection {
                 commonResponse.setData(insertRecordResponse);
             } catch (JsonProcessingException ex) {
                 commonResponse.setAPIResponse(ResponseCodes.get("95"));//Error while converting server data to local data model
-                Logger.getLogger(ServerAPIConnection.class.getName()).log(Level.SEVERE, null, ex);
+                EasyPosLogger.getInstance().error("", ex);
             }
         }
         
@@ -693,7 +685,7 @@ public class ServerAPIConnection {
                 commonResponse.setData(item);
             } catch (JsonProcessingException ex) {
                 commonResponse.setAPIResponse(ResponseCodes.get("95"));//Error while converting server data to local data model
-                Logger.getLogger(ServerAPIConnection.class.getName()).log(Level.SEVERE, null, ex);
+                EasyPosLogger.getInstance().error("", ex);
             }
         }
         
@@ -716,7 +708,7 @@ public class ServerAPIConnection {
                 commonResponse.setData(insertRecordResponse);
             } catch (JsonProcessingException ex) {
                 commonResponse.setAPIResponse(ResponseCodes.get("95"));//Error while converting server data to local data model
-                Logger.getLogger(ServerAPIConnection.class.getName()).log(Level.SEVERE, null, ex);
+                EasyPosLogger.getInstance().error("", ex);
             }
         }
         
@@ -749,7 +741,7 @@ public class ServerAPIConnection {
                 commonResponse.setData(insertRecordResponse);
             } catch (JsonProcessingException ex) {
                 commonResponse.setAPIResponse(ResponseCodes.get("95"));//Error while converting server data to local data model
-                Logger.getLogger(ServerAPIConnection.class.getName()).log(Level.SEVERE, null, ex);
+                EasyPosLogger.getInstance().error("", ex);
             }
         }
         
@@ -772,7 +764,7 @@ public class ServerAPIConnection {
                 commonResponse.setData(insertRecordResponse);
             } catch (JsonProcessingException ex) {
                 commonResponse.setAPIResponse(ResponseCodes.get("95"));//Error while converting server data to local data model
-                Logger.getLogger(ServerAPIConnection.class.getName()).log(Level.SEVERE, null, ex);
+                EasyPosLogger.getInstance().error("", ex);
             }
         }
         
@@ -809,7 +801,7 @@ public class ServerAPIConnection {
                 commonResponse.setData(insertRecordResponse);
             } catch (JsonProcessingException ex) {
                 commonResponse.setAPIResponse(ResponseCodes.get("95"));//Error while converting server data to local data model
-                Logger.getLogger(ServerAPIConnection.class.getName()).log(Level.SEVERE, null, ex);
+                EasyPosLogger.getInstance().error("", ex);
             }
         }
         

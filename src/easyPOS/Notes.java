@@ -1,5 +1,6 @@
 package easyPOS;
 
+import control.EasyPosLogger;
 import dbOperations.LoginDBOperation;
 import java.awt.Color;
 import java.awt.Font;
@@ -240,13 +241,13 @@ public class Notes extends javax.swing.JFrame {
                 }
             }
         } catch (ClassNotFoundException ex) {
-            java.util.logging.Logger.getLogger(Notes.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+            EasyPosLogger.getInstance().error("", ex);
         } catch (InstantiationException ex) {
-            java.util.logging.Logger.getLogger(Notes.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+            EasyPosLogger.getInstance().error("", ex);
         } catch (IllegalAccessException ex) {
-            java.util.logging.Logger.getLogger(Notes.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+            EasyPosLogger.getInstance().error("", ex);
         } catch (javax.swing.UnsupportedLookAndFeelException ex) {
-            java.util.logging.Logger.getLogger(Notes.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+            EasyPosLogger.getInstance().error("", ex);
         }
         //</editor-fold>
 

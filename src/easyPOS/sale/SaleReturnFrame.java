@@ -4,6 +4,7 @@ import appDataModels.APIHeaderData;
 import appDataModels.InstituteModel;
 import appDataModels.ItemModel;
 import control.ApplicationDataManager;
+import control.EasyPosLogger;
 import control.RuntimeDataManager;
 import control.SaleReturnVoucherPrint;
 import dataModels.ReceiptCommonData;
@@ -687,13 +688,13 @@ public class SaleReturnFrame extends javax.swing.JFrame implements control.Langu
                 }
             }
         } catch (ClassNotFoundException ex) {
-            java.util.logging.Logger.getLogger(SaleReturnFrame.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+            EasyPosLogger.getInstance().error("", ex);
         } catch (InstantiationException ex) {
-            java.util.logging.Logger.getLogger(SaleReturnFrame.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+            EasyPosLogger.getInstance().error("", ex);
         } catch (IllegalAccessException ex) {
-            java.util.logging.Logger.getLogger(SaleReturnFrame.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+            EasyPosLogger.getInstance().error("", ex);
         } catch (javax.swing.UnsupportedLookAndFeelException ex) {
-            java.util.logging.Logger.getLogger(SaleReturnFrame.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+            EasyPosLogger.getInstance().error("", ex);
         }
         //</editor-fold>
 

@@ -27,8 +27,7 @@ import java.awt.print.PrinterJob;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.ExecutionException;
-import java.util.logging.Level;
-import java.util.logging.Logger;
+import control.EasyPosLogger;
 import javax.print.PrintService;
 import easyPOS.localization.ApplicationMessages;
 import javax.swing.JOptionPane;
@@ -626,7 +625,7 @@ public class Customer extends javax.swing.JPanel implements control.LanguageChan
                         uiUtil.EasyPOSMessageDialog.showErrorMessageDialog(parent, commonResponse.getAPIResponse());
                     }
                 } catch (InterruptedException | ExecutionException ex) {
-                    Logger.getLogger(Customer.class.getName()).log(Level.SEVERE, null, ex);
+                    EasyPosLogger.getInstance().error("", ex);
                 }
             }
         };

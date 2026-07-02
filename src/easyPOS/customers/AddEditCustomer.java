@@ -3,6 +3,7 @@ package easyPOS.customers;
 import appDataModels.APIHeaderData;
 import appDataModels.CustomerModel;
 import control.ApplicationDataManager;
+import control.EasyPosLogger;
 import control.RuntimeDataManager;
 import java.awt.Font;
 import java.awt.FontFormatException;
@@ -377,13 +378,13 @@ public class AddEditCustomer extends javax.swing.JFrame implements control.Langu
                 }
             }
         } catch (ClassNotFoundException ex) {
-            java.util.logging.Logger.getLogger(AddEditCustomer.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+            EasyPosLogger.getInstance().error("", ex);
         } catch (InstantiationException ex) {
-            java.util.logging.Logger.getLogger(AddEditCustomer.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+            EasyPosLogger.getInstance().error("", ex);
         } catch (IllegalAccessException ex) {
-            java.util.logging.Logger.getLogger(AddEditCustomer.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+            EasyPosLogger.getInstance().error("", ex);
         } catch (javax.swing.UnsupportedLookAndFeelException ex) {
-            java.util.logging.Logger.getLogger(AddEditCustomer.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+            EasyPosLogger.getInstance().error("", ex);
         }
         //</editor-fold>
 

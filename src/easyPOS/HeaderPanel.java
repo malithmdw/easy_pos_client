@@ -13,8 +13,7 @@ import java.util.GregorianCalendar;
 import dataModels.Language;
 import java.util.Locale;
 import java.util.ResourceBundle;
-import java.util.logging.Level;
-import java.util.logging.Logger;
+import control.EasyPosLogger;
 
 /**
  *
@@ -237,7 +236,7 @@ public final class HeaderPanel extends javax.swing.JPanel implements control.Lan
 try {
     sleep(1000);
 } catch (InterruptedException ex) {
-    Logger.getLogger(OpenScreen.class.getName()).log(Level.SEVERE, null, ex);
+    EasyPosLogger.getInstance().error("", ex);
 }   
                 }
                 

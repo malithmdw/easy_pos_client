@@ -7,8 +7,7 @@ import control.RuntimeDataManager;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.ExecutionException;
-import java.util.logging.Level;
-import java.util.logging.Logger;
+import control.EasyPosLogger;
 import javax.swing.JPanel;
 import javax.swing.JRootPane;
 import javax.swing.SwingWorker;
@@ -147,9 +146,9 @@ public class PendingPurchasingInvoicesPanel extends javax.swing.JPanel {
                         invoicePanelActions.dataloadingFailed();
                     }
                 } catch (InterruptedException ex) {
-                    Logger.getLogger(PendingPurchasingInvoicesPanel.class.getName()).log(Level.SEVERE, null, ex);
+                    EasyPosLogger.getInstance().error("", ex);
                 } catch (ExecutionException ex) {
-                    Logger.getLogger(PendingPurchasingInvoicesPanel.class.getName()).log(Level.SEVERE, null, ex);
+                    EasyPosLogger.getInstance().error("", ex);
                 }
                     
                 

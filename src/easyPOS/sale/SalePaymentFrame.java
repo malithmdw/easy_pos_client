@@ -3,6 +3,7 @@ package easyPOS.sale;
 import appDataModels.APIHeaderData;
 import appDataModels.InstituteModel;
 import control.ApplicationDataManager;
+import control.EasyPosLogger;
 import control.RuntimeDataManager;
 import control.ServerDataSubmissionQueue;
 import control.SimpleReceiptPrint;
@@ -1403,13 +1404,13 @@ public class SalePaymentFrame extends javax.swing.JFrame implements control.Lang
                 }
             }
         } catch (ClassNotFoundException ex) {
-            java.util.logging.Logger.getLogger(SalePaymentFrame.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+            EasyPosLogger.getInstance().error("", ex);
         } catch (InstantiationException ex) {
-            java.util.logging.Logger.getLogger(SalePaymentFrame.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+            EasyPosLogger.getInstance().error("", ex);
         } catch (IllegalAccessException ex) {
-            java.util.logging.Logger.getLogger(SalePaymentFrame.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+            EasyPosLogger.getInstance().error("", ex);
         } catch (javax.swing.UnsupportedLookAndFeelException ex) {
-            java.util.logging.Logger.getLogger(SalePaymentFrame.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+            EasyPosLogger.getInstance().error("", ex);
         }
         //</editor-fold>
 

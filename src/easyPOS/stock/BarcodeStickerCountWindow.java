@@ -5,6 +5,7 @@
 package easyPOS.stock;
 
 import appDataModels.BarcodeLableItemDataModel;
+import control.EasyPosLogger;
 import easyPOS.localization.ApplicationMessages;
 import javax.swing.JOptionPane;
 import uiUtil.EasyPOSMessageDialog;
@@ -126,13 +127,13 @@ public class BarcodeStickerCountWindow extends javax.swing.JFrame {
                 }
             }
         } catch (ClassNotFoundException ex) {
-            java.util.logging.Logger.getLogger(BarcodeStickerCountWindow.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+            EasyPosLogger.getInstance().error("", ex);
         } catch (InstantiationException ex) {
-            java.util.logging.Logger.getLogger(BarcodeStickerCountWindow.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+            EasyPosLogger.getInstance().error("", ex);
         } catch (IllegalAccessException ex) {
-            java.util.logging.Logger.getLogger(BarcodeStickerCountWindow.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+            EasyPosLogger.getInstance().error("", ex);
         } catch (javax.swing.UnsupportedLookAndFeelException ex) {
-            java.util.logging.Logger.getLogger(BarcodeStickerCountWindow.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+            EasyPosLogger.getInstance().error("", ex);
         }
         //</editor-fold>
 

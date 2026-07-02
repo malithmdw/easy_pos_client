@@ -36,8 +36,7 @@ import java.util.List;
 import java.util.Locale;
 import java.util.ResourceBundle;
 import java.util.concurrent.ExecutionException;
-import java.util.logging.Level;
-import java.util.logging.Logger;
+import control.EasyPosLogger;
 import javax.print.PrintService;
 import javax.swing.JLabel;
 import javax.swing.JOptionPane;
@@ -95,7 +94,7 @@ public class SaleInvoiceJPanel extends javax.swing.JPanel implements control.Lan
                 jLabelMeasuringUnit.setFont(customFontSin_18);
             }
         } catch (FontFormatException | IOException ex) {
-            Logger.getLogger(ItemCard.class.getName()).log(Level.SEVERE, null, ex);
+            EasyPosLogger.getInstance().error("", ex);
         }
         
         jTextFieldQty.addFocusListener(new FocusListener() {

@@ -18,8 +18,6 @@ import static java.awt.print.Printable.PAGE_EXISTS;
 import java.awt.print.PrinterException;
 import java.io.IOException;
 import java.text.DecimalFormat;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import javax.imageio.ImageIO;
 
 /**
@@ -98,7 +96,7 @@ public class SaleReturnVoucherPrint implements Printable {
                 logo = ImageIO.read(ApplicationDataManager.getInstance().getReceiptLogo());
             }
         } catch (IOException ex) {
-            Logger.getLogger(SaleReturnVoucherPrint.class.getName()).log(Level.SEVERE, null, ex);
+            EasyPosLogger.getInstance().error("", ex);
         }
 
         if (logo != null) {
@@ -171,7 +169,7 @@ public class SaleReturnVoucherPrint implements Printable {
             g2.drawImage(barcodeImage, x, y, 200, 50, null);
             y = y + 60;
         } catch (Exception ex) {
-            Logger.getLogger(SaleReturnVoucherPrint.class.getName()).log(Level.SEVERE, null, ex);
+            EasyPosLogger.getInstance().error("", ex);
         }
 
         // Footer

@@ -18,8 +18,6 @@ import static java.awt.print.Printable.PAGE_EXISTS;
 import java.awt.print.PrinterException;
 import java.io.IOException;
 import java.text.DecimalFormat;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import javax.imageio.ImageIO;
 
 /**
@@ -100,7 +98,7 @@ public class SimpleReceiptPrint implements Printable{
                 logo = ImageIO.read(ApplicationDataManager.getInstance().getReceiptLogo());
             }
         } catch (IOException ex) {
-            Logger.getLogger(SimpleReceiptPrint.class.getName()).log(Level.SEVERE, null, ex);
+            EasyPosLogger.getInstance().error("", ex);
         }
 
         if (logo != null) {
