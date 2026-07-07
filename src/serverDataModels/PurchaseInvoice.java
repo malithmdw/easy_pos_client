@@ -1,5 +1,6 @@
 package serverDataModels;
 
+import com.fasterxml.jackson.annotation.JsonInclude;
 import java.util.List;
 import java.util.ArrayList;
 
@@ -8,6 +9,7 @@ import java.util.ArrayList;
  * @author MalithWanniarachchi
  */
 public class PurchaseInvoice {
+    @JsonInclude(JsonInclude.Include.NON_DEFAULT)
     public long rec_id;
     public int institute_id;
     public String system_invoice_no;

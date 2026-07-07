@@ -1,11 +1,13 @@
 package serverDataModels;
 
+import com.fasterxml.jackson.annotation.JsonInclude;
 import java.util.List;
 
 /**
  *
  * @author MalithWanniarachchi
  */
+@JsonInclude(JsonInclude.Include.NON_DEFAULT)
 public class Item {
     public int item_id; 
     public int institute_id; 

@@ -118,6 +118,9 @@ public class ServerAPIConnection {
         if (loggedInUser == null) {
             return false;
         }
+        // Clear the expired token before calling login so generateHeader() does not
+        // attach it to the login request (some servers reject login with a bad JWT).
+        RuntimeDataManager.getInstance().getRuntimeData().setAuthToken(null);
         CommonResponse loginResp = login(loggedInUser.getUserName(), loggedInUser.getPassword());
         return loginResp.getAPIResponse().isSuccess();
     }

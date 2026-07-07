@@ -1,15 +1,20 @@
 
 package serverDataModels;
 
+import com.fasterxml.jackson.annotation.JsonInclude;
+
 /**
  *
  * @author MalithWanniarachchi
  */
 public class PurchaseItem {
+    @JsonInclude(JsonInclude.Include.NON_DEFAULT)
     public long rec_id;
+    @JsonInclude(JsonInclude.Include.NON_DEFAULT)
     public long invoice_record_id;
     public String insert_date_time;
     public long item_id;
+    @JsonInclude(JsonInclude.Include.NON_DEFAULT)
     public long batch_id;
     public double purchase_unit_price;
     public double label_price;

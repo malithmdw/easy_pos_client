@@ -1,9 +1,12 @@
 package serverDataModels;
 
+import com.fasterxml.jackson.annotation.JsonInclude;
+
 /**
  *
  * @author MalithWanniarachchi
  */
+@JsonInclude(JsonInclude.Include.NON_DEFAULT)
 public class CustomerLedger {
     
     public enum LEDGER_TYPE{DEBIT, CREDIT;};
