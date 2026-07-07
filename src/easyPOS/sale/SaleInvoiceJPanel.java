@@ -64,7 +64,29 @@ public class SaleInvoiceJPanel extends javax.swing.JPanel implements control.Lan
 
     
     DecimalFormat df = new DecimalFormat("#0.00");
-    
+
+    private easyPOS.customerdisplay.CustomerScreenFrame customerScreenFrame;
+
+    public void setCustomerScreenFrame(easyPOS.customerdisplay.CustomerScreenFrame frame) {
+        this.customerScreenFrame = frame;
+    }
+
+    private void pushToCustomerDisplay() {
+        if (customerScreenFrame == null) return;
+        easyPOS.customerdisplay.CustomerScreenInvoicePanel invoicePanel = customerScreenFrame.getInvoicePanel();
+        easyPOS.customerdisplay.CustomerScreenLogoPanel logoPanel = customerScreenFrame.getLogoPanel();
+        invoicePanel.updateTable(jTableSaleToBill.getModel());
+        invoicePanel.updateSummary(
+            jTextFieldSalesNoOfItms.getText(),
+            jTextFieldGrossAmount.getText(),
+            jTextFieldTotalDis.getText(),
+            jTextFieldNetTot.getText(),
+            jTextFieldMRecieve.getText(),
+            jTextFieldBal.getText()
+        );
+        logoPanel.setCustomerName(jTextFieldCustName.getText());
+    }
+
     BillDataModel billDataModel = new BillDataModel();
     BillDataModel lastIssuedBillDataModel = new BillDataModel();
     
@@ -387,8 +409,9 @@ public class SaleInvoiceJPanel extends javax.swing.JPanel implements control.Lan
         }
         
         jTableSaleToBill.setRowHeight(35);
+        pushToCustomerDisplay();
     }
-    
+
     private void arrangeTotalValues()
     {
         double totalQty = 0;
@@ -411,8 +434,9 @@ public class SaleInvoiceJPanel extends javax.swing.JPanel implements control.Lan
         jTextFieldSalesNoOfItms.setText(df.format(totalQty));
         jTextFieldTotalDis.setText(df.format(totalDiscount));
         jTextFieldNetTot.setText(df.format(totalNetAmount));
+        pushToCustomerDisplay();
     }
-    
+
     private void btnActionProcessBill(){
         if(jTextFieldGrossAmount.getText().equals("")||jTextFieldTotalDis.getText().equals("")||jTextFieldSalesNoOfItms.getText().equals("")||
                 jTextFieldNetTot.getText().equals("")||jTextFieldMRecieve.getText().equals("")||jTextFieldBal.getText().equals("")||
@@ -619,7 +643,8 @@ public class SaleInvoiceJPanel extends javax.swing.JPanel implements control.Lan
         jTextFieldNetTot.setText("");
         jTextFieldMRecieve.setText("");
         jTextFieldBal.setText("");
-    } 
+        pushToCustomerDisplay();
+    }
     
     private void switchLanguage() {
         Language appLang = ApplicationDataManager.getInstance().getApplicationLanguage();
@@ -779,6 +804,7 @@ public class SaleInvoiceJPanel extends javax.swing.JPanel implements control.Lan
                     } else {
                         EasyPOSMessageDialog.showErrorMessageDialog(jPanelSaleInvoiceBase.getRootPane(), response.getAPIResponse());
                     }
+                    pushToCustomerDisplay();
 
                 } catch (InterruptedException | ExecutionException ex) {
                     EasyPOSMessageDialog.showUnexpectedError(jPanelSaleInvoiceBase.getRootPane(), ex.getMessage());
@@ -1414,6 +1440,7 @@ public class SaleInvoiceJPanel extends javax.swing.JPanel implements control.Lan
             }catch(NumberFormatException e){
 
             }
+            pushToCustomerDisplay();
         }else if(evt.getKeyCode()==KeyEvent.VK_F1){
             btnActionProcessBill();
             jTextFieldItmCode.requestFocus();

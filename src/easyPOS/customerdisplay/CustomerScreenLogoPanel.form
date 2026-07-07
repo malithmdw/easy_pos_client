@@ -28,7 +28,7 @@
                   <Component id="cusScreenLogoGreetingLbl" alignment="0" max="32767" attributes="0"/>
                   <Component id="cusScreenLogoGreetingLbl2" alignment="0" pref="220" max="32767" attributes="0"/>
                   <Component id="cusScreenLogoGreetingLbl3" alignment="0" pref="220" max="32767" attributes="0"/>
-                  <Component id="cusScreenLogoAddressLbl" alignment="1" pref="220" max="32767" attributes="0"/>
+                  <Component id="cusScreenCustomerNameLbl" alignment="1" pref="220" max="32767" attributes="0"/>
               </Group>
               <EmptySpace max="-2" attributes="0"/>
           </Group>
@@ -46,7 +46,7 @@
               <EmptySpace type="separate" max="-2" attributes="0"/>
               <Component id="cusScreenLogoLbl" pref="124" max="32767" attributes="0"/>
               <EmptySpace type="unrelated" max="-2" attributes="0"/>
-              <Component id="cusScreenLogoAddressLbl" min="-2" pref="54" max="-2" attributes="0"/>
+              <Component id="cusScreenCustomerNameLbl" min="-2" pref="54" max="-2" attributes="0"/>
               <EmptySpace max="-2" attributes="0"/>
           </Group>
       </Group>
@@ -89,7 +89,7 @@
         <Property name="text" type="java.lang.String" value="Welcome to"/>
       </Properties>
     </Component>
-    <Component class="javax.swing.JLabel" name="cusScreenLogoAddressLbl">
+    <Component class="javax.swing.JLabel" name="cusScreenCustomerNameLbl">
       <Properties>
         <Property name="font" type="java.awt.Font" editor="org.netbeans.beaninfo.editors.FontEditor">
           <Font name="Segoe UI" size="18" style="0"/>

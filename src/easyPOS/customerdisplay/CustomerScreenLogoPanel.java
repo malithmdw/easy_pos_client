@@ -1,8 +1,5 @@
-/*
- * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
- * Click nbfs://nbhost/SystemFileSystem/Templates/GUIForms/JPanel.java to edit this template
- */
-package javaapplication1;
+
+package easyPOS.customerdisplay;
 
 /**
  *
@@ -17,6 +14,14 @@ public class CustomerScreenLogoPanel extends javax.swing.JPanel {
         initComponents();
     }
 
+    public void setCustomerName(String name) {
+        if (name == null || name.trim().isEmpty()) {
+            cusScreenCustomerNameLbl.setText("Hello !");
+        } else {
+            cusScreenCustomerNameLbl.setText("Hello, " + name.trim() + " !");
+        }
+    }
+
     /**
      * This method is called from within the constructor to initialize the form.
      * WARNING: Do NOT modify this code. The content of this method is always
@@ -29,7 +34,7 @@ public class CustomerScreenLogoPanel extends javax.swing.JPanel {
         cusScreenLogoGreetingLbl = new javax.swing.JLabel();
         cusScreenLogoGreetingLbl2 = new javax.swing.JLabel();
         cusScreenLogoGreetingLbl3 = new javax.swing.JLabel();
-        cusScreenLogoAddressLbl = new javax.swing.JLabel();
+        cusScreenCustomerNameLbl = new javax.swing.JLabel();
         cusScreenLogoLbl = new javax.swing.JLabel();
 
         setBackground(new java.awt.Color(255, 255, 255));
@@ -49,10 +54,10 @@ public class CustomerScreenLogoPanel extends javax.swing.JPanel {
         cusScreenLogoGreetingLbl3.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
         cusScreenLogoGreetingLbl3.setText("Welcome to");
 
-        cusScreenLogoAddressLbl.setFont(new java.awt.Font("Segoe UI", 0, 18)); // NOI18N
-        cusScreenLogoAddressLbl.setForeground(new java.awt.Color(255, 204, 51));
-        cusScreenLogoAddressLbl.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
-        cusScreenLogoAddressLbl.setText("Branch Name");
+        cusScreenCustomerNameLbl.setFont(new java.awt.Font("Segoe UI", 0, 18)); // NOI18N
+        cusScreenCustomerNameLbl.setForeground(new java.awt.Color(255, 204, 51));
+        cusScreenCustomerNameLbl.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
+        cusScreenCustomerNameLbl.setText("Branch Name");
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(this);
         this.setLayout(layout);
@@ -65,7 +70,7 @@ public class CustomerScreenLogoPanel extends javax.swing.JPanel {
                     .addComponent(cusScreenLogoGreetingLbl, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                     .addComponent(cusScreenLogoGreetingLbl2, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, 220, Short.MAX_VALUE)
                     .addComponent(cusScreenLogoGreetingLbl3, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, 220, Short.MAX_VALUE)
-                    .addComponent(cusScreenLogoAddressLbl, javax.swing.GroupLayout.DEFAULT_SIZE, 220, Short.MAX_VALUE))
+                    .addComponent(cusScreenCustomerNameLbl, javax.swing.GroupLayout.DEFAULT_SIZE, 220, Short.MAX_VALUE))
                 .addContainerGap())
         );
         layout.setVerticalGroup(
@@ -80,14 +85,14 @@ public class CustomerScreenLogoPanel extends javax.swing.JPanel {
                 .addGap(18, 18, 18)
                 .addComponent(cusScreenLogoLbl, javax.swing.GroupLayout.DEFAULT_SIZE, 124, Short.MAX_VALUE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                .addComponent(cusScreenLogoAddressLbl, javax.swing.GroupLayout.PREFERRED_SIZE, 54, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addComponent(cusScreenCustomerNameLbl, javax.swing.GroupLayout.PREFERRED_SIZE, 54, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addContainerGap())
         );
     }// </editor-fold>//GEN-END:initComponents
 
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
-    private javax.swing.JLabel cusScreenLogoAddressLbl;
+    private javax.swing.JLabel cusScreenCustomerNameLbl;
     private javax.swing.JLabel cusScreenLogoGreetingLbl;
     private javax.swing.JLabel cusScreenLogoGreetingLbl2;
     private javax.swing.JLabel cusScreenLogoGreetingLbl3;

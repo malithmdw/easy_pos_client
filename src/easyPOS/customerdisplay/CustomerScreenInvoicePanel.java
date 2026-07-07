@@ -1,5 +1,5 @@
 
-package javaapplication1;
+package easyPOS.customerdisplay;
 
 /**
  *
@@ -43,7 +43,7 @@ public class CustomerScreenInvoicePanel extends javax.swing.JPanel {
         custDisplayDueAmtValueLabel1 = new javax.swing.JLabel();
         custDisplayChangeAmtValueLabel1 = new javax.swing.JLabel();
         jScrollPane1 = new javax.swing.JScrollPane();
-        jTable1 = new javax.swing.JTable();
+        customerDisplayItemTable = new javax.swing.JTable();
 
         setBackground(new java.awt.Color(255, 255, 255));
 
@@ -210,8 +210,8 @@ public class CustomerScreenInvoicePanel extends javax.swing.JPanel {
                 .addContainerGap())
         );
 
-        jTable1.setFont(new java.awt.Font("Segoe UI", 0, 16)); // NOI18N
-        jTable1.setModel(new javax.swing.table.DefaultTableModel(
+        customerDisplayItemTable.setFont(new java.awt.Font("Segoe UI", 0, 16)); // NOI18N
+        customerDisplayItemTable.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
                 {null, null, null, null},
                 {null, null, null, null},
@@ -222,9 +222,9 @@ public class CustomerScreenInvoicePanel extends javax.swing.JPanel {
                 "Title 1", "Title 2", "Title 3", "Title 4"
             }
         ));
-        jTable1.setRequestFocusEnabled(false);
-        jTable1.setRowSelectionAllowed(false);
-        jScrollPane1.setViewportView(jTable1);
+        customerDisplayItemTable.setRequestFocusEnabled(false);
+        customerDisplayItemTable.setRowSelectionAllowed(false);
+        jScrollPane1.setViewportView(customerDisplayItemTable);
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(this);
         this.setLayout(layout);
@@ -242,6 +242,31 @@ public class CustomerScreenInvoicePanel extends javax.swing.JPanel {
         );
     }// </editor-fold>//GEN-END:initComponents
 
+
+    public void updateTable(javax.swing.table.TableModel sourceModel) {
+        customerDisplayItemTable.setModel(new CustomerInvoiceTableModel(sourceModel));
+    }
+
+    public void updateSummary(String items, String total, String discount,
+                              String net, String due, String change) {
+        custDisplayItemsValueLabel.setText(items.isEmpty() ? " " : items);
+        custDisplayTotalValueLabel.setText(total.isEmpty() ? " " : total);
+        custDisplayDiscountValueLabel.setText(discount.isEmpty() ? " " : discount);
+        custDisplayNetAmtValueLabel.setText(net.isEmpty() ? " " : net);
+        custDisplayDueAmtValueLabel.setText(due.isEmpty() ? " " : due);
+        custDisplayChangeAmtValueLabel.setText(change.isEmpty() ? " " : change);
+    }
+
+    public void clearDisplay() {
+        customerDisplayItemTable.setModel(new CustomerInvoiceTableModel(
+                new javax.swing.table.DefaultTableModel()));
+        custDisplayItemsValueLabel.setText(" ");
+        custDisplayTotalValueLabel.setText(" ");
+        custDisplayDiscountValueLabel.setText(" ");
+        custDisplayNetAmtValueLabel.setText(" ");
+        custDisplayDueAmtValueLabel.setText(" ");
+        custDisplayChangeAmtValueLabel.setText(" ");
+    }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JLabel custDisplayChangeAmtLabel;
@@ -262,8 +287,8 @@ public class CustomerScreenInvoicePanel extends javax.swing.JPanel {
     private javax.swing.JLabel custDisplayTotalLabel;
     private javax.swing.JLabel custDisplayTotalValueLabel;
     private javax.swing.JLabel custDisplayTotalValueLabel1;
+    private javax.swing.JTable customerDisplayItemTable;
     private javax.swing.JPanel jPanel1;
     private javax.swing.JScrollPane jScrollPane1;
-    private javax.swing.JTable jTable1;
     // End of variables declaration//GEN-END:variables
 }

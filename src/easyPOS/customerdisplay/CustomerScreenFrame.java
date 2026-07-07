@@ -1,8 +1,5 @@
-/*
- * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
- * Click nbfs://nbhost/SystemFileSystem/Templates/GUIForms/JFrame.java to edit this template
- */
-package javaapplication1;
+
+package easyPOS.customerdisplay;
 
 import control.EasyPosLogger;
 
@@ -28,8 +25,8 @@ public class CustomerScreenFrame extends javax.swing.JFrame {
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
 
-        customerScreenLogoPanel1 = new javaapplication1.CustomerScreenLogoPanel();
-        customerScreenInvoicePanel1 = new javaapplication1.CustomerScreenInvoicePanel();
+        customerScreenLogoPanel1 = new CustomerScreenLogoPanel();
+        customerScreenInvoicePanel1 = new CustomerScreenInvoicePanel();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 
@@ -87,8 +84,16 @@ public class CustomerScreenFrame extends javax.swing.JFrame {
         });
     }
 
+    public CustomerScreenInvoicePanel getInvoicePanel() {
+        return customerScreenInvoicePanel1;
+    }
+
+    public CustomerScreenLogoPanel getLogoPanel() {
+        return customerScreenLogoPanel1;
+    }
+
     // Variables declaration - do not modify//GEN-BEGIN:variables
-    private javaapplication1.CustomerScreenInvoicePanel customerScreenInvoicePanel1;
-    private javaapplication1.CustomerScreenLogoPanel customerScreenLogoPanel1;
+    private CustomerScreenInvoicePanel customerScreenInvoicePanel1;
+    private CustomerScreenLogoPanel customerScreenLogoPanel1;
     // End of variables declaration//GEN-END:variables
 }

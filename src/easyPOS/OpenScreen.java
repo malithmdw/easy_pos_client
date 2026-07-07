@@ -34,18 +34,22 @@ import util.DateTimeUtil;
 public class OpenScreen extends javax.swing.JFrame{
 
     LoginDBOperation logScr = new LoginDBOperation();
-    SuppliesDBOperation supp = new SuppliesDBOperation(); 
+    SuppliesDBOperation supp = new SuppliesDBOperation();
     SalesDBOperation sdbops = new SalesDBOperation();
-    
+
+    private easyPOS.customerdisplay.CustomerScreenFrame customerScreenFrame;
+
     String currentUser="";
     
     int showAlertAgain=1;
     
     public OpenScreen() {
-        initComponents();  
-        
+        initComponents();
+
         //insert logo to the top left of the frame
         setIcon();
+
+        openCustomerDisplay();
         
         //delete sale items from table
         //deleteSalesItemsData();
@@ -520,6 +524,23 @@ public class OpenScreen extends javax.swing.JFrame{
     
    
     
+    private void openCustomerDisplay() {
+        customerScreenFrame = new easyPOS.customerdisplay.CustomerScreenFrame();
+        customerScreenFrame.setDefaultCloseOperation(javax.swing.WindowConstants.DO_NOTHING_ON_CLOSE);
+
+        java.awt.GraphicsDevice[] screens = java.awt.GraphicsEnvironment
+                .getLocalGraphicsEnvironment().getScreenDevices();
+
+        if (screens.length > 1) {
+            java.awt.Rectangle bounds = screens[1].getDefaultConfiguration().getBounds();
+            customerScreenFrame.setBounds(bounds);
+            customerScreenFrame.setExtendedState(javax.swing.JFrame.MAXIMIZED_BOTH);
+        }
+
+        customerScreenFrame.setVisible(true);
+        salePanel.setCustomerScreenFrame(customerScreenFrame);
+    }
+
     @SuppressWarnings("unchecked")
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {

@@ -1,5 +1,6 @@
 package easyPOS;
 
+import appDataModels.UserAccountModel;
 import control.ApplicationDataManager;
 import control.EventManager;
 import dataModels.MenuItemType;
@@ -14,12 +15,14 @@ import dataModels.Language;
 import java.util.Locale;
 import java.util.ResourceBundle;
 import control.EasyPosLogger;
+import control.LoginEvent;
+import control.RuntimeDataManager;
 
 /**
  *
  * @author malit
  */
-public final class HeaderPanel extends javax.swing.JPanel implements control.LanguageChangeListener {
+public final class HeaderPanel extends javax.swing.JPanel implements control.LanguageChangeListener, LoginEvent{
 
     /**
      * Creates new form HeaderPanel
@@ -29,13 +32,26 @@ public final class HeaderPanel extends javax.swing.JPanel implements control.Lan
         switchLanguage();
         setTodayDate();
         control.EventManager.getInstance().addLanguageChangeListener(this);
+        EventManager.getInstance().addLoginEvent(this);
     }
 
+    public void LoadUIData() {
+        jLabelHeaderBusinessName.setText(RuntimeDataManager.getInstance().getRuntimeData().getSelectedInstitute().getBusinessName());
+    }
     @Override
     public void onLanguageChanged() {
         switchLanguage();
         revalidate();
         repaint();
+    }
+    
+    @Override
+    public void onLoginSuccess(UserAccountModel user) {
+        LoadUIData();
+    }
+
+    @Override
+    public void onForgotPassword(String UserName) {
     }
 
     @SuppressWarnings("unchecked")
@@ -55,8 +71,6 @@ public final class HeaderPanel extends javax.swing.JPanel implements control.Lan
 
         jLabelHeaderBusinessName.setFont(new java.awt.Font("Bookman Old Style", 0, 36)); // NOI18N
         jLabelHeaderBusinessName.setForeground(new java.awt.Color(0, 0, 51));
-        java.util.ResourceBundle bundle = java.util.ResourceBundle.getBundle("easyPOS/Bundle"); // NOI18N
-        jLabelHeaderBusinessName.setText(bundle.getString("HeaderPanel.jLabelHeaderBusinessName.text")); // NOI18N
 
         jTextFieldHeaderDate.setEditable(false);
         jTextFieldHeaderDate.setBackground(new java.awt.Color(153, 153, 153));
@@ -74,6 +88,7 @@ public final class HeaderPanel extends javax.swing.JPanel implements control.Lan
         });
 
         jButtonHeaderHome.setIcon(new javax.swing.ImageIcon(getClass().getResource("/images/grid.png"))); // NOI18N
+        java.util.ResourceBundle bundle = java.util.ResourceBundle.getBundle("easyPOS/Bundle"); // NOI18N
         jButtonHeaderHome.setText(bundle.getString("HeaderPanel.jButtonHeaderHome.text")); // NOI18N
         jButtonHeaderHome.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -97,7 +112,7 @@ public final class HeaderPanel extends javax.swing.JPanel implements control.Lan
                 .addContainerGap()
                 .addComponent(jLabelHeaderLogo, javax.swing.GroupLayout.PREFERRED_SIZE, 137, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(jLabelHeaderBusinessName, javax.swing.GroupLayout.PREFERRED_SIZE, 410, Short.MAX_VALUE)
+                .addComponent(jLabelHeaderBusinessName, javax.swing.GroupLayout.DEFAULT_SIZE, 410, Short.MAX_VALUE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(jButtonHeaderLogOut)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
@@ -151,19 +166,18 @@ public final class HeaderPanel extends javax.swing.JPanel implements control.Lan
         Locale locale = (appLang == Language.SINHALA) ? new Locale("si", "LK") : Locale.ENGLISH;
         ResourceBundle resourceBundle = ResourceBundle.getBundle("easyPOS/Bundle", locale);
         if (appLang == Language.SINHALA) {
-        try {
-            Font customFont = Font.createFont(Font.TRUETYPE_FONT,
-                    ApplicationDataManager.getInstance().getSinhalaFontFile()).deriveFont(18f);
-            GraphicsEnvironment ge = GraphicsEnvironment.getLocalGraphicsEnvironment();
-            ge.registerFont(customFont);
-            jLabelHeaderBusinessName.setFont(customFont);
-            jButtonHeaderHome.setFont(customFont);
-            jButtonHeaderLogOut.setFont(customFont);
-        } catch (IOException | FontFormatException e) {
-            System.err.println(e);
+            try {
+                Font customFont = Font.createFont(Font.TRUETYPE_FONT,
+                        ApplicationDataManager.getInstance().getSinhalaFontFile()).deriveFont(18f);
+                GraphicsEnvironment ge = GraphicsEnvironment.getLocalGraphicsEnvironment();
+                ge.registerFont(customFont);
+                jLabelHeaderBusinessName.setFont(customFont);
+                jButtonHeaderHome.setFont(customFont);
+                jButtonHeaderLogOut.setFont(customFont);
+            } catch (IOException | FontFormatException e) {
+                System.err.println(e);
+            }
         }
-        }
-        jLabelHeaderBusinessName.setText(resourceBundle.getString("HeaderPanel.jLabelHeaderBusinessName.text"));
         jButtonHeaderHome.setText(resourceBundle.getString("HeaderPanel.jButtonHeaderHome.text"));
         jButtonHeaderLogOut.setText(resourceBundle.getString("HeaderPanel.jButtonHeaderLogOut.text"));
     }
@@ -232,12 +246,12 @@ public final class HeaderPanel extends javax.swing.JPanel implements control.Lan
 //                           alertForPayForSuppliers();
 //                        }                        
 //                    }
-///change time for every 1000 miliseconds
-try {
-    sleep(1000);
-} catch (InterruptedException ex) {
-    EasyPosLogger.getInstance().error("", ex);
-}   
+                    ///change time for every 1000 miliseconds
+                    try {
+                        sleep(1000);
+                    } catch (InterruptedException ex) {
+                        EasyPosLogger.getInstance().error("", ex);
+                    }   
                 }
                 
             }

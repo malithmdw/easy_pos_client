@@ -201,6 +201,10 @@ public class SalePanel extends javax.swing.JPanel {
     public void setNextInvoiceNumber() {
         saleInvoiceJPanel.setNextInvoiceNumber();
     }
+
+    public void setCustomerScreenFrame(easyPOS.customerdisplay.CustomerScreenFrame frame) {
+        saleInvoiceJPanel.setCustomerScreenFrame(frame);
+    }
     
     public void loadItemCardData(List<ItemCardDataModel> items)
     {
