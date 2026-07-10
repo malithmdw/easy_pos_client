@@ -18,6 +18,7 @@ public class PurchaseInvoice {
     public String supplier_code;
     public double total;
     public double discount;
+    public double charges;
     public double net_total;
     public int set_alert;
     public double paid;

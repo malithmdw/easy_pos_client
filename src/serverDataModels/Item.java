@@ -17,8 +17,10 @@ public class Item {
     public String item_name_tam; 
     public int category_id; 
     public int measure_unit_id; 
-    public String image_name; 
-    public double minimum_stock; 
+    public String image_name;
+    public String video_link;
+    public int sale_online;
+    public double minimum_stock;
     public String added_by; 
     public String added_date_time; 
     public String modified_by; 
