@@ -82,6 +82,9 @@ public class SalePanel extends javax.swing.JPanel {
                 itemCardDataModel.setItemStockModel(item.getStock().get(0));
                 itemCardDataModel.setItemNameText(Language.SINHALA.equals(ApplicationDataManager.getInstance().getApplicationLanguage())?
                             item.getItemNameSin():item.getItemName());
+                if (ItemCardDataModel.CardType.STOCK_ITEM.equals(itemCardDataModel.getCardType())) {
+                    itemCardDataModel.setItemPriceText(GeneralUtil.getCurrencyString(item.getStock().get(0).getSellingPrice()));
+                }
                 itemCardDataModels.add(itemCardDataModel);
             }
             
