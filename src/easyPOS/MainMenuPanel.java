@@ -59,12 +59,10 @@ public class MainMenuPanel extends javax.swing.JPanel implements control.Languag
         jLabelMainMenuBusinessName = new javax.swing.JLabel();
         jButtonDailyTrans = new javax.swing.JButton();
         jButtonStoke = new javax.swing.JButton();
-        jButtonSupp = new javax.swing.JButton();
         jButtonReports = new javax.swing.JButton();
         jButtonSettings = new javax.swing.JButton();
         jButtonLogOut1 = new javax.swing.JButton();
         jButtonSupp1 = new javax.swing.JButton();
-        jButtonSettings1 = new javax.swing.JButton();
         jButtonSettings2 = new javax.swing.JButton();
 
         setBackground(new java.awt.Color(204, 204, 204));
@@ -95,16 +93,6 @@ public class MainMenuPanel extends javax.swing.JPanel implements control.Languag
         jButtonStoke.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 jButtonStokeActionPerformed(evt);
-            }
-        });
-
-        jButtonSupp.setFont(new java.awt.Font("Tahoma", 1, 18)); // NOI18N
-        jButtonSupp.setForeground(new java.awt.Color(51, 51, 51));
-        jButtonSupp.setIcon(new javax.swing.ImageIcon(getClass().getResource("/images/supplier.png"))); // NOI18N
-        jButtonSupp.setText(bundle.getString("MainMenuPanel.jButtonSupp.text")); // NOI18N
-        jButtonSupp.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jButtonSuppActionPerformed(evt);
             }
         });
 
@@ -146,16 +134,6 @@ public class MainMenuPanel extends javax.swing.JPanel implements control.Languag
             }
         });
 
-        jButtonSettings1.setFont(new java.awt.Font("Tahoma", 1, 18)); // NOI18N
-        jButtonSettings1.setForeground(new java.awt.Color(51, 51, 51));
-        jButtonSettings1.setIcon(new javax.swing.ImageIcon(getClass().getResource("/images/user.png"))); // NOI18N
-        jButtonSettings1.setText(bundle.getString("MainMenuPanel.jButtonSettings1.text")); // NOI18N
-        jButtonSettings1.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jButtonSettings1ActionPerformed(evt);
-            }
-        });
-
         jButtonSettings2.setFont(new java.awt.Font("Tahoma", 1, 18)); // NOI18N
         jButtonSettings2.setForeground(new java.awt.Color(51, 51, 51));
         jButtonSettings2.setIcon(new javax.swing.ImageIcon(getClass().getResource("/images/customer.png"))); // NOI18N
@@ -184,15 +162,13 @@ public class MainMenuPanel extends javax.swing.JPanel implements control.Languag
                             .addGroup(layout.createSequentialGroup()
                                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
                                     .addComponent(jButtonSettings2, javax.swing.GroupLayout.DEFAULT_SIZE, 375, Short.MAX_VALUE)
-                                    .addComponent(jButtonSupp, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                                     .addComponent(jButtonSupp1, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                                     .addComponent(jButtonStoke, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                                     .addComponent(jButtonDailyTrans, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                                     .addComponent(jButtonSettings, javax.swing.GroupLayout.PREFERRED_SIZE, 375, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                    .addComponent(jButtonReports, javax.swing.GroupLayout.PREFERRED_SIZE, 375, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                    .addComponent(jButtonSettings1, javax.swing.GroupLayout.PREFERRED_SIZE, 375, javax.swing.GroupLayout.PREFERRED_SIZE))))
+                                    .addComponent(jButtonReports, javax.swing.GroupLayout.PREFERRED_SIZE, 375, javax.swing.GroupLayout.PREFERRED_SIZE))))
                         .addGap(46, 46, 46)))
                 .addContainerGap())
         );
@@ -212,14 +188,10 @@ public class MainMenuPanel extends javax.swing.JPanel implements control.Languag
                     .addComponent(jButtonStoke, javax.swing.GroupLayout.PREFERRED_SIZE, 70, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(jButtonSettings, javax.swing.GroupLayout.PREFERRED_SIZE, 70, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(jButtonSettings2, javax.swing.GroupLayout.PREFERRED_SIZE, 70, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(jButtonSettings1, javax.swing.GroupLayout.PREFERRED_SIZE, 70, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(jButtonSupp, javax.swing.GroupLayout.PREFERRED_SIZE, 70, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addComponent(jButtonSettings2, javax.swing.GroupLayout.PREFERRED_SIZE, 70, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(jButtonSupp1, javax.swing.GroupLayout.PREFERRED_SIZE, 70, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 16, Short.MAX_VALUE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 92, Short.MAX_VALUE)
                 .addComponent(jButtonLogOut1)
                 .addContainerGap())
         );
@@ -232,10 +204,6 @@ public class MainMenuPanel extends javax.swing.JPanel implements control.Languag
     private void jButtonStokeActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonStokeActionPerformed
         EventManager.getInstance().notifyMenuItemChanged(MenuItemType.STOCK);
     }//GEN-LAST:event_jButtonStokeActionPerformed
-
-    private void jButtonSuppActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonSuppActionPerformed
-        EventManager.getInstance().notifyMenuItemChanged(MenuItemType.SUPPLIER);
-    }//GEN-LAST:event_jButtonSuppActionPerformed
 
     private void jButtonReportsActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonReportsActionPerformed
         EventManager.getInstance().notifyMenuItemChanged(MenuItemType.REPORT);
@@ -252,10 +220,6 @@ public class MainMenuPanel extends javax.swing.JPanel implements control.Languag
     private void jButtonSupp1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonSupp1ActionPerformed
         EventManager.getInstance().notifyMenuItemChanged(MenuItemType.INVOICE);
     }//GEN-LAST:event_jButtonSupp1ActionPerformed
-
-    private void jButtonSettings1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonSettings1ActionPerformed
-        // TODO add your handling code here:
-    }//GEN-LAST:event_jButtonSettings1ActionPerformed
 
     private void jButtonSettings2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonSettings2ActionPerformed
         EventManager.getInstance().notifyMenuItemChanged(MenuItemType.CUSTOMER);
@@ -274,12 +238,12 @@ public class MainMenuPanel extends javax.swing.JPanel implements control.Languag
             jLabelMainMenuBusinessName.setFont(customFont);
             jButtonDailyTrans.setFont(customFont);
             jButtonStoke.setFont(customFont);
-            jButtonSupp.setFont(customFont);
+//            jButtonSupp.setFont(customFont);
             jButtonReports.setFont(customFont);
             jButtonSettings.setFont(customFont);
             jButtonLogOut1.setFont(customFont);
             jButtonSupp1.setFont(customFont);
-            jButtonSettings1.setFont(customFont);
+//            jButtonSettings1.setFont(customFont);
             jButtonSettings2.setFont(customFont);
         } catch (IOException | FontFormatException e) {
             System.err.println(e);
@@ -287,12 +251,12 @@ public class MainMenuPanel extends javax.swing.JPanel implements control.Languag
         }
         jButtonDailyTrans.setText(resourceBundle.getString("MainMenuPanel.jButtonDailyTrans.text"));
         jButtonStoke.setText(resourceBundle.getString("MainMenuPanel.jButtonStoke.text"));
-        jButtonSupp.setText(resourceBundle.getString("MainMenuPanel.jButtonSupp.text"));
+//        jButtonSupp.setText(resourceBundle.getString("MainMenuPanel.jButtonSupp.text"));
         jButtonReports.setText(resourceBundle.getString("MainMenuPanel.jButtonReports.text"));
         jButtonSettings.setText(resourceBundle.getString("MainMenuPanel.jButtonSettings.text"));
         jButtonLogOut1.setText(resourceBundle.getString("MainMenuPanel.jButtonLogOut1.text"));
         jButtonSupp1.setText(resourceBundle.getString("MainMenuPanel.jButtonSupp1.text"));
-        jButtonSettings1.setText(resourceBundle.getString("MainMenuPanel.jButtonSettings1.text"));
+//        jButtonSettings1.setText(resourceBundle.getString("MainMenuPanel.jButtonSettings1.text"));
         jButtonSettings2.setText(resourceBundle.getString("MainMenuPanel.jButtonSettings2.text"));
     }
 
@@ -301,10 +265,8 @@ public class MainMenuPanel extends javax.swing.JPanel implements control.Languag
     private javax.swing.JButton jButtonLogOut1;
     private javax.swing.JButton jButtonReports;
     private javax.swing.JButton jButtonSettings;
-    private javax.swing.JButton jButtonSettings1;
     private javax.swing.JButton jButtonSettings2;
     private javax.swing.JButton jButtonStoke;
-    private javax.swing.JButton jButtonSupp;
     private javax.swing.JButton jButtonSupp1;
     private javax.swing.JLabel jLabel106;
     private javax.swing.JLabel jLabelMainMenuBusinessName;

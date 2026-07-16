@@ -144,13 +144,13 @@ public class AddEditCustomer extends javax.swing.JFrame implements control.Langu
 
         jLabel27.setFont(new java.awt.Font("Tahoma", 0, 18)); // NOI18N
         jLabel27.setHorizontalAlignment(javax.swing.SwingConstants.RIGHT);
-        jLabel27.setText(bundle.getString("Customer.jLabel25.text")); // NOI18N
+        jLabel27.setText(bundle.getString("Customer.jLabel27.text")); // NOI18N
 
         jTextFieldCustomerAddress.setFont(new java.awt.Font("Tahoma", 0, 18)); // NOI18N
 
         jLabel28.setFont(new java.awt.Font("Tahoma", 0, 18)); // NOI18N
         jLabel28.setHorizontalAlignment(javax.swing.SwingConstants.RIGHT);
-        jLabel28.setText(bundle.getString("Customer.jLabel25.text")); // NOI18N
+        jLabel28.setText(bundle.getString("Customer.jLabel28.text")); // NOI18N
 
         jTextFieldCustomerNIC.setFont(new java.awt.Font("Tahoma", 0, 18)); // NOI18N
 
@@ -158,7 +158,7 @@ public class AddEditCustomer extends javax.swing.JFrame implements control.Langu
 
         jLabel29.setFont(new java.awt.Font("Tahoma", 0, 18)); // NOI18N
         jLabel29.setHorizontalAlignment(javax.swing.SwingConstants.RIGHT);
-        jLabel29.setText(bundle.getString("Customer.jLabel25.text")); // NOI18N
+        jLabel29.setText(bundle.getString("Customer.jLabel29.text")); // NOI18N
 
         javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
         jPanel1.setLayout(jPanel1Layout);
@@ -265,9 +265,9 @@ public class AddEditCustomer extends javax.swing.JFrame implements control.Langu
         jLabel18.setText(resourceBundle.getString("Customer.jLabel18.text"));
         jLabel25.setText(resourceBundle.getString("Customer.jLabel25.text"));
         jLabel26.setText(resourceBundle.getString("Customer.jLabel26.text"));
-        jLabel27.setText(resourceBundle.getString("Customer.jLabel25.text"));
-        jLabel28.setText(resourceBundle.getString("Customer.jLabel25.text"));
-        jLabel29.setText(resourceBundle.getString("Customer.jLabel25.text"));
+        jLabel27.setText(resourceBundle.getString("Customer.jLabel27.text"));
+        jLabel28.setText(resourceBundle.getString("Customer.jLabel28.text"));
+        jLabel29.setText(resourceBundle.getString("Customer.jLabel29.text"));
         jButton1.setText(resourceBundle.getString("AddEditCustomer.jButton1.text"));
     }
 
