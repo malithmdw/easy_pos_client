@@ -91,7 +91,6 @@ public class ReportPanel extends javax.swing.JPanel implements control.LanguageC
         jLabel32.setText("To:");
 
         jComboBoxOrderStatus.setFont(new java.awt.Font("Tahoma", 0, 12)); // NOI18N
-        jComboBoxOrderStatus.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "--All Sales--", "Sales Report Daily", "Sales Report Monthly", "Sales Report Annualy", "--All Purchase Reports--", "Purchase Report" }));
         jComboBoxOrderStatus.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 jComboBoxOrderStatusActionPerformed(evt);

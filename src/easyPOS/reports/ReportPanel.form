@@ -120,14 +120,7 @@
               <Font name="Tahoma" size="12" style="0"/>
             </Property>
             <Property name="model" type="javax.swing.ComboBoxModel" editor="org.netbeans.modules.form.editors2.ComboBoxModelEditor">
-              <StringArray count="6">
-                <StringItem index="0" value="--All Sales--"/>
-                <StringItem index="1" value="Sales Report Daily"/>
-                <StringItem index="2" value="Sales Report Monthly"/>
-                <StringItem index="3" value="Sales Report Annualy"/>
-                <StringItem index="4" value="--All Purchase Reports--"/>
-                <StringItem index="5" value="Purchase Report"/>
-              </StringArray>
+              <StringArray count="0"/>
             </Property>
           </Properties>
           <Events>
