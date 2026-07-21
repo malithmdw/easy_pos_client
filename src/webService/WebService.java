@@ -77,6 +77,13 @@ public class WebService {
             }
             String result = response.toString();
             
+            // Remove the leading BOM character if it exists
+            String rawJson = result;
+            if (rawJson.startsWith("\uFEFF")) {
+                rawJson = rawJson.substring(1);
+            }
+            result = rawJson; 
+            
             ServerResponse serverResponse = mapper.readValue(result, ServerResponse.class);
 //            System.out.println(serverResponse.response_code);
 //            System.out.println(serverResponse.response_msg);
@@ -126,6 +133,13 @@ public class WebService {
                 }
             }
             String result = response.toString();
+            
+            // Remove the leading BOM character if it exists
+            String rawJson = result;
+            if (rawJson.startsWith("\uFEFF")) {
+                rawJson = rawJson.substring(1);
+            }
+            result = rawJson;                      
 
             ServerResponse serverResponse = mapper.readValue(result, ServerResponse.class);
 

@@ -6,7 +6,7 @@
       <Properties>
         <Property name="border" type="javax.swing.border.Border" editor="org.netbeans.modules.form.editors2.BorderEditor">
           <Border info="org.netbeans.modules.form.compat2.border.TitledBorderInfo">
-            <TitledBorder title="&lt;StockItemForm.jPanel2.border.title&gt;">
+            <TitledBorder title="TEST5">
               <ResourceString PropertyName="titleX" bundle="easyPOS/stock/Bundle.properties" key="StockItemForm.jPanel2.border.title" replaceFormat="java.util.ResourceBundle.getBundle(&quot;{bundleNameSlashes}&quot;).getString(&quot;{key}&quot;)"/>
             </TitledBorder>
           </Border>
@@ -273,7 +273,7 @@
       <Properties>
         <Property name="border" type="javax.swing.border.Border" editor="org.netbeans.modules.form.editors2.BorderEditor">
           <Border info="org.netbeans.modules.form.compat2.border.TitledBorderInfo">
-            <TitledBorder title="&lt;StockItemForm.jPanel2.border.title&gt;">
+            <TitledBorder title="TEST5">
               <ResourceString PropertyName="titleX" bundle="easyPOS/stock/Bundle.properties" key="StockItemForm.jPanel2.border.title" replaceFormat="java.util.ResourceBundle.getBundle(&quot;{bundleNameSlashes}&quot;).getString(&quot;{key}&quot;)"/>
             </TitledBorder>
           </Border>

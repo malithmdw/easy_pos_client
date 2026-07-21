@@ -8,6 +8,7 @@ import control.SalesMenuItemClickListener;
 import easyPOS.NumberPanel;
 import java.awt.BorderLayout;
 import java.awt.FlowLayout;
+import java.awt.GridLayout;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.util.List;
@@ -92,8 +93,8 @@ public class ItemSelection extends javax.swing.JPanel {
             rows++;
         }
         
-        //itemGridPanel.setLayout(new GridLayout(0, COLUMNS, 20, 20));
-        itemGridPanel.setLayout(new FlowLayout(FlowLayout.LEFT, 20, 20));
+        itemGridPanel.setLayout(new GridLayout(rows, COLUMNS, 20, 20));
+//        itemGridPanel.setLayout(new FlowLayout(FlowLayout.LEFT, 20, 20));
         
         for (ItemCardDataModel item: list) {
             ItemCard card = new ItemCard();

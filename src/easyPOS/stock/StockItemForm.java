@@ -1,27 +1,33 @@
 package easyPOS.stock;
 
+import appDataModels.APIHeaderData;
 import appDataModels.CategoryModel;
 import control.ApplicationDataManager;
+import control.EasyPosLogger;
+import control.RuntimeDataManager;
 import dataModels.Language;
-import easyPOS.sale.ItemCard;
 import java.awt.Color;
 import java.awt.Font;
 import java.awt.FontFormatException;
 import java.awt.GraphicsEnvironment;
 import java.awt.event.KeyEvent;
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
 import java.util.ResourceBundle;
-import control.EasyPosLogger;
+import java.util.concurrent.ExecutionException;
 import javax.swing.DefaultComboBoxModel;
+import javax.swing.SwingWorker;
 import easyPOS.localization.ApplicationMessages;
-import javax.swing.JOptionPane;
 import uiUtil.EasyPOSMessageDialog;
 import localDatabase.DatabaseManager;
 import serverDataModels.Item;
 import serverDataModels.MeasureUnit;
+import serverDataModels.ProductBrand;
+import serverResponseDataModel.CommonResponse;
 import util.DateTimeUtil;
+import webService.ServerAPIConnection;
 
 /**
  *
@@ -30,7 +36,8 @@ import util.DateTimeUtil;
 public class StockItemForm extends javax.swing.JPanel implements control.LanguageChangeListener {
 
     private StockPanel parent;
-    
+    private List<ProductBrand> productBrands = new ArrayList<>();
+
     /**
      * Creates new form StockItemForm
      */
@@ -69,6 +76,7 @@ public class StockItemForm extends javax.swing.JPanel implements control.Languag
     
     void loadData() {
         loadComboValues();
+        loadProductBrands();
         switchLanguage();
     }
     
@@ -91,9 +99,43 @@ public class StockItemForm extends javax.swing.JPanel implements control.Languag
         }
 
         jComboBoxAddItemMesUnit.setModel(comboBoxModel2);
-        
     }
-    
+
+    private void loadProductBrands() {
+        DefaultComboBoxModel<String> initialModel = new DefaultComboBoxModel<>();
+        initialModel.addElement("-- No Brand --");
+        jComboBoxjNewItemProductBrand.setModel(initialModel);
+
+        SwingWorker<CommonResponse, Void> worker = new SwingWorker<CommonResponse, Void>() {
+            @Override
+            protected CommonResponse doInBackground() {
+                APIHeaderData aPIHeaderData = new APIHeaderData();
+                aPIHeaderData.setInstituteId(RuntimeDataManager.getInstance().getRuntimeData().getInstituteId());
+                aPIHeaderData.setTerminalId(RuntimeDataManager.getInstance().getRuntimeData().getTerminalId());
+                return ServerAPIConnection.getInstance(aPIHeaderData).getProductBrands();
+            }
+
+            @Override
+            protected void done() {
+                try {
+                    CommonResponse response = get();
+                    if (response.getAPIResponse().isSuccess()) {
+                        productBrands = (List<ProductBrand>) response.getData();
+                        DefaultComboBoxModel<String> model = new DefaultComboBoxModel<>();
+                        model.addElement("-- No Brand --");
+                        for (ProductBrand brand : productBrands) {
+                            model.addElement(brand.brand_name);
+                        }
+                        jComboBoxjNewItemProductBrand.setModel(model);
+                    }
+                } catch (InterruptedException | ExecutionException ex) {
+                    EasyPosLogger.getInstance().error("", ex);
+                }
+            }
+        };
+        worker.execute();
+    }
+
     private void switchLanguage() {
         Language appLang = ApplicationDataManager.getInstance().getApplicationLanguage();
         Locale locale = (appLang == Language.SINHALA) ? new Locale("si", "LK") : Locale.ENGLISH;
@@ -116,6 +158,7 @@ public class StockItemForm extends javax.swing.JPanel implements control.Languag
             jLabelNewItemCat.setFont(customFont1);
             jLabelNewItemMUnit.setFont(customFont1);
             jLabelNewItemComment.setFont(customFont1);
+            jLabelNewItemProductBrand.setFont(customFont1);
 
 
         } catch (IOException | FontFormatException e) {
@@ -133,6 +176,7 @@ public class StockItemForm extends javax.swing.JPanel implements control.Languag
         jLabelNewItemCat.setText(resourceBundle.getString("StockItemForm.jLabelNewItemCat.text"));
         jLabelNewItemMUnit.setText(resourceBundle.getString("StockItemForm.jLabelNewItemMUnit.text"));
         jLabelNewItemComment.setText(resourceBundle.getString("StockItemForm.jLabelNewItemComment.text"));
+        jLabelNewItemProductBrand.setText(resourceBundle.getString("StockItemForm.jLabelNewItemProductBrand.text"));
         
     }
     @SuppressWarnings("unchecked")
@@ -159,6 +203,8 @@ public class StockItemForm extends javax.swing.JPanel implements control.Languag
         jComboBoxAddItemMesUnit = new javax.swing.JComboBox();
         jLabelNewItemComment = new javax.swing.JLabel();
         jTextFieldAddToStComent = new javax.swing.JTextField();
+        jLabelNewItemProductBrand = new javax.swing.JLabel();
+        jComboBoxjNewItemProductBrand = new javax.swing.JComboBox<>();
         jPanel5 = new javax.swing.JPanel();
         jLabel78 = new javax.swing.JLabel();
         jTextFieldMinimumQtyForAlert = new javax.swing.JTextField();
@@ -324,6 +370,12 @@ public class StockItemForm extends javax.swing.JPanel implements control.Languag
             }
         });
 
+        jLabelNewItemProductBrand.setFont(new java.awt.Font("Tahoma", 0, 18)); // NOI18N
+        jLabelNewItemProductBrand.setHorizontalAlignment(javax.swing.SwingConstants.RIGHT);
+        jLabelNewItemProductBrand.setText(bundle.getString("StockItemForm.jLabelNewItemProductBrand.text")); // NOI18N
+
+        jComboBoxjNewItemProductBrand.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Item 1", "Item 2", "Item 3", "Item 4" }));
+
         javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
         jPanel1.setLayout(jPanel1Layout);
         jPanel1Layout.setHorizontalGroup(
@@ -353,12 +405,14 @@ public class StockItemForm extends javax.swing.JPanel implements control.Languag
                         .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
                             .addComponent(jLabelNewItemNameTam, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, 170, Short.MAX_VALUE)
                             .addComponent(jLabelNewItemMUnit, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                            .addComponent(jLabelNewItemSubName, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                            .addComponent(jLabelNewItemSubName, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                            .addComponent(jLabelNewItemProductBrand, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(jTextFieldAddToStName2, javax.swing.GroupLayout.PREFERRED_SIZE, 250, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addComponent(jTextFieldAddToStSubName, javax.swing.GroupLayout.PREFERRED_SIZE, 250, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addComponent(jComboBoxAddItemMesUnit, javax.swing.GroupLayout.PREFERRED_SIZE, 250, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                        .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                            .addComponent(jTextFieldAddToStName2, javax.swing.GroupLayout.DEFAULT_SIZE, 250, Short.MAX_VALUE)
+                            .addComponent(jTextFieldAddToStSubName, javax.swing.GroupLayout.DEFAULT_SIZE, 250, Short.MAX_VALUE)
+                            .addComponent(jComboBoxAddItemMesUnit, 0, 250, Short.MAX_VALUE)
+                            .addComponent(jComboBoxjNewItemProductBrand, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)))
                     .addComponent(jTextFieldAddToStComent)))
         );
         jPanel1Layout.setVerticalGroup(
@@ -371,7 +425,9 @@ public class StockItemForm extends javax.swing.JPanel implements control.Languag
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jTextFieldAddToStItCode1, javax.swing.GroupLayout.PREFERRED_SIZE, 40, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(jLabelNewItemBarcode, javax.swing.GroupLayout.PREFERRED_SIZE, 40, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addComponent(jLabelNewItemBarcode, javax.swing.GroupLayout.PREFERRED_SIZE, 40, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(jLabelNewItemProductBrand, javax.swing.GroupLayout.PREFERRED_SIZE, 40, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(jComboBoxjNewItemProductBrand, javax.swing.GroupLayout.PREFERRED_SIZE, 40, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jLabelNewItemName, javax.swing.GroupLayout.PREFERRED_SIZE, 40, javax.swing.GroupLayout.PREFERRED_SIZE)
@@ -651,10 +707,17 @@ public class StockItemForm extends javax.swing.JPanel implements control.Languag
             item.modified_date_time = DateTimeUtil.getCurrentDateTimeDBFormat(); 
             item.is_active = 1;
 
-            List<CategoryModel> allCategories = DatabaseManager.getInstance().getCategories();        
+            List<CategoryModel> allCategories = DatabaseManager.getInstance().getCategories();
             List<MeasureUnit> allMeasureUnits = DatabaseManager.getInstance().getMeasureUnits();
             item.measure_unit_id = allMeasureUnits.get(jComboBoxAddItemMesUnit.getSelectedIndex()).measure_unit_id;
             item.category_id = allCategories.get(jComboBoxAddItemCategory.getSelectedIndex()).getCategoryId();
+
+            int brandIndex = jComboBoxjNewItemProductBrand.getSelectedIndex();
+            if (brandIndex > 0 && brandIndex <= productBrands.size()) {
+                item.brand_id = productBrands.get(brandIndex - 1).brand_id;
+            } else {
+                item.brand_id = null;
+            }
             
         } catch (Exception e) {
         }
@@ -663,10 +726,10 @@ public class StockItemForm extends javax.swing.JPanel implements control.Languag
     }
     
     private boolean validateUIData(Item item){
-        if (item.barcode == null || item.barcode.isEmpty()) {
-            EasyPOSMessageDialog.showLocalizedWarning(parent, ApplicationMessages.VALIDATION_BARCODE_REQUIRED);
-            return false;
-        }
+//        if (item.barcode == null || item.barcode.isEmpty()) {
+//            EasyPOSMessageDialog.showLocalizedWarning(parent, ApplicationMessages.VALIDATION_BARCODE_REQUIRED);
+//            return false;
+//        }
         if (item.item_name == null || item.item_name.isEmpty()) {
             EasyPOSMessageDialog.showLocalizedWarning(parent, ApplicationMessages.VALIDATION_ITEM_NAME_REQUIRED);
             return false;
@@ -702,6 +765,7 @@ public class StockItemForm extends javax.swing.JPanel implements control.Languag
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JComboBox jComboBoxAddItemCategory;
     private javax.swing.JComboBox jComboBoxAddItemMesUnit;
+    private javax.swing.JComboBox<String> jComboBoxjNewItemProductBrand;
     private javax.swing.JLabel jLabel78;
     private javax.swing.JLabel jLabel80;
     private javax.swing.JLabel jLabelNewItemBarcode;
@@ -712,6 +776,7 @@ public class StockItemForm extends javax.swing.JPanel implements control.Languag
     private javax.swing.JLabel jLabelNewItemName;
     private javax.swing.JLabel jLabelNewItemNameSin;
     private javax.swing.JLabel jLabelNewItemNameTam;
+    private javax.swing.JLabel jLabelNewItemProductBrand;
     private javax.swing.JLabel jLabelNewItemSubName;
     private javax.swing.JPanel jPanel1;
     private javax.swing.JPanel jPanel14;

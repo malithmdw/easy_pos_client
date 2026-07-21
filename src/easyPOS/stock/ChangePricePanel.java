@@ -779,7 +779,8 @@ public class ChangePricePanel extends javax.swing.JPanel implements control.Lang
     }//GEN-LAST:event_jButton1ActionPerformed
 
     private void jButton2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton2ActionPerformed
-        
+        clearItemData();
+        clearNewPriceData();
     }//GEN-LAST:event_jButton2ActionPerformed
 
     private void jTextFieldNewLabelPriceKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_jTextFieldNewLabelPriceKeyPressed
@@ -830,6 +831,25 @@ public class ChangePricePanel extends javax.swing.JPanel implements control.Lang
     private javax.swing.JTextField jTextFieldPIItmLablePrice;
     // End of variables declaration//GEN-END:variables
 
+    private void clearItemData(){
+        jTextFieldInvItemItmName.setText("");
+        jTextFieldInvItmItmName2.setText("");
+        jTextFieldPIItmLablePrice.setText("");
+        jTextFieldInvItmItmDis.setText("");
+        jTextFieldInvItmUnitPrice.setText("");
+        jTextFieldInvItmWholesalePrice.setText("");
+        jTextFieldInvItmAvailQty.setText("");
+        jTextFieldInvItmPurchAmount.setText("");
+        jTextFieldInvItmExp.setText("");
+    }
+    
+    private void clearNewPriceData(){
+        jTextFieldNewLabelPrice.setText("");
+        jTextFieldNewDiscount.setText("");
+        jTextFieldNewSellingPrice.setText("");
+        jTextFieldNewWholeSalePrice.setText("");
+    }
+    
     private boolean validateNewInputs() {
         double newLabelPrice = 0;
         double newDiscount = 0;
@@ -915,6 +935,11 @@ public class ChangePricePanel extends javax.swing.JPanel implements control.Lang
                     CommonResponse response = get();
 
                     EasyPOSMessageDialog.showApiResponseDialog(ChangePricePanel.this.getRootPane(), response.getAPIResponse());
+                    
+                    if (response.getAPIResponse().isSuccess()) {
+                        clearItemData();
+                        clearNewPriceData();
+                    }
 
                 } catch (InterruptedException | ExecutionException ex) {
                     EasyPOSMessageDialog.showUnexpectedError(ChangePricePanel.this.getRootPane(), ex.getMessage());

@@ -15,8 +15,9 @@ public class Item {
     public String item_name; 
     public String item_name_sin; 
     public String item_name_tam; 
-    public int category_id; 
-    public int measure_unit_id; 
+    public int category_id;
+    public Integer brand_id;
+    public int measure_unit_id;
     public String image_name;
     public String video_link;
     public int sale_online;
@@ -29,5 +30,6 @@ public class Item {
     
     public Category category;
     public MeasureUnit measureUnit;
+    public ProductBrand productBrand;
     public List<ItemStock> stock;
 }

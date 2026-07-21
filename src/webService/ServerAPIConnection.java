@@ -19,6 +19,7 @@ import serverDataModels.DiscountRule;
 import serverDataModels.Institute;
 import serverDataModels.Item;
 import serverDataModels.MeasureUnit;
+import serverDataModels.ProductBrand;
 import serverDataModels.PurchaseInvoice;
 import serverDataModels.SaleInvoice;
 import serverDataModels.SaleReturn;
@@ -78,7 +79,8 @@ public class ServerAPIConnection {
         GET_MEASURE_UNITS_DATA("get-measure-units.php"),
         GET_PENDING_PURCHASING_INVOICES("get-pending-purchasing-invoices.php"),
         UPDATE_BATCH_SELLING_PRICES("update-batch-selling-price.php"),
-        REDEEM_VOUCHER("redeem-voucher.php");
+        REDEEM_VOUCHER("redeem-voucher.php"),
+        GET_PRODUCT_BRANDS("get-product-brands.php");
 
         private final String name;
 
@@ -642,6 +644,25 @@ public class ServerAPIConnection {
                 InsertRecordResponse insertRecordResponse = mapper.treeToValue((JsonNode) commonResponse.getData(), InsertRecordResponse.class);
                 commonResponse.setData(insertRecordResponse);
             } catch (JsonProcessingException ex) {
+                commonResponse.setAPIResponse(ResponseCodes.get("95"));
+                EasyPosLogger.getInstance().error("", ex);
+            }
+        }
+        return commonResponse;
+    }
+
+    public CommonResponse getProductBrands() {
+        WebService webService = new WebService();
+        CommonResponse commonResponse = callWithRetry(() ->
+                webService.sendGETRequest(API_NAME.GET_PRODUCT_BRANDS.getAPIName(), generateHeader()));
+
+        if (commonResponse.getAPIResponse().isSuccess()) {
+            ObjectMapper mapper = new ObjectMapper();
+            try {
+                List<ProductBrand> productBrands = mapper.convertValue(commonResponse.getData(),
+                        new com.fasterxml.jackson.core.type.TypeReference<List<ProductBrand>>() {});
+                commonResponse.setData(productBrands);
+            } catch (IllegalArgumentException ex) {
                 commonResponse.setAPIResponse(ResponseCodes.get("95"));
                 EasyPosLogger.getInstance().error("", ex);
             }

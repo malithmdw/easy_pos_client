@@ -145,6 +145,7 @@ public class PurchasingInvoiceDataPanel extends javax.swing.JPanel implements co
         pim.setDueToPay(util.DateTimeUtil.getDBFormatStringFromDate(jDateChooserPIDataDueDate.getDate()));
         pim.setAlertDate(util.DateTimeUtil.getDBFormatStringFromDate(jDateChooserPIDataAlrtDate.getDate()));
         pim.setInputMethod("1");
+        pim.setEditBy(ApplicationDataManager.getInstance().getLoggedInUser().getUserName());
         
         if (purchaseInvoiceModel == null) {
             pim.setPurchaseItems(new ArrayList<>());

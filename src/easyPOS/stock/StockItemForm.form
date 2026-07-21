@@ -58,7 +58,7 @@
           <Properties>
             <Property name="border" type="javax.swing.border.Border" editor="org.netbeans.modules.form.editors2.BorderEditor">
               <Border info="org.netbeans.modules.form.compat2.border.TitledBorderInfo">
-                <TitledBorder title="TEXT">
+                <TitledBorder title="Item Data">
                   <ResourceString PropertyName="titleX" bundle="easyPOS/stock/Bundle.properties" key="StockItemForm.jPanel1.border.title" replaceFormat="java.util.ResourceBundle.getBundle(&quot;{bundleNameSlashes}&quot;).getString(&quot;{key}&quot;)"/>
                 </TitledBorder>
               </Border>
@@ -99,12 +99,14 @@
                                   <Component id="jLabelNewItemNameTam" alignment="0" pref="170" max="32767" attributes="0"/>
                                   <Component id="jLabelNewItemMUnit" max="32767" attributes="0"/>
                                   <Component id="jLabelNewItemSubName" alignment="0" max="32767" attributes="0"/>
+                                  <Component id="jLabelNewItemProductBrand" alignment="0" max="32767" attributes="0"/>
                               </Group>
                               <EmptySpace max="-2" attributes="0"/>
-                              <Group type="103" groupAlignment="0" attributes="0">
-                                  <Component id="jTextFieldAddToStName2" min="-2" pref="250" max="-2" attributes="0"/>
-                                  <Component id="jTextFieldAddToStSubName" min="-2" pref="250" max="-2" attributes="0"/>
-                                  <Component id="jComboBoxAddItemMesUnit" min="-2" pref="250" max="-2" attributes="0"/>
+                              <Group type="103" groupAlignment="0" max="-2" attributes="0">
+                                  <Component id="jTextFieldAddToStName2" pref="250" max="32767" attributes="0"/>
+                                  <Component id="jTextFieldAddToStSubName" pref="250" max="32767" attributes="0"/>
+                                  <Component id="jComboBoxAddItemMesUnit" pref="250" max="32767" attributes="0"/>
+                                  <Component id="jComboBoxjNewItemProductBrand" alignment="0" max="32767" attributes="0"/>
                               </Group>
                           </Group>
                           <Component id="jTextFieldAddToStComent" max="32767" attributes="0"/>
@@ -124,6 +126,8 @@
                       <Group type="103" groupAlignment="3" attributes="0">
                           <Component id="jTextFieldAddToStItCode1" alignment="3" min="-2" pref="40" max="-2" attributes="0"/>
                           <Component id="jLabelNewItemBarcode" alignment="3" min="-2" pref="40" max="-2" attributes="0"/>
+                          <Component id="jLabelNewItemProductBrand" alignment="3" min="-2" pref="40" max="-2" attributes="0"/>
+                          <Component id="jComboBoxjNewItemProductBrand" alignment="3" min="-2" pref="40" max="-2" attributes="0"/>
                       </Group>
                       <EmptySpace max="-2" attributes="0"/>
                       <Group type="103" groupAlignment="3" attributes="0">
@@ -369,13 +373,39 @@
                 <EventHandler event="keyPressed" listener="java.awt.event.KeyListener" parameters="java.awt.event.KeyEvent" handler="jTextFieldAddToStComentKeyPressed"/>
               </Events>
             </Component>
+            <Component class="javax.swing.JLabel" name="jLabelNewItemProductBrand">
+              <Properties>
+                <Property name="font" type="java.awt.Font" editor="org.netbeans.beaninfo.editors.FontEditor">
+                  <Font name="Tahoma" size="18" style="0"/>
+                </Property>
+                <Property name="horizontalAlignment" type="int" value="4"/>
+                <Property name="text" type="java.lang.String" editor="org.netbeans.modules.i18n.form.FormI18nStringEditor">
+                  <ResourceString bundle="easyPOS/stock/Bundle.properties" key="StockItemForm.jLabelNewItemProductBrand.text" replaceFormat="java.util.ResourceBundle.getBundle(&quot;{bundleNameSlashes}&quot;).getString(&quot;{key}&quot;)"/>
+                </Property>
+              </Properties>
+            </Component>
+            <Component class="javax.swing.JComboBox" name="jComboBoxjNewItemProductBrand">
+              <Properties>
+                <Property name="model" type="javax.swing.ComboBoxModel" editor="org.netbeans.modules.form.editors2.ComboBoxModelEditor">
+                  <StringArray count="4">
+                    <StringItem index="0" value="Item 1"/>
+                    <StringItem index="1" value="Item 2"/>
+                    <StringItem index="2" value="Item 3"/>
+                    <StringItem index="3" value="Item 4"/>
+                  </StringArray>
+                </Property>
+              </Properties>
+              <AuxValues>
+                <AuxValue name="JavaCodeGenerator_TypeParameters" type="java.lang.String" value="&lt;String&gt;"/>
+              </AuxValues>
+            </Component>
           </SubComponents>
         </Container>
         <Container class="javax.swing.JPanel" name="jPanel5">
           <Properties>
             <Property name="border" type="javax.swing.border.Border" editor="org.netbeans.modules.form.editors2.BorderEditor">
               <Border info="org.netbeans.modules.form.compat2.border.TitledBorderInfo">
-                <TitledBorder title="TEST2">
+                <TitledBorder title="Configurations">
                   <ResourceString PropertyName="titleX" bundle="easyPOS/stock/Bundle.properties" key="StockItemForm.jPanel5.border.title" replaceFormat="java.util.ResourceBundle.getBundle(&quot;{bundleNameSlashes}&quot;).getString(&quot;{key}&quot;)"/>
                 </TitledBorder>
               </Border>

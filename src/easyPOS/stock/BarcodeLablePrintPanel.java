@@ -2,11 +2,20 @@
 package easyPOS.stock;
 
 import appDataModels.BarcodeLableItemDataModel;
+import control.ApplicationDataManager;
+import control.EasyPosLogger;
 import control.RuntimeDataManager;
 import control.ZebraStickerPrinter;
+import java.awt.Component;
+import java.awt.Font;
+import java.awt.FontFormatException;
+import java.io.IOException;
 import java.util.ArrayList;
+import java.util.logging.Level;
 import javax.swing.JLabel;
+import javax.swing.JTable;
 import javax.swing.table.DefaultTableCellRenderer;
+import javax.swing.table.TableColumn;
 import tableModels.BarcodeLabletemTbl;
 
 /**
@@ -39,6 +48,33 @@ public class BarcodeLablePrintPanel extends javax.swing.JPanel {
         jTableBarcodeLablePrintItems.getColumnModel().getColumn(5).setMinWidth(300);//item name
         jTableBarcodeLablePrintItems.getColumnModel().getColumn(6).setMinWidth(150);// Price
         jTableBarcodeLablePrintItems.getColumnModel().getColumn(7).setMinWidth(150);// Lable Count
+        
+        try {
+            // 1. Define the custom font
+            Font customFont1 = Font.createFont(Font.TRUETYPE_FONT, ApplicationDataManager.getInstance().getSinhalaFontFile()).deriveFont(18f);
+        
+            // 2. Create the custom renderer
+            DefaultTableCellRenderer customRenderer = new DefaultTableCellRenderer() {
+                @Override
+                public Component getTableCellRendererComponent(JTable table, Object value, 
+                        boolean isSelected, boolean hasFocus, int row, int column) {
+
+                    // Get the standard component properties first
+                    Component c = super.getTableCellRendererComponent(table, value, isSelected, hasFocus, row, column);
+
+                    // Apply your custom font to this component
+                    c.setFont(customFont1); 
+                    return c;
+                }
+            };
+
+            // 3. Target the specific column index (e.g., Column 0 for "Name")
+            TableColumn nameColumn = jTableBarcodeLablePrintItems.getColumnModel().getColumn(4);
+            // 4. Bind the renderer to the column
+            nameColumn.setCellRenderer(customRenderer);
+        } catch (FontFormatException | IOException ex) {
+            EasyPosLogger.getInstance().error("Error", ex);
+        }
                 
         jTableBarcodeLablePrintItems.setRowHeight(35);
         

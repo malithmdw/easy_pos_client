@@ -36,7 +36,14 @@ public final class HeaderPanel extends javax.swing.JPanel implements control.Lan
     }
 
     public void LoadUIData() {
-        jLabelHeaderBusinessName.setText(RuntimeDataManager.getInstance().getRuntimeData().getSelectedInstitute().getBusinessName());
+        if(RuntimeDataManager.getInstance().getRuntimeData().getSelectedInstitute() != null)
+        {
+            jLabelHeaderBusinessName.setText(RuntimeDataManager.getInstance().getRuntimeData().getSelectedInstitute().getBusinessName());
+        }
+        else{
+            // Fresh run. Will be loaded next time
+            jLabelHeaderBusinessName.setText("Loading...");
+        }
     }
     @Override
     public void onLanguageChanged() {

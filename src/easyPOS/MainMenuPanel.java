@@ -32,7 +32,14 @@ public class MainMenuPanel extends javax.swing.JPanel implements control.Languag
     }
     
     public void LoadUIData() {
-        jLabelMainMenuBusinessName.setText(RuntimeDataManager.getInstance().getRuntimeData().getSelectedInstitute().getBusinessName());
+        if(RuntimeDataManager.getInstance().getRuntimeData().getSelectedInstitute() != null)
+        {
+            jLabelMainMenuBusinessName.setText(RuntimeDataManager.getInstance().getRuntimeData().getSelectedInstitute().getBusinessName());
+        }
+        else{
+            // Fresh run. Will be loaded next time
+            jLabelMainMenuBusinessName.setText("Loading...");
+        }
     }
 
     @Override
