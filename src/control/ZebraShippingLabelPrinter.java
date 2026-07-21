@@ -18,12 +18,13 @@ import serverDataModels.OnlineOrder;
  * Label layout:
  *   SHIP TO:
  *     <customer_name>
- *     <address_line_1>
- *     <address_line_2>
- *     <address_line_3>
+ *     <address_line1>
+ *     <address_line2>
+ *     <address_line3>
+ *     <district_name>, <province_name>
  *     <contact_number>
  *   ──────────────────────
- *   ORDER NUMBER: <order_number>
+ *   ORDER NUMBER: <order_no>
  *   ──────────────────────
  *   RETURN ADDRESS:
  *     <institute name>
@@ -75,13 +76,23 @@ public class ZebraShippingLabelPrinter {
         y += 34;
 
         // Address lines
-        y = appendIfNotEmpty(zpl, x + 10, y, 24, order.address_line_1);
-        y = appendIfNotEmpty(zpl, x + 10, y, 24, order.address_line_2);
-        y = appendIfNotEmpty(zpl, x + 10, y, 24, order.address_line_3);
+        y = appendIfNotEmpty(zpl, x + 10, y, 24, order.address_line1);
+        y = appendIfNotEmpty(zpl, x + 10, y, 24, order.address_line2);
+        y = appendIfNotEmpty(zpl, x + 10, y, 24, order.address_line3);
 
-        // Contact number
+        // District, Province
+        String region = buildRegion(order.district_name, order.province_name);
+        y = appendIfNotEmpty(zpl, x + 10, y, 24, region);
+
+        // Primary contact number
         zpl.append(field(x + 10, y, 24, 24, safe(order.contact_number)));
-        y += 34;
+        y += 30;
+
+        // Secondary contact number (if different)
+        if (notEmpty(order.contact_number_2) && !order.contact_number_2.equals(order.contact_number)) {
+            zpl.append(field(x + 10, y, 24, 24, safe(order.contact_number_2)));
+            y += 30;
+        }
 
         // ── Divider ──
         y += 6;
@@ -89,7 +100,7 @@ public class ZebraShippingLabelPrinter {
         y += 14;
 
         // ── ORDER NUMBER ──
-        zpl.append(field(x, y, 26, 26, "ORDER NUMBER: " + safe(order.order_number)));
+        zpl.append(field(x, y, 26, 26, "ORDER NUMBER: " + safe(order.order_no)));
         y += 36;
 
         // ── Divider ──
@@ -126,6 +137,17 @@ public class ZebraShippingLabelPrinter {
 
         zpl.append("^XZ");
         return zpl.toString();
+    }
+
+    private String buildRegion(String district, String province) {
+        if (notEmpty(district) && notEmpty(province)) {
+            return safe(district) + ", " + safe(province);
+        } else if (notEmpty(district)) {
+            return safe(district);
+        } else if (notEmpty(province)) {
+            return safe(province);
+        }
+        return "";
     }
 
     private String field(int x, int y, int fontW, int fontH, String text) {

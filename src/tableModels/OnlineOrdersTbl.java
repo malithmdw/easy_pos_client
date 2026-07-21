@@ -58,13 +58,13 @@ public class OnlineOrdersTbl extends AbstractTableModel {
         switch (columnIndex) {
             case 0: return selected[rowIndex];
             case 1: return rowIndex + 1;
-            case 2: return order.order_number;
+            case 2: return order.order_no;
             case 3: return order.customer_name;
-            case 4: return order.address_line_1;
+            case 4: return order.address_line1;
             case 5: return order.contact_number;
             case 6: return order.order_status;
-            case 7: return order.order_date;
-            case 8: return util.GeneralUtil.getCurrencyString(order.total_amount);
+            case 7: return order.created_at;
+            case 8: return order.total_amount;
             default: return "";
         }
     }
