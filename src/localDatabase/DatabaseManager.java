@@ -119,6 +119,8 @@ public class DatabaseManager {
             "cat_name_tam TEXT NOT NULL," +
             "image TEXT," +
             "description TEXT NOT NULL," +
+            "trspp REAL," +
+            "twspp REAL," +
             "enable INTEGER NOT NULL" +
             ");",
             
@@ -266,6 +268,36 @@ public class DatabaseManager {
         } catch (SQLException e) {
             EasyPosLogger.getInstance().log(EasyPosLogger.LogLevel.ERROR, e.toString());
         }
+
+        migrateCategoryTable();
+    }
+
+    /**
+     * Adds trspp/twspp columns to pre-existing category tables that were
+     * created before these columns existed. SQLite has no
+     * "ADD COLUMN IF NOT EXISTS", so failures (column already exists) are
+     * expected and silently ignored.
+     */
+    private static void migrateCategoryTable() {
+        String[] alterStatements = {
+            "ALTER TABLE category ADD COLUMN trspp REAL;",
+            "ALTER TABLE category ADD COLUMN twspp REAL;"
+        };
+
+        try (Connection conn = DatabaseManager.getConnection();
+             Statement stmt = conn.createStatement()) {
+
+            for (String sql : alterStatements) {
+                try {
+                    stmt.execute(sql);
+                } catch (SQLException e) {
+                    // Column already exists - ignore.
+                }
+            }
+
+        } catch (SQLException e) {
+            EasyPosLogger.getInstance().log(EasyPosLogger.LogLevel.ERROR, e.toString());
+        }
     }
     
     public static void versionUpdateDBChanges(){}
@@ -377,6 +409,8 @@ public class DatabaseManager {
                 category.cat_name_tam = rs.getString("cat_name_tam");
                 category.image = rs.getString("image");
                 category.description = rs.getString("description");
+                category.trspp = rs.getDouble("trspp");
+                category.twspp = rs.getDouble("twspp");
                 category.enable = rs.getInt("enable");
 
                 resultList.add(new CategoryModel(category));
@@ -1243,8 +1277,8 @@ public class DatabaseManager {
     public void insertCategory(Category category) {
 
         String sql = "INSERT INTO category "
-                   + "(category_id, institute_id, cat_name, cat_name_sin, cat_name_tam, image, description, enable) "
-                   + "VALUES (?, ?, ?, ?, ?, ?, ?, ?)";
+                   + "(category_id, institute_id, cat_name, cat_name_sin, cat_name_tam, image, description, trspp, twspp, enable) "
+                   + "VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
 
         try (Connection conn = DatabaseManager.getConnection();
              PreparedStatement pstmt = conn.prepareStatement(sql)) {
@@ -1257,7 +1291,9 @@ public class DatabaseManager {
             pstmt.setString(5, category.cat_name_tam);
             pstmt.setString(6, category.image);
             pstmt.setString(7, category.description);
-            pstmt.setInt(8, 1);
+            pstmt.setDouble(8, category.trspp);
+            pstmt.setDouble(9, category.twspp);
+            pstmt.setInt(10, 1);
 
             // Execute insert
             pstmt.executeUpdate();

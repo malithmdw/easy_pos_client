@@ -11,6 +11,8 @@ public class Category {
     public String cat_name_sin; 
     public String cat_name_tam; 
     public String image;
-    public String description; 
-    public int enable; 
+    public String description;
+    public double trspp;
+    public double twspp;
+    public int enable;
 }
