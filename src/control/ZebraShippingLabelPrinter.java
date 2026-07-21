@@ -103,6 +103,11 @@ public class ZebraShippingLabelPrinter {
         zpl.append(field(x, y, 26, 26, "ORDER NUMBER: " + safe(order.order_no)));
         y += 36;
 
+        // ── PAYMENT METHOD ──
+        String paymentLabel = "CODS".equalsIgnoreCase(order.mop) ? "COD - Cash On Delivery" : "Paid";
+        zpl.append(field(x, y, 26, 26, paymentLabel));
+        y += 36;
+
         // ── Divider ──
         y += 4;
         zpl.append(divider(x, y));
