@@ -72,27 +72,17 @@ public class ReportPanel extends javax.swing.JPanel implements control.LanguageC
     private void initComponents() {
 
         jPanel15 = new javax.swing.JPanel();
-        jTextFieldDateFrom = new javax.swing.JTextField();
-        jTextFieldDateTo = new javax.swing.JTextField();
         jLabel4 = new javax.swing.JLabel();
         jLabel32 = new javax.swing.JLabel();
         jComboBoxOrderStatus = new javax.swing.JComboBox();
         jButtonShowOrders = new javax.swing.JButton();
         jButtonPrintShippingLabel = new javax.swing.JButton();
-        jLabel88 = new javax.swing.JLabel();
+        jDateChooserOrdersFrom = new com.toedter.calendar.JDateChooser();
+        jDateChooserOrdersTo = new com.toedter.calendar.JDateChooser();
         jScrollPane8 = new javax.swing.JScrollPane();
         jTableReport = new javax.swing.JTable();
 
         jPanel15.setBorder(new javax.swing.border.LineBorder(new java.awt.Color(0, 0, 0), 1, true));
-
-        jTextFieldDateFrom.setFont(new java.awt.Font("Tahoma", 0, 12)); // NOI18N
-        jTextFieldDateFrom.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jTextFieldDateFromActionPerformed(evt);
-            }
-        });
-
-        jTextFieldDateTo.setFont(new java.awt.Font("Tahoma", 0, 12)); // NOI18N
 
         jLabel4.setFont(new java.awt.Font("Tahoma", 0, 12)); // NOI18N
         jLabel4.setText("From:");
@@ -127,50 +117,44 @@ public class ReportPanel extends javax.swing.JPanel implements control.LanguageC
             }
         });
 
-        jLabel88.setHorizontalAlignment(javax.swing.SwingConstants.RIGHT);
-        jLabel88.setText("dd/mm/yyyy");
-
         javax.swing.GroupLayout jPanel15Layout = new javax.swing.GroupLayout(jPanel15);
         jPanel15.setLayout(jPanel15Layout);
         jPanel15Layout.setHorizontalGroup(
             jPanel15Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(jPanel15Layout.createSequentialGroup()
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel15Layout.createSequentialGroup()
                 .addContainerGap()
-                .addGroup(jPanel15Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(jComboBoxOrderStatus, 0, 145, Short.MAX_VALUE)
-                    .addComponent(jButtonShowOrders, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addGroup(jPanel15Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
                     .addComponent(jButtonPrintShippingLabel, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                    .addGroup(jPanel15Layout.createSequentialGroup()
+                    .addComponent(jButtonShowOrders, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addComponent(jComboBoxOrderStatus, javax.swing.GroupLayout.Alignment.LEADING, 0, 0, Short.MAX_VALUE)
+                    .addGroup(javax.swing.GroupLayout.Alignment.LEADING, jPanel15Layout.createSequentialGroup()
                         .addGroup(jPanel15Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addComponent(jLabel4)
                             .addComponent(jLabel32))
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                         .addGroup(jPanel15Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(jTextFieldDateFrom)
-                            .addComponent(jTextFieldDateTo)
-                            .addComponent(jLabel88, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))))
+                            .addComponent(jDateChooserOrdersFrom, javax.swing.GroupLayout.PREFERRED_SIZE, 0, Short.MAX_VALUE)
+                            .addComponent(jDateChooserOrdersTo, javax.swing.GroupLayout.PREFERRED_SIZE, 0, Short.MAX_VALUE))))
                 .addContainerGap())
         );
         jPanel15Layout.setVerticalGroup(
             jPanel15Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel15Layout.createSequentialGroup()
                 .addContainerGap()
-                .addGroup(jPanel15Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(jTextFieldDateFrom, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(jLabel4))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                .addGroup(jPanel15Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(jTextFieldDateTo, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(jLabel32))
+                .addGroup(jPanel15Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(jLabel4)
+                    .addComponent(jDateChooserOrdersFrom, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(jLabel88)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addGroup(jPanel15Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(jLabel32)
+                    .addComponent(jDateChooserOrdersTo, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addGap(21, 21, 21)
                 .addComponent(jComboBoxOrderStatus, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(jButtonShowOrders, javax.swing.GroupLayout.PREFERRED_SIZE, 46, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(jButtonPrintShippingLabel, javax.swing.GroupLayout.PREFERRED_SIZE, 45, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                .addContainerGap(209, Short.MAX_VALUE))
         );
 
         jTableReport.setModel(new javax.swing.table.DefaultTableModel(
@@ -198,8 +182,8 @@ public class ReportPanel extends javax.swing.JPanel implements control.LanguageC
             .addGroup(layout.createSequentialGroup()
                 .addContainerGap()
                 .addComponent(jPanel15, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(18, 18, 18)
-                .addComponent(jScrollPane8, javax.swing.GroupLayout.DEFAULT_SIZE, 772, Short.MAX_VALUE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(jScrollPane8)
                 .addContainerGap())
         );
         layout.setVerticalGroup(
@@ -213,35 +197,24 @@ public class ReportPanel extends javax.swing.JPanel implements control.LanguageC
         );
     }// </editor-fold>//GEN-END:initComponents
 
-    private void jTextFieldDateFromActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jTextFieldDateFromActionPerformed
-        // TODO add your handling code here:
-    }//GEN-LAST:event_jTextFieldDateFromActionPerformed
-
     private void jComboBoxOrderStatusActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jComboBoxOrderStatusActionPerformed
         // TODO add your handling code here:
     }//GEN-LAST:event_jComboBoxOrderStatusActionPerformed
 
     private void jButtonShowOrdersActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonShowOrdersActionPerformed
-        try {
-            String dateFrom = "";
-            String dateTo = "";
-            if (!jTextFieldDateFrom.getText().isEmpty()) {
-                dateFrom = util.DateTimeUtil.dateFormatForDB(jTextFieldDateFrom.getText());
-            }
-            if (!jTextFieldDateTo.getText().isEmpty()) {
-                dateTo = util.DateTimeUtil.dateFormatForDB(jTextFieldDateTo.getText());
-            }
+        java.util.Date fromDate = jDateChooserOrdersFrom.getDate();
+        java.util.Date toDate = jDateChooserOrdersTo.getDate();
 
-            String selectedStatus = "";
-            int statusIdx = jComboBoxOrderStatus.getSelectedIndex();
-            if (statusIdx > 0) {
-                selectedStatus = jComboBoxOrderStatus.getSelectedItem().toString();
-            }
+        String dateFrom = fromDate != null ? util.DateTimeUtil.getDBFormatStringFromDate(fromDate) : "";
+        String dateTo = toDate != null ? util.DateTimeUtil.getDBFormatStringFromDate(toDate) : "";
 
-            loadOnlineOrders(dateFrom, dateTo, selectedStatus);
-        } catch (Exception e) {
-            EasyPOSMessageDialog.showLocalizedWarning(this, ApplicationMessages.VALIDATION_DATE_INPUT_INVALID);
+        String selectedStatus = "";
+        int statusIdx = jComboBoxOrderStatus.getSelectedIndex();
+        if (statusIdx > 0) {
+            selectedStatus = jComboBoxOrderStatus.getSelectedItem().toString();
         }
+
+        loadOnlineOrders(dateFrom, dateTo, selectedStatus);
     }//GEN-LAST:event_jButtonShowOrdersActionPerformed
 
     private void jButtonPrintShippingLabelActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonPrintShippingLabelActionPerformed
@@ -429,38 +402,35 @@ public class ReportPanel extends javax.swing.JPanel implements control.LanguageC
         Locale locale = (appLang == Language.SINHALA) ? new Locale("si", "LK") : Locale.ENGLISH;
         ResourceBundle resourceBundle = ResourceBundle.getBundle("easyPOS/reports/Bundle", locale);
         if (appLang == Language.SINHALA) {
-        try {
-            Font customFont = Font.createFont(Font.TRUETYPE_FONT,
-                    ApplicationDataManager.getInstance().getSinhalaFontFile()).deriveFont(14f);
-            GraphicsEnvironment ge = GraphicsEnvironment.getLocalGraphicsEnvironment();
-            ge.registerFont(customFont);
-            jLabel4.setFont(customFont);
-            jLabel32.setFont(customFont);
-            jButtonShowOrders.setFont(customFont);
-            jButtonPrintShippingLabel.setFont(customFont);
-            jLabel88.setFont(customFont);
-        } catch (IOException | FontFormatException e) {
-            System.err.println(e);
-        }
+            try {
+                Font customFont = Font.createFont(Font.TRUETYPE_FONT,
+                        ApplicationDataManager.getInstance().getSinhalaFontFile()).deriveFont(14f);
+                GraphicsEnvironment ge = GraphicsEnvironment.getLocalGraphicsEnvironment();
+                ge.registerFont(customFont);
+                jLabel4.setFont(customFont);
+                jLabel32.setFont(customFont);
+                jButtonShowOrders.setFont(customFont);
+                jButtonPrintShippingLabel.setFont(customFont);
+            } catch (IOException | FontFormatException e) {
+                System.err.println(e);
+            }
         }
         jLabel4.setText(resourceBundle.getString("ReportPanel.jLabel4.text"));
         jLabel32.setText(resourceBundle.getString("ReportPanel.jLabel32.text"));
         jButtonShowOrders.setText(resourceBundle.getString("ReportPanel.jButton26.text"));
         jButtonPrintShippingLabel.setText(resourceBundle.getString("ReportPanel.jButton7.text"));
-        jLabel88.setText(resourceBundle.getString("ReportPanel.jLabel88.text"));
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton jButtonPrintShippingLabel;
     private javax.swing.JButton jButtonShowOrders;
     private javax.swing.JComboBox jComboBoxOrderStatus;
+    private com.toedter.calendar.JDateChooser jDateChooserOrdersFrom;
+    private com.toedter.calendar.JDateChooser jDateChooserOrdersTo;
     private javax.swing.JLabel jLabel32;
     private javax.swing.JLabel jLabel4;
-    private javax.swing.JLabel jLabel88;
     private javax.swing.JPanel jPanel15;
     private javax.swing.JScrollPane jScrollPane8;
     private javax.swing.JTable jTableReport;
-    private javax.swing.JTextField jTextFieldDateFrom;
-    private javax.swing.JTextField jTextFieldDateTo;
     // End of variables declaration//GEN-END:variables
 }
