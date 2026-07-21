@@ -19,6 +19,7 @@ import serverDataModels.DiscountRule;
 import serverDataModels.Institute;
 import serverDataModels.Item;
 import serverDataModels.MeasureUnit;
+import serverDataModels.OnlineOrder;
 import serverDataModels.ProductBrand;
 import serverDataModels.PurchaseInvoice;
 import serverDataModels.SaleInvoice;
@@ -80,7 +81,10 @@ public class ServerAPIConnection {
         GET_PENDING_PURCHASING_INVOICES("get-pending-purchasing-invoices.php"),
         UPDATE_BATCH_SELLING_PRICES("update-batch-selling-price.php"),
         REDEEM_VOUCHER("redeem-voucher.php"),
-        GET_PRODUCT_BRANDS("get-product-brands.php");
+        GET_PRODUCT_BRANDS("get-product-brands.php"),
+        GET_EXPIRED_STOCK("get-expired-stock.php"),
+        GET_RESTOCK_NEEDED("get-stock-needto-restock.php"),
+        GET_ONLINE_ORDERS("get-online-orders.php");
 
         private final String name;
 
@@ -678,6 +682,68 @@ public class ServerAPIConnection {
 
         return callWithRetry(() ->
                 webService.sendPOSTRequest(API_NAME.REDEEM_VOUCHER.getAPIName(), generateHeader(), bodyData));
+    }
+
+    public CommonResponse getOnlineOrders(String dateFrom, String dateTo, String status) {
+        WebService webService = new WebService();
+        Map<String, String> queryParams = new HashMap<>();
+        if (dateFrom != null && !dateFrom.isEmpty()) queryParams.put("date_from", dateFrom);
+        if (dateTo != null && !dateTo.isEmpty()) queryParams.put("date_to", dateTo);
+        if (status != null && !status.isEmpty()) queryParams.put("status", status);
+
+        CommonResponse commonResponse = callWithRetry(() ->
+                webService.sendGETRequestWithParams(API_NAME.GET_ONLINE_ORDERS.getAPIName(), generateHeader(), queryParams));
+
+        if (commonResponse.getAPIResponse().isSuccess()) {
+            ObjectMapper mapper = new ObjectMapper();
+            try {
+                List<OnlineOrder> orders = mapper.convertValue(commonResponse.getData(),
+                        new com.fasterxml.jackson.core.type.TypeReference<List<OnlineOrder>>() {});
+                commonResponse.setData(orders);
+            } catch (IllegalArgumentException ex) {
+                commonResponse.setAPIResponse(ResponseCodes.get("95"));
+                EasyPosLogger.getInstance().error("", ex);
+            }
+        }
+        return commonResponse;
+    }
+
+    public CommonResponse getExpiredStock() {
+        WebService webService = new WebService();
+        CommonResponse commonResponse = callWithRetry(() ->
+                webService.sendGETRequest(API_NAME.GET_EXPIRED_STOCK.getAPIName(), generateHeader()));
+
+        if (commonResponse.getAPIResponse().isSuccess()) {
+            ObjectMapper mapper = new ObjectMapper();
+            try {
+                List<Item> items = mapper.convertValue(commonResponse.getData(),
+                        new com.fasterxml.jackson.core.type.TypeReference<List<Item>>() {});
+                commonResponse.setData(items);
+            } catch (IllegalArgumentException ex) {
+                commonResponse.setAPIResponse(ResponseCodes.get("95"));
+                EasyPosLogger.getInstance().error("", ex);
+            }
+        }
+        return commonResponse;
+    }
+
+    public CommonResponse getRestockNeeded() {
+        WebService webService = new WebService();
+        CommonResponse commonResponse = callWithRetry(() ->
+                webService.sendGETRequest(API_NAME.GET_RESTOCK_NEEDED.getAPIName(), generateHeader()));
+
+        if (commonResponse.getAPIResponse().isSuccess()) {
+            ObjectMapper mapper = new ObjectMapper();
+            try {
+                List<Item> items = mapper.convertValue(commonResponse.getData(),
+                        new com.fasterxml.jackson.core.type.TypeReference<List<Item>>() {});
+                commonResponse.setData(items);
+            } catch (IllegalArgumentException ex) {
+                commonResponse.setAPIResponse(ResponseCodes.get("95"));
+                EasyPosLogger.getInstance().error("", ex);
+            }
+        }
+        return commonResponse;
     }
 
     public CommonResponse processCompletePurchasingInvoice(String systemInvoiceNumber) {

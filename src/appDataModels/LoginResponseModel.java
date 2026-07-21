@@ -1,5 +1,6 @@
 package appDataModels;
 
+import control.EasyPosLogger;
 import java.util.ArrayList;
 import java.util.List;
 import serverResponseDataModel.LoginResponse;
@@ -25,7 +26,11 @@ public class LoginResponseModel {
         }
         permissions = new ArrayList<>();
         for (String p : dto.permissions) {
-            permissions.add(Permission.valueOf(p));
+            try {
+                permissions.add(Permission.valueOf(p));
+            } catch (Exception e) {
+                EasyPosLogger.getInstance().error("Error", e);
+            }            
         }
     }
 

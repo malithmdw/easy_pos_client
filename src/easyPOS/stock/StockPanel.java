@@ -1,12 +1,27 @@
 package easyPOS.stock;
 
+import appDataModels.APIHeaderData;
+import appDataModels.CategoryModel;
+import control.EasyPosLogger;
+import control.RuntimeDataManager;
 import dbOperations.StockDBOperation;
 import dbOperations.SuppliesDBOperation;
 import java.awt.HeadlessException;
 import java.awt.print.PrinterException;
+import java.util.List;
+import java.util.concurrent.ExecutionException;
 import easyPOS.localization.ApplicationMessages;
 import javax.swing.JOptionPane;
+import javax.swing.JRootPane;
+import javax.swing.SwingWorker;
+import localDatabase.DatabaseManager;
+import serverDataModels.Item;
+import serverResponseDataModel.CommonResponse;
+import tableModels.ExpiredStockTbl;
+import tableModels.RestockNeededTbl;
 import uiUtil.EasyPOSMessageDialog;
+import uiUtil.LoadingGlassPane;
+import webService.ServerAPIConnection;
 
 /**
  *
@@ -330,7 +345,7 @@ public class StockPanel extends javax.swing.JPanel {
                 loadExpStockTbl(13, util.DateTimeUtil.getTodayDateDBFormat(),"");
                 break;
             case 3:
-                loadExpStockTbl(13, util.DateTimeUtil.getTodayDateDBFormat(),"");
+                loadToParchaseTbl(11, "", "");
                 break;
             case 4:
                 addNewItemPanel1.loadData();
@@ -359,29 +374,95 @@ public class StockPanel extends javax.swing.JPanel {
 //                jTableCurStoke.getColumnModel().getColumn(3).setMinWidth(200);
 //                jTableCurStoke.getColumnModel().getColumn(9).setMinWidth(100);
     }
-    void loadToParchaseTbl(int situation,String searchInput1,String searchInput2){
-//        ItemMovement imove=new ItemMovement();
-//        stList2=imove.getStockAndItemMovement(situation,searchInput1,searchInput2);
-//        ListForOrder lfo=new ListForOrder(stList2);
-//        jTableToOrder.setModel(lfo);
-//                DefaultTableCellRenderer rightRenderer=new DefaultTableCellRenderer();
-//                rightRenderer.setHorizontalAlignment(jLabel1.RIGHT);
-//                jTableToOrder.getColumnModel().getColumn(5).setCellRenderer(rightRenderer);
-//                jTableToOrder.getColumnModel().getColumn(6).setCellRenderer(rightRenderer);
-//                jTableToOrder.getColumnModel().getColumn(7).setCellRenderer(rightRenderer);
-//                jTableToOrder.getColumnModel().getColumn(8).setCellRenderer(rightRenderer);
+    void loadToParchaseTbl(int situation, String searchInput1, String searchInput2) {
+        JRootPane root = getRootPane();
+        LoadingGlassPane loader = new LoadingGlassPane();
+        root.setGlassPane(loader);
+
+        SwingWorker<CommonResponse, Void> worker = new SwingWorker<CommonResponse, Void>() {
+            @Override
+            protected CommonResponse doInBackground() {
+                loader.start();
+                APIHeaderData aPIHeaderData = new APIHeaderData();
+                aPIHeaderData.setInstituteId(RuntimeDataManager.getInstance().getRuntimeData().getInstituteId());
+                aPIHeaderData.setTerminalId(RuntimeDataManager.getInstance().getRuntimeData().getTerminalId());
+                return ServerAPIConnection.getInstance(aPIHeaderData).getRestockNeeded();
+            }
+
+            @Override
+            protected void done() {
+                loader.stop();
+                try {
+                    CommonResponse response = get();
+                    if (response.getAPIResponse().isSuccess()) {
+                        List<Item> items = (List<Item>) response.getData();
+                        List<CategoryModel> categories = DatabaseManager.getInstance().getCategories();
+                        for (Item item : items) {
+                            for (CategoryModel cat : categories) {
+                                if (cat.getCategoryId() == item.category_id) {
+                                    item.category = cat.newCategoryDTO();
+                                    break;
+                                }
+                            }
+                        }
+                        jTableToOrder.setModel(new RestockNeededTbl(items));
+                    } else {
+                        EasyPOSMessageDialog.showErrorMessageDialog(StockPanel.this.getRootPane(), response.getAPIResponse());
+                    }
+                } catch (InterruptedException | ExecutionException ex) {
+                    EasyPOSMessageDialog.showUnexpectedError(StockPanel.this.getRootPane(), ex.getMessage());
+                    EasyPosLogger.getInstance().log(EasyPosLogger.LogLevel.ERROR, ex.toString());
+                }
+            }
+        };
+
+        loader.start();
+        worker.execute();
     }
-    void loadExpStockTbl(int situation,String searchInput1,String searchInput2){
-//        stList3=stock.getStocks(situation,searchInput1,searchInput2);
-//        ListOfExp loex=new ListOfExp(stList3);
-//        jTableExpStocks.setModel(loex);
-//                DefaultTableCellRenderer rightRenderer=new DefaultTableCellRenderer();
-//                rightRenderer.setHorizontalAlignment(jLabel1.RIGHT);
-//                jTableExpStocks.getColumnModel().getColumn(5).setCellRenderer(rightRenderer);
-//                jTableExpStocks.getColumnModel().getColumn(6).setCellRenderer(rightRenderer);
-//                jTableExpStocks.getColumnModel().getColumn(7).setCellRenderer(rightRenderer);
-//                jTableExpStocks.getColumnModel().getColumn(8).setCellRenderer(rightRenderer);
-//        
+    void loadExpStockTbl(int situation, String searchInput1, String searchInput2) {
+        JRootPane root = getRootPane();
+        LoadingGlassPane loader = new LoadingGlassPane();
+        root.setGlassPane(loader);
+
+        SwingWorker<CommonResponse, Void> worker = new SwingWorker<CommonResponse, Void>() {
+            @Override
+            protected CommonResponse doInBackground() {
+                loader.start();
+                APIHeaderData aPIHeaderData = new APIHeaderData();
+                aPIHeaderData.setInstituteId(RuntimeDataManager.getInstance().getRuntimeData().getInstituteId());
+                aPIHeaderData.setTerminalId(RuntimeDataManager.getInstance().getRuntimeData().getTerminalId());
+                return ServerAPIConnection.getInstance(aPIHeaderData).getExpiredStock();
+            }
+
+            @Override
+            protected void done() {
+                loader.stop();
+                try {
+                    CommonResponse response = get();
+                    if (response.getAPIResponse().isSuccess()) {
+                        List<Item> items = (List<Item>) response.getData();
+                        List<CategoryModel> categories = DatabaseManager.getInstance().getCategories();
+                        for (Item item : items) {
+                            for (CategoryModel cat : categories) {
+                                if (cat.getCategoryId() == item.category_id) {
+                                    item.category = cat.newCategoryDTO();
+                                    break;
+                                }
+                            }
+                        }
+                        jTableExpStocks.setModel(new ExpiredStockTbl(items));
+                    } else {
+                        EasyPOSMessageDialog.showErrorMessageDialog(StockPanel.this.getRootPane(), response.getAPIResponse());
+                    }
+                } catch (InterruptedException | ExecutionException ex) {
+                    EasyPOSMessageDialog.showUnexpectedError(StockPanel.this.getRootPane(), ex.getMessage());
+                    EasyPosLogger.getInstance().log(EasyPosLogger.LogLevel.ERROR, ex.toString());
+                }
+            }
+        };
+
+        loader.start();
+        worker.execute();
     }
     
     

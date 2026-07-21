@@ -149,7 +149,6 @@ public class StockItemForm extends javax.swing.JPanel implements control.Languag
             GraphicsEnvironment ge = GraphicsEnvironment.getLocalGraphicsEnvironment();
             //register the font
             ge.registerFont(customFont1);
-            jLabelNewItemItemCode.setFont(customFont1);
             jLabelNewItemBarcode.setFont(customFont1);
             jLabelNewItemName.setFont(customFont1);
             jLabelNewItemSubName.setFont(customFont1);
@@ -167,7 +166,6 @@ public class StockItemForm extends javax.swing.JPanel implements control.Languag
         }
 
         //use the font
-        jLabelNewItemItemCode.setText(resourceBundle.getString("StockItemForm.jLabelNewItemItemCode.text"));
         jLabelNewItemBarcode.setText(resourceBundle.getString("StockItemForm.jLabelNewItemBarcode.text"));
         jLabelNewItemName.setText(resourceBundle.getString("StockItemForm.jLabelNewItemName.text"));
         jLabelNewItemSubName.setText(resourceBundle.getString("StockItemForm.jLabelNewItemSubName.text"));
@@ -185,8 +183,6 @@ public class StockItemForm extends javax.swing.JPanel implements control.Languag
 
         jPanel14 = new javax.swing.JPanel();
         jPanel1 = new javax.swing.JPanel();
-        jLabelNewItemItemCode = new javax.swing.JLabel();
-        jTextFieldAddToStItCode = new javax.swing.JTextField();
         jTextFieldAddToStItCode1 = new javax.swing.JTextField();
         jLabelNewItemBarcode = new javax.swing.JLabel();
         jLabelNewItemName = new javax.swing.JLabel();
@@ -213,27 +209,6 @@ public class StockItemForm extends javax.swing.JPanel implements control.Languag
 
         java.util.ResourceBundle bundle = java.util.ResourceBundle.getBundle("easyPOS/stock/Bundle"); // NOI18N
         jPanel1.setBorder(javax.swing.BorderFactory.createTitledBorder(bundle.getString("StockItemForm.jPanel1.border.title"))); // NOI18N
-
-        jLabelNewItemItemCode.setFont(new java.awt.Font("Tahoma", 0, 18)); // NOI18N
-        jLabelNewItemItemCode.setHorizontalAlignment(javax.swing.SwingConstants.RIGHT);
-        jLabelNewItemItemCode.setText(bundle.getString("StockItemForm.jLabelNewItemItemCode.text")); // NOI18N
-
-        jTextFieldAddToStItCode.setEditable(false);
-        jTextFieldAddToStItCode.setBackground(new java.awt.Color(204, 204, 255));
-        jTextFieldAddToStItCode.setFont(new java.awt.Font("Tahoma", 0, 18)); // NOI18N
-        jTextFieldAddToStItCode.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jTextFieldAddToStItCodeActionPerformed(evt);
-            }
-        });
-        jTextFieldAddToStItCode.addKeyListener(new java.awt.event.KeyAdapter() {
-            public void keyPressed(java.awt.event.KeyEvent evt) {
-                jTextFieldAddToStItCodeKeyPressed(evt);
-            }
-            public void keyTyped(java.awt.event.KeyEvent evt) {
-                jTextFieldAddToStItCodeKeyTyped(evt);
-            }
-        });
 
         jTextFieldAddToStItCode1.setBackground(new java.awt.Color(204, 204, 255));
         jTextFieldAddToStItCode1.setFont(new java.awt.Font("Tahoma", 0, 18)); // NOI18N
@@ -390,8 +365,7 @@ public class StockItemForm extends javax.swing.JPanel implements control.Languag
                         .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
                             .addComponent(jLabelNewItemNameSin, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, 170, Short.MAX_VALUE)
                             .addComponent(jLabelNewItemName, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                            .addComponent(jLabelNewItemBarcode, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                            .addComponent(jLabelNewItemItemCode, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))))
+                            .addComponent(jLabelNewItemBarcode, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
                     .addGroup(jPanel1Layout.createSequentialGroup()
@@ -399,8 +373,7 @@ public class StockItemForm extends javax.swing.JPanel implements control.Languag
                             .addComponent(jTextFieldAddToStName1, javax.swing.GroupLayout.Alignment.LEADING)
                             .addComponent(jTextFieldAddToStName, javax.swing.GroupLayout.Alignment.LEADING)
                             .addComponent(jTextFieldAddToStItCode1, javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(jComboBoxAddItemCategory, 0, 250, Short.MAX_VALUE)
-                            .addComponent(jTextFieldAddToStItCode, javax.swing.GroupLayout.Alignment.LEADING))
+                            .addComponent(jComboBoxAddItemCategory, 0, 250, Short.MAX_VALUE))
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
                             .addComponent(jLabelNewItemNameTam, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, 170, Short.MAX_VALUE)
@@ -419,10 +392,6 @@ public class StockItemForm extends javax.swing.JPanel implements control.Languag
             jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel1Layout.createSequentialGroup()
                 .addContainerGap()
-                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(jTextFieldAddToStItCode, javax.swing.GroupLayout.PREFERRED_SIZE, 40, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(jLabelNewItemItemCode, javax.swing.GroupLayout.PREFERRED_SIZE, 40, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jTextFieldAddToStItCode1, javax.swing.GroupLayout.PREFERRED_SIZE, 40, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(jLabelNewItemBarcode, javax.swing.GroupLayout.PREFERRED_SIZE, 40, javax.swing.GroupLayout.PREFERRED_SIZE)
@@ -536,33 +505,12 @@ public class StockItemForm extends javax.swing.JPanel implements control.Languag
         );
     }// </editor-fold>//GEN-END:initComponents
 
-    private void jTextFieldAddToStItCodeActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jTextFieldAddToStItCodeActionPerformed
-        // TODO add your handling code here:
-    }//GEN-LAST:event_jTextFieldAddToStItCodeActionPerformed
-
-    private void jTextFieldAddToStItCodeKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_jTextFieldAddToStItCodeKeyPressed
-        
-    }//GEN-LAST:event_jTextFieldAddToStItCodeKeyPressed
-
-    private void jTextFieldAddToStItCodeKeyTyped(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_jTextFieldAddToStItCodeKeyTyped
-//        loadStokeTbleFull(5, jTextFieldAddToStItCode.getText(),"");////should load the table search ///////
-        if(jTextFieldAddToStItCode.getText().length()>8){
-            jLabelNewItemItemCode.setText("maximum length=8");
-            jLabelNewItemItemCode.setForeground(Color.RED);
-
-        }else{
-            jLabelNewItemItemCode.setText("Item Code:");
-            jLabelNewItemItemCode.setForeground(Color.BLACK);
-        }
-    }//GEN-LAST:event_jTextFieldAddToStItCodeKeyTyped
-
     private void jTextFieldAddToStNameActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jTextFieldAddToStNameActionPerformed
         // TODO add your handling code here:
     }//GEN-LAST:event_jTextFieldAddToStNameActionPerformed
 
     private void jTextFieldAddToStNameKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_jTextFieldAddToStNameKeyPressed
         if(evt.getKeyCode()==KeyEvent.VK_UP){
-            jTextFieldAddToStItCode.requestFocus();
         }else if(evt.getKeyCode()==KeyEvent.VK_DOWN){
             jTextFieldAddToStSubName.requestFocus();
         }else if(evt.getKeyCode()==KeyEvent.VK_ENTER){
@@ -753,7 +701,6 @@ public class StockItemForm extends javax.swing.JPanel implements control.Languag
     
     final void clearFieldsAll(){
         jTextFieldAddToStComent.setText("");
-        jTextFieldAddToStItCode.setText("");
         jTextFieldAddToStItCode1.setText("");
         jTextFieldAddToStName.setText("");
         jTextFieldAddToStName1.setText("");
@@ -771,7 +718,6 @@ public class StockItemForm extends javax.swing.JPanel implements control.Languag
     private javax.swing.JLabel jLabelNewItemBarcode;
     private javax.swing.JLabel jLabelNewItemCat;
     private javax.swing.JLabel jLabelNewItemComment;
-    private javax.swing.JLabel jLabelNewItemItemCode;
     private javax.swing.JLabel jLabelNewItemMUnit;
     private javax.swing.JLabel jLabelNewItemName;
     private javax.swing.JLabel jLabelNewItemNameSin;
@@ -782,7 +728,6 @@ public class StockItemForm extends javax.swing.JPanel implements control.Languag
     private javax.swing.JPanel jPanel14;
     private javax.swing.JPanel jPanel5;
     private javax.swing.JTextField jTextFieldAddToStComent;
-    private javax.swing.JTextField jTextFieldAddToStItCode;
     private javax.swing.JTextField jTextFieldAddToStItCode1;
     private javax.swing.JTextField jTextFieldAddToStName;
     private javax.swing.JTextField jTextFieldAddToStName1;

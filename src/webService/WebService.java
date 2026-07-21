@@ -10,6 +10,7 @@ import java.net.ConnectException;
 import java.net.HttpURLConnection;
 import java.net.SocketTimeoutException;
 import java.net.URL;
+import java.net.URLEncoder;
 import java.net.UnknownHostException;
 import java.util.ArrayList;
 import java.util.Collection;
@@ -158,6 +159,70 @@ public class WebService {
     }
 
     
+    public CommonResponse sendGETRequestWithParams(String apiPath, Map<String, String> header, Map<String, String> queryParams) {
+        CommonResponse commonResponse = new CommonResponse();
+
+        try {
+            StringBuilder urlBuilder = new StringBuilder(POST_URL + "/" + apiPath);
+            if (queryParams != null && !queryParams.isEmpty()) {
+                urlBuilder.append("?");
+                boolean first = true;
+                for (Map.Entry<String, String> param : queryParams.entrySet()) {
+                    if (!first) urlBuilder.append("&");
+                    urlBuilder.append(URLEncoder.encode(param.getKey(), "UTF-8"))
+                              .append("=")
+                              .append(URLEncoder.encode(param.getValue(), "UTF-8"));
+                    first = false;
+                }
+            }
+
+            URL obj = new URL(urlBuilder.toString());
+            ObjectMapper mapper = new ObjectMapper();
+
+            HttpURLConnection con = (HttpURLConnection) obj.openConnection();
+            con.setRequestMethod("GET");
+            con.setRequestProperty("User-Agent", USER_AGENT);
+            con.setRequestProperty("Content-Type", "application/json");
+
+            for (Map.Entry<String, String> entry : header.entrySet()) {
+                con.setRequestProperty(entry.getKey(), entry.getValue());
+            }
+
+            con.setConnectTimeout(30_000);
+            con.setReadTimeout(30_000);
+
+            int responseCode = con.getResponseCode();
+            InputStream is = (responseCode >= 200 && responseCode < 300)
+                    ? con.getInputStream() : con.getErrorStream();
+
+            StringBuilder response = new StringBuilder();
+            try (BufferedReader br = new BufferedReader(new InputStreamReader(is, "utf-8"))) {
+                String responseLine;
+                while ((responseLine = br.readLine()) != null) {
+                    response.append(responseLine.trim());
+                }
+            }
+            String result = response.toString();
+
+            if (result.startsWith("﻿")) {
+                result = result.substring(1);
+            }
+
+            ServerResponse serverResponse = mapper.readValue(result, ServerResponse.class);
+            commonResponse.setData(serverResponse.data);
+            commonResponse.setAPIResponse(ResponseCodes.get(serverResponse.response_code));
+
+        } catch (SocketTimeoutException timeoutEx) {
+            commonResponse.setAPIResponse(ResponseCodes.get("97"));
+        } catch (UnknownHostException | ConnectException networkEx) {
+            commonResponse.setAPIResponse(ResponseCodes.get("96"));
+        } catch (IOException ex) {
+            commonResponse.setAPIResponse(ResponseCodes.get("98"));
+        }
+
+        return commonResponse;
+    }
+
     private static String toJson(Object obj) {
         if (obj == null) {
             return "null";

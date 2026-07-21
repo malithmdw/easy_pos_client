@@ -1,30 +1,35 @@
-/*
- * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
- * Click nbfs://nbhost/SystemFileSystem/Templates/GUIForms/JPanel.java to edit this template
- */
 package easyPOS.reports;
 
+import appDataModels.APIHeaderData;
+import appDataModels.InstituteModel;
 import control.ApplicationDataManager;
+import control.EasyPosLogger;
+import control.RuntimeDataManager;
+import control.ZebraShippingLabelPrinter;
+import dataModels.Language;
 import dataModels.SaleDataModel;
 import dbOperations.SalesDBOperation;
-import java.awt.Color;
 import java.awt.Font;
 import java.awt.FontFormatException;
 import java.awt.GraphicsEnvironment;
 import java.io.IOException;
 import java.util.ArrayList;
-import dataModels.Language;
+import java.util.LinkedHashSet;
+import java.util.List;
 import java.util.Locale;
 import java.util.ResourceBundle;
+import java.util.Set;
+import java.util.concurrent.ExecutionException;
+import javax.swing.DefaultComboBoxModel;
+import javax.swing.JRootPane;
+import javax.swing.SwingWorker;
 import easyPOS.localization.ApplicationMessages;
-import javax.swing.JOptionPane;
+import serverDataModels.OnlineOrder;
+import serverResponseDataModel.CommonResponse;
+import tableModels.OnlineOrdersTbl;
 import uiUtil.EasyPOSMessageDialog;
-import org.jfree.chart.ChartFactory;
-import org.jfree.chart.ChartFrame;
-import org.jfree.chart.JFreeChart;
-import org.jfree.chart.plot.CategoryPlot;
-import org.jfree.chart.plot.PlotOrientation;
-import org.jfree.data.category.DefaultCategoryDataset;
+import uiUtil.LoadingGlassPane;
+import webService.ServerAPIConnection;
 
 /**
  *
@@ -36,9 +41,10 @@ public class ReportPanel extends javax.swing.JPanel implements control.LanguageC
     ArrayList<SaleDataModel> dailySalesList;
     ArrayList<SaleDataModel> monthlySalesList;
     ArrayList<SaleDataModel> annualSalesList;
-    
-    
-    SalesDBOperation sdbops=new SalesDBOperation();
+
+    SalesDBOperation sdbops = new SalesDBOperation();
+
+    private List<OnlineOrder> currentOrders = new ArrayList<>();
     
     /**
      * Creates new form ReportPanel
@@ -70,23 +76,12 @@ public class ReportPanel extends javax.swing.JPanel implements control.LanguageC
         jTextFieldDateTo = new javax.swing.JTextField();
         jLabel4 = new javax.swing.JLabel();
         jLabel32 = new javax.swing.JLabel();
-        jComboBoxReportType = new javax.swing.JComboBox();
-        jButton26 = new javax.swing.JButton();
-        jButton27 = new javax.swing.JButton();
-        jButton7 = new javax.swing.JButton();
+        jComboBoxOrderStatus = new javax.swing.JComboBox();
+        jButtonShowOrders = new javax.swing.JButton();
+        jButtonPrintShippingLabel = new javax.swing.JButton();
         jLabel88 = new javax.swing.JLabel();
-        jComboBoxReportType2 = new javax.swing.JComboBox();
-        jCheckBoxBarChart = new javax.swing.JCheckBox();
-        jCheckBoxLineChart = new javax.swing.JCheckBox();
         jScrollPane8 = new javax.swing.JScrollPane();
         jTableReport = new javax.swing.JTable();
-        jPanel31 = new javax.swing.JPanel();
-        jLabel82 = new javax.swing.JLabel();
-        jLabel83 = new javax.swing.JLabel();
-        jLabel84 = new javax.swing.JLabel();
-        jTextFieldTodNwInc = new javax.swing.JTextField();
-        jTextFieldTodNwCos = new javax.swing.JTextField();
-        jTextFieldTodNwProf = new javax.swing.JTextField();
 
         jPanel15.setBorder(new javax.swing.border.LineBorder(new java.awt.Color(0, 0, 0), 1, true));
 
@@ -105,71 +100,35 @@ public class ReportPanel extends javax.swing.JPanel implements control.LanguageC
         jLabel32.setFont(new java.awt.Font("Tahoma", 0, 12)); // NOI18N
         jLabel32.setText("To:");
 
-        jComboBoxReportType.setFont(new java.awt.Font("Tahoma", 0, 12)); // NOI18N
-        jComboBoxReportType.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "--All Sales--", "Sales Report Daily", "Sales Report Monthly", "Sales Report Annualy", "--All Purchase Reports--", "Purchase Report" }));
-        jComboBoxReportType.addActionListener(new java.awt.event.ActionListener() {
+        jComboBoxOrderStatus.setFont(new java.awt.Font("Tahoma", 0, 12)); // NOI18N
+        jComboBoxOrderStatus.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "--All Sales--", "Sales Report Daily", "Sales Report Monthly", "Sales Report Annualy", "--All Purchase Reports--", "Purchase Report" }));
+        jComboBoxOrderStatus.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jComboBoxReportTypeActionPerformed(evt);
+                jComboBoxOrderStatusActionPerformed(evt);
             }
         });
 
-        jButton26.setFont(new java.awt.Font("Tahoma", 0, 12)); // NOI18N
-        jButton26.setIcon(new javax.swing.ImageIcon(getClass().getResource("/images/repo.png"))); // NOI18N
-        jButton26.setText("Show Report");
-        jButton26.addActionListener(new java.awt.event.ActionListener() {
+        jButtonShowOrders.setFont(new java.awt.Font("Tahoma", 0, 12)); // NOI18N
+        jButtonShowOrders.setIcon(new javax.swing.ImageIcon(getClass().getResource("/images/repo.png"))); // NOI18N
+        jButtonShowOrders.setText("Show Report");
+        jButtonShowOrders.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jButton26ActionPerformed(evt);
+                jButtonShowOrdersActionPerformed(evt);
             }
         });
 
-        jButton27.setFont(new java.awt.Font("Tahoma", 0, 12)); // NOI18N
-        jButton27.setIcon(new javax.swing.ImageIcon(getClass().getResource("/images/graph.png"))); // NOI18N
-        jButton27.setText("Show in Graph");
-        jButton27.setToolTipText("You can see graphs using this");
-        jButton27.addActionListener(new java.awt.event.ActionListener() {
+        jButtonPrintShippingLabel.setFont(new java.awt.Font("Tahoma", 0, 12)); // NOI18N
+        jButtonPrintShippingLabel.setIcon(new javax.swing.ImageIcon(getClass().getResource("/images/print.png"))); // NOI18N
+        jButtonPrintShippingLabel.setText("Print ");
+        jButtonPrintShippingLabel.setToolTipText("Click here,To Print this Table");
+        jButtonPrintShippingLabel.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jButton27ActionPerformed(evt);
-            }
-        });
-
-        jButton7.setFont(new java.awt.Font("Tahoma", 0, 12)); // NOI18N
-        jButton7.setIcon(new javax.swing.ImageIcon(getClass().getResource("/images/print.png"))); // NOI18N
-        jButton7.setText("Print ");
-        jButton7.setToolTipText("Click here,To Print this Table");
-        jButton7.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jButton7ActionPerformed(evt);
+                jButtonPrintShippingLabelActionPerformed(evt);
             }
         });
 
         jLabel88.setHorizontalAlignment(javax.swing.SwingConstants.RIGHT);
         jLabel88.setText("dd/mm/yyyy");
-
-        jComboBoxReportType2.setFont(new java.awt.Font("Tahoma", 0, 12)); // NOI18N
-        jComboBoxReportType2.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "Income", "Cost", "Profit" }));
-        jComboBoxReportType2.setToolTipText("Select,What kind of graph do you want?");
-        jComboBoxReportType2.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jComboBoxReportType2ActionPerformed(evt);
-            }
-        });
-
-        jCheckBoxBarChart.setFont(new java.awt.Font("Tahoma", 0, 12)); // NOI18N
-        jCheckBoxBarChart.setText("Bar Chart");
-        jCheckBoxBarChart.setToolTipText("Select the chart disposition");
-        jCheckBoxBarChart.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jCheckBoxBarChartActionPerformed(evt);
-            }
-        });
-
-        jCheckBoxLineChart.setFont(new java.awt.Font("Tahoma", 0, 12)); // NOI18N
-        jCheckBoxLineChart.setText("Line Chart");
-        jCheckBoxLineChart.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jCheckBoxLineChartActionPerformed(evt);
-            }
-        });
 
         javax.swing.GroupLayout jPanel15Layout = new javax.swing.GroupLayout(jPanel15);
         jPanel15.setLayout(jPanel15Layout);
@@ -178,10 +137,9 @@ public class ReportPanel extends javax.swing.JPanel implements control.LanguageC
             .addGroup(jPanel15Layout.createSequentialGroup()
                 .addContainerGap()
                 .addGroup(jPanel15Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(jComboBoxReportType, 0, 145, Short.MAX_VALUE)
-                    .addComponent(jButton26, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                    .addComponent(jButton27, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                    .addComponent(jButton7, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addComponent(jComboBoxOrderStatus, 0, 145, Short.MAX_VALUE)
+                    .addComponent(jButtonShowOrders, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addComponent(jButtonPrintShippingLabel, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                     .addGroup(jPanel15Layout.createSequentialGroup()
                         .addGroup(jPanel15Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addComponent(jLabel4)
@@ -190,10 +148,7 @@ public class ReportPanel extends javax.swing.JPanel implements control.LanguageC
                         .addGroup(jPanel15Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addComponent(jTextFieldDateFrom)
                             .addComponent(jTextFieldDateTo)
-                            .addComponent(jLabel88, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)))
-                    .addComponent(jComboBoxReportType2, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                    .addComponent(jCheckBoxBarChart, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                    .addComponent(jCheckBoxLineChart, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                            .addComponent(jLabel88, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))))
                 .addContainerGap())
         );
         jPanel15Layout.setVerticalGroup(
@@ -209,20 +164,12 @@ public class ReportPanel extends javax.swing.JPanel implements control.LanguageC
                     .addComponent(jLabel32))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(jLabel88)
-                .addGap(40, 40, 40)
-                .addComponent(jComboBoxReportType, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(jButton26, javax.swing.GroupLayout.PREFERRED_SIZE, 46, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addComponent(jComboBoxOrderStatus, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(jButton7, javax.swing.GroupLayout.PREFERRED_SIZE, 45, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(18, 18, 18)
-                .addComponent(jComboBoxReportType2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                .addComponent(jCheckBoxBarChart)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                .addComponent(jCheckBoxLineChart)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                .addComponent(jButton27, javax.swing.GroupLayout.PREFERRED_SIZE, 45, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addComponent(jButtonShowOrders, javax.swing.GroupLayout.PREFERRED_SIZE, 46, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(jButtonPrintShippingLabel, javax.swing.GroupLayout.PREFERRED_SIZE, 45, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
 
@@ -244,73 +191,6 @@ public class ReportPanel extends javax.swing.JPanel implements control.LanguageC
         });
         jScrollPane8.setViewportView(jTableReport);
 
-        jPanel31.setBorder(javax.swing.BorderFactory.createTitledBorder("Today Now"));
-
-        jLabel82.setFont(new java.awt.Font("Tahoma", 0, 14)); // NOI18N
-        jLabel82.setText("Income:");
-
-        jLabel83.setFont(new java.awt.Font("Tahoma", 0, 14)); // NOI18N
-        jLabel83.setText("Cost:");
-
-        jLabel84.setFont(new java.awt.Font("Tahoma", 0, 14)); // NOI18N
-        jLabel84.setText("Profit:");
-
-        jTextFieldTodNwInc.setEditable(false);
-        jTextFieldTodNwInc.setFont(new java.awt.Font("Tahoma", 1, 14)); // NOI18N
-        jTextFieldTodNwInc.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jTextFieldTodNwIncActionPerformed(evt);
-            }
-        });
-
-        jTextFieldTodNwCos.setEditable(false);
-        jTextFieldTodNwCos.setFont(new java.awt.Font("Tahoma", 1, 14)); // NOI18N
-        jTextFieldTodNwCos.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jTextFieldTodNwCosActionPerformed(evt);
-            }
-        });
-
-        jTextFieldTodNwProf.setEditable(false);
-        jTextFieldTodNwProf.setFont(new java.awt.Font("Tahoma", 1, 14)); // NOI18N
-        jTextFieldTodNwProf.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jTextFieldTodNwProfActionPerformed(evt);
-            }
-        });
-
-        javax.swing.GroupLayout jPanel31Layout = new javax.swing.GroupLayout(jPanel31);
-        jPanel31.setLayout(jPanel31Layout);
-        jPanel31Layout.setHorizontalGroup(
-            jPanel31Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(jPanel31Layout.createSequentialGroup()
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                .addComponent(jLabel82, javax.swing.GroupLayout.PREFERRED_SIZE, 84, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(jTextFieldTodNwInc, javax.swing.GroupLayout.PREFERRED_SIZE, 148, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                .addComponent(jLabel83, javax.swing.GroupLayout.PREFERRED_SIZE, 84, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                .addComponent(jTextFieldTodNwCos, javax.swing.GroupLayout.PREFERRED_SIZE, 148, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                .addComponent(jLabel84, javax.swing.GroupLayout.PREFERRED_SIZE, 84, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                .addComponent(jTextFieldTodNwProf, javax.swing.GroupLayout.PREFERRED_SIZE, 148, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap())
-        );
-        jPanel31Layout.setVerticalGroup(
-            jPanel31Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(jPanel31Layout.createSequentialGroup()
-                .addGroup(jPanel31Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(jLabel82)
-                    .addComponent(jTextFieldTodNwInc, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(jLabel83)
-                    .addComponent(jTextFieldTodNwCos, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(jLabel84)
-                    .addComponent(jTextFieldTodNwProf, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addGap(0, 12, Short.MAX_VALUE))
-        );
-
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(this);
         this.setLayout(layout);
         layout.setHorizontalGroup(
@@ -319,9 +199,7 @@ public class ReportPanel extends javax.swing.JPanel implements control.LanguageC
                 .addContainerGap()
                 .addComponent(jPanel15, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(18, 18, 18)
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(jScrollPane8)
-                    .addComponent(jPanel31, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                .addComponent(jScrollPane8, javax.swing.GroupLayout.DEFAULT_SIZE, 772, Short.MAX_VALUE)
                 .addContainerGap())
         );
         layout.setVerticalGroup(
@@ -329,11 +207,8 @@ public class ReportPanel extends javax.swing.JPanel implements control.LanguageC
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
                 .addContainerGap()
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(layout.createSequentialGroup()
-                        .addComponent(jScrollPane8, javax.swing.GroupLayout.PREFERRED_SIZE, 0, Short.MAX_VALUE)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                        .addComponent(jPanel31, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                    .addComponent(jPanel15, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                    .addComponent(jPanel15, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addComponent(jScrollPane8, javax.swing.GroupLayout.DEFAULT_SIZE, 412, Short.MAX_VALUE))
                 .addContainerGap())
         );
     }// </editor-fold>//GEN-END:initComponents
@@ -342,341 +217,51 @@ public class ReportPanel extends javax.swing.JPanel implements control.LanguageC
         // TODO add your handling code here:
     }//GEN-LAST:event_jTextFieldDateFromActionPerformed
 
-    private void jComboBoxReportTypeActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jComboBoxReportTypeActionPerformed
+    private void jComboBoxOrderStatusActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jComboBoxOrderStatusActionPerformed
         // TODO add your handling code here:
-    }//GEN-LAST:event_jComboBoxReportTypeActionPerformed
+    }//GEN-LAST:event_jComboBoxOrderStatusActionPerformed
 
-    private void jButton26ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton26ActionPerformed
-        try{
-            int reportType=jComboBoxReportType.getSelectedIndex();
-
-            if(jTextFieldDateFrom.getText().equals("")&&jTextFieldDateTo.getText().equals("")){
-                switch(reportType){
-                    case 0:allSalesLoadTable("","");break;//all
-                    case 1:dailySalesLoadTable(0,"","");break;//daily
-                    case 2:monthlySalesLoadTable(1,"","");break;//monthly
-                    case 3:annualSalesLoadTable(2,"","");break;//annual
-                    case 4:suppliesLoadTableForReport(0,"","","");break;//
-                    case 5:suppliesLoadTableForReport(0,"","","");break;//
-                    default:EasyPOSMessageDialog.showLocalizedError(this, ApplicationMessages.ERROR_GENERIC);break;
-                }
-            }else{
-                String dateFrom="";
-                String dateTo="";
-                if(jTextFieldDateFrom.getText().equals("")){
-                }else{
-                    dateFrom=util.DateTimeUtil.dateFormatForDB(jTextFieldDateFrom.getText());
-                }
-                if(jTextFieldDateTo.getText().equals("")){
-                }else{
-                    dateTo=util.DateTimeUtil.dateFormatForDB(jTextFieldDateTo.getText());
-                }
-                switch(reportType){
-                    case 0:allSalesLoadTable(dateFrom,dateTo);break;//all
-                    case 1:dailySalesLoadTable(3,dateFrom,dateTo);break;//daily
-                    case 2:monthlySalesLoadTable(4,dateFrom,dateTo);break;//monthly
-                    case 3:annualSalesLoadTable(5,dateFrom,dateTo);break;//annual
-                    case 4:suppliesLoadTableForReport(0,"","","");break;//
-                    case 5:suppliesLoadTableForReport(1,dateFrom,dateTo,"");break;//
-                    default:EasyPOSMessageDialog.showLocalizedError(this, ApplicationMessages.ERROR_GENERIC);break;
-                }
+    private void jButtonShowOrdersActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonShowOrdersActionPerformed
+        try {
+            String dateFrom = "";
+            String dateTo = "";
+            if (!jTextFieldDateFrom.getText().isEmpty()) {
+                dateFrom = util.DateTimeUtil.dateFormatForDB(jTextFieldDateFrom.getText());
             }
-        }catch(Exception e){
+            if (!jTextFieldDateTo.getText().isEmpty()) {
+                dateTo = util.DateTimeUtil.dateFormatForDB(jTextFieldDateTo.getText());
+            }
+
+            String selectedStatus = "";
+            int statusIdx = jComboBoxOrderStatus.getSelectedIndex();
+            if (statusIdx > 0) {
+                selectedStatus = jComboBoxOrderStatus.getSelectedItem().toString();
+            }
+
+            loadOnlineOrders(dateFrom, dateTo, selectedStatus);
+        } catch (Exception e) {
             EasyPOSMessageDialog.showLocalizedWarning(this, ApplicationMessages.VALIDATION_DATE_INPUT_INVALID);
         }
+    }//GEN-LAST:event_jButtonShowOrdersActionPerformed
 
-    }//GEN-LAST:event_jButton26ActionPerformed
-
-    private void jButton27ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton27ActionPerformed
-        int input1=jComboBoxReportType.getSelectedIndex();
-        int input2=jComboBoxReportType2.getSelectedIndex();
-        String dateFrom="";
-        String dateTo="";
-        if(jTextFieldDateFrom.getText().equals("")){
-        }else{
-            dateFrom=util.DateTimeUtil.dateFormatForDB(jTextFieldDateFrom.getText());
+    private void jButtonPrintShippingLabelActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonPrintShippingLabelActionPerformed
+        if (!(jTableReport.getModel() instanceof OnlineOrdersTbl)) {
+            EasyPOSMessageDialog.showLocalizedError(this, ApplicationMessages.ERROR_GENERIC);
+            return;
         }
-        if(jTextFieldDateTo.getText().equals("")){
-        }else{
-            dateTo=util.DateTimeUtil.dateFormatForDB(jTextFieldDateTo.getText());
+        OnlineOrdersTbl model = (OnlineOrdersTbl) jTableReport.getModel();
+        List<OnlineOrder> selected = model.getSelectedOrders();
+        if (selected.isEmpty()) {
+            EasyPOSMessageDialog.showLocalizedWarning(this, ApplicationMessages.VALIDATION_SELECT_ITEM);
+            return;
         }
-        DefaultCategoryDataset dataset=new DefaultCategoryDataset();
-        try{
-            switch(input2){
-                //income************************************************************
-                case 0:
-                if(input1==1){//daily
-                    if(jTextFieldDateFrom.getText().equals("") && jTextFieldDateTo.getText().equals("")){
-                        dailySalesList=sdbops.getTotalSales(0,"","");
-                    }else{
-                        dailySalesList=sdbops.getTotalSales(3,dateFrom,dateTo);
-                    }
-                    for(int i=0;i<=dailySalesList.size()-1;i++){
-                        dataset.setValue(dailySalesList.get(i).getIncome(), "Income",dailySalesList.get(i).getDate());
-                    }
-                    if(jCheckBoxBarChart.isSelected()){
-                        JFreeChart chart=ChartFactory.createBarChart("Daily Income", "Date", "Income(Rs)", dataset, PlotOrientation.VERTICAL, false, true, false);
-                        CategoryPlot p=chart.getCategoryPlot();
-                        p.setRangeGridlinePaint(Color.BLUE);
-                        ChartFrame frame=new ChartFrame("Bar Chart For Daily Income", chart);
-                        frame.setVisible(true);
-                        frame.setSize(800, 500);
-                    }
-                    if(jCheckBoxLineChart.isSelected()){
-                        JFreeChart chart=ChartFactory.createLineChart("Daily Income", "Date", "Income(Rs)", dataset, PlotOrientation.VERTICAL, false, true, false);
-                        CategoryPlot p=chart.getCategoryPlot();
-                        p.setRangeGridlinePaint(Color.BLUE);
-                        ChartFrame frame=new ChartFrame("Line Chart For Daily Income", chart);
-                        frame.setVisible(true);
-                        frame.setSize(800, 500);
-                    }
-
-                }else if(input1==2){//monthly
-                    if(jTextFieldDateFrom.getText().equals("") && jTextFieldDateTo.getText().equals("")){
-                        monthlySalesList=sdbops.getTotalSales(1,"","");
-                    }else{
-                        monthlySalesList=sdbops.getTotalSales(4,dateFrom,dateTo);
-                    }
-                    for(int i=0;i<=monthlySalesList.size()-1;i++){
-                        dataset.setValue(monthlySalesList.get(i).getIncome(), "Income",monthlySalesList.get(i).getMonthName()+monthlySalesList.get(i).getDate());
-                    }
-                    if(jCheckBoxBarChart.isSelected()){
-                        JFreeChart chart=ChartFactory.createBarChart("Monthly Income", "Month(Date)", "Income(Rs)", dataset, PlotOrientation.VERTICAL, false, true, false);
-                        CategoryPlot p=chart.getCategoryPlot();
-                        p.setRangeGridlinePaint(Color.BLUE);
-                        ChartFrame frame=new ChartFrame("Bar Chart For Monthly Income", chart);
-                        frame.setVisible(true);
-                        frame.setSize(800, 500);
-                    }
-                    if(jCheckBoxLineChart.isSelected()){
-                        JFreeChart chart=ChartFactory.createLineChart("Monthly Income", "Month(Date)", "Income(Rs)", dataset, PlotOrientation.VERTICAL, false, true, false);
-                        CategoryPlot p=chart.getCategoryPlot();
-                        p.setRangeGridlinePaint(Color.BLUE);
-                        ChartFrame frame=new ChartFrame("Line Chart For Monthly Income", chart);
-                        frame.setVisible(true);
-                        frame.setSize(800, 500);
-                    }
-
-                }else if(input1==3){//annualy
-                    if(jTextFieldDateFrom.getText().equals("") && jTextFieldDateTo.getText().equals("")){
-                        annualSalesList=sdbops.getTotalSales(2,"","");
-                    }else{
-                        annualSalesList=sdbops.getTotalSales(5,dateFrom,dateTo);
-                    }
-                    for(int i=0;i<=annualSalesList.size()-1;i++){
-                        dataset.setValue(annualSalesList.get(i).getIncome(), "Income",annualSalesList.get(i).getYearName());
-                    }
-                    if(jCheckBoxBarChart.isSelected()){
-                        JFreeChart chart=ChartFactory.createBarChart("Annual Income", "Year", "Income(Rs)", dataset, PlotOrientation.VERTICAL, false, true, false);
-                        CategoryPlot p=chart.getCategoryPlot();
-                        p.setRangeGridlinePaint(Color.BLUE);
-                        ChartFrame frame=new ChartFrame("Bar Chart For Annual Income", chart);
-                        frame.setVisible(true);
-                        frame.setSize(800, 500);
-                    }
-                    if(jCheckBoxLineChart.isSelected()){
-                        JFreeChart chart=ChartFactory.createLineChart("Annual Income", "Year", "Income(Rs)", dataset, PlotOrientation.VERTICAL, false, true, false);
-                        CategoryPlot p=chart.getCategoryPlot();
-                        p.setRangeGridlinePaint(Color.BLUE);
-                        ChartFrame frame=new ChartFrame("Line Chart For Annual Income", chart);
-                        frame.setVisible(true);
-                        frame.setSize(800, 500);
-                    }
-                }
-                break;
-
-                //cost**************************************************************
-                case 1:
-                if(input1==1){//daily
-                    if(jTextFieldDateFrom.getText().equals("") && jTextFieldDateTo.getText().equals("")){
-                        dailySalesList=sdbops.getTotalSales(0,"","");
-                    }else{
-                        dailySalesList=sdbops.getTotalSales(3,dateFrom,dateTo);
-                    }
-                    for(int i=0;i<=dailySalesList.size()-1;i++){
-                        dataset.setValue(dailySalesList.get(i).getCost(), "Cost",dailySalesList.get(i).getDate());
-                    }
-                    if(jCheckBoxBarChart.isSelected()){
-                        JFreeChart chart=ChartFactory.createBarChart("Daily Costs of Sales", "Date", "Cost(Rs)", dataset, PlotOrientation.VERTICAL, false, true, false);
-                        CategoryPlot p=chart.getCategoryPlot();
-                        p.setRangeGridlinePaint(Color.BLUE);
-                        ChartFrame frame=new ChartFrame("Bar Chart For Daily Costs of Sales", chart);
-                        frame.setVisible(true);
-                        frame.setSize(800, 500);
-                    }
-                    if(jCheckBoxLineChart.isSelected()){
-                        JFreeChart chart=ChartFactory.createLineChart("Daily Costs of Sales", "Date", "Cost(Rs)", dataset, PlotOrientation.VERTICAL, false, true, false);
-                        CategoryPlot p=chart.getCategoryPlot();
-                        p.setRangeGridlinePaint(Color.BLUE);
-                        ChartFrame frame=new ChartFrame("Line Chart For Daily Costs of Sales", chart);
-                        frame.setVisible(true);
-                        frame.setSize(800, 500);
-                    }
-
-                }else if(input1==2){//monthly
-                    if(jTextFieldDateFrom.getText().equals("") && jTextFieldDateTo.getText().equals("")){
-                        monthlySalesList=sdbops.getTotalSales(1,"","");
-                    }else{
-                        monthlySalesList=sdbops.getTotalSales(4,dateFrom,dateTo);
-                    }
-                    for(int i=0;i<=monthlySalesList.size()-1;i++){
-                        dataset.setValue(monthlySalesList.get(i).getCost(), "Cost",monthlySalesList.get(i).getMonthName()+monthlySalesList.get(i).getDate());
-                    }
-                    if(jCheckBoxBarChart.isSelected()){
-                        JFreeChart chart=ChartFactory.createBarChart("Monthly Costs of sales", "Month(Date)", "Cost(Rs)", dataset, PlotOrientation.VERTICAL, false, true, false);
-                        CategoryPlot p=chart.getCategoryPlot();
-                        p.setRangeGridlinePaint(Color.BLUE);
-                        ChartFrame frame=new ChartFrame("Bar Chart For Monthly Costs of Sales", chart);
-                        frame.setVisible(true);
-                        frame.setSize(800, 500);
-                    }
-                    if(jCheckBoxLineChart.isSelected()){
-                        JFreeChart chart=ChartFactory.createLineChart("Monthly Costs of sales", "Month(Date)", "Cost(Rs)", dataset, PlotOrientation.VERTICAL, false, true, false);
-                        CategoryPlot p=chart.getCategoryPlot();
-                        p.setRangeGridlinePaint(Color.BLUE);
-                        ChartFrame frame=new ChartFrame("Line Chart For Monthly Costs of Sales", chart);
-                        frame.setVisible(true);
-                        frame.setSize(800, 500);
-                    }
-
-                }else if(input1==3){//annualy
-                    if(jTextFieldDateFrom.getText().equals("") && jTextFieldDateTo.getText().equals("")){
-                        annualSalesList=sdbops.getTotalSales(2,"","");
-                    }else{
-                        annualSalesList=sdbops.getTotalSales(5,dateFrom,dateTo);
-                    }
-                    for(int i=0;i<=annualSalesList.size()-1;i++){
-                        dataset.setValue(annualSalesList.get(i).getCost(), "Cost",annualSalesList.get(i).getYearName());
-                    }
-                    if(jCheckBoxBarChart.isSelected()){
-                        JFreeChart chart=ChartFactory.createBarChart("Annual Costs of sales", "Year", "Cost(Rs)", dataset, PlotOrientation.VERTICAL, false, true, false);
-                        CategoryPlot p=chart.getCategoryPlot();
-                        p.setRangeGridlinePaint(Color.BLUE);
-                        ChartFrame frame=new ChartFrame("Bar Chart For Annual Cost of sales", chart);
-                        frame.setVisible(true);
-                        frame.setSize(800, 500);
-                    }
-                    if(jCheckBoxLineChart.isSelected()){
-                        JFreeChart chart=ChartFactory.createLineChart("Annual Costs of sales", "Year", "Cost(Rs)", dataset, PlotOrientation.VERTICAL, false, true, false);
-                        CategoryPlot p=chart.getCategoryPlot();
-                        p.setRangeGridlinePaint(Color.BLUE);
-                        ChartFrame frame=new ChartFrame("Line Chart For Annual Cost of sales", chart);
-                        frame.setVisible(true);
-                        frame.setSize(800, 500);
-                    }
-                }
-                break;
-
-                //profit************************************************************
-                case 2:
-                if(input1==1){//daily
-                    if(jTextFieldDateFrom.getText().equals("") && jTextFieldDateTo.getText().equals("")){
-                        dailySalesList=sdbops.getTotalSales(0,"","");
-                    }else{
-                        dailySalesList=sdbops.getTotalSales(3,dateFrom,dateTo);
-                    }
-                    for(int i=0;i<=dailySalesList.size()-1;i++){
-                        dataset.setValue(dailySalesList.get(i).getProfit(), "Profit",dailySalesList.get(i).getDate());
-                    }
-                    if(jCheckBoxBarChart.isSelected()){
-                        JFreeChart chart=ChartFactory.createBarChart("Daily Profits", "Date", "Profit(Rs)", dataset, PlotOrientation.VERTICAL, false, true, false);
-                        CategoryPlot p=chart.getCategoryPlot();
-                        p.setRangeGridlinePaint(Color.BLUE);
-                        ChartFrame frame=new ChartFrame("Bar Chart For Daily Profits", chart);
-                        frame.setVisible(true);
-                        frame.setSize(800, 500);
-                    }
-                    if(jCheckBoxLineChart.isSelected()){
-                        JFreeChart chart=ChartFactory.createLineChart("Daily Profits", "Date", "Profit(Rs)", dataset, PlotOrientation.VERTICAL, false, true, false);
-                        CategoryPlot p=chart.getCategoryPlot();
-                        p.setRangeGridlinePaint(Color.BLUE);
-                        ChartFrame frame=new ChartFrame("Line Chart For Daily Profits", chart);
-                        frame.setVisible(true);
-                        frame.setSize(800, 500);
-                    }
-
-                }else if(input1==2){//monthly
-                    if(jTextFieldDateFrom.getText().equals("") && jTextFieldDateTo.getText().equals("")){
-                        monthlySalesList=sdbops.getTotalSales(1,"","");
-                    }else{
-                        monthlySalesList=sdbops.getTotalSales(4,dateFrom,dateTo);
-                    }
-                    for(int i=0;i<=monthlySalesList.size()-1;i++){
-                        dataset.setValue(monthlySalesList.get(i).getProfit(), "Profit",monthlySalesList.get(i).getMonthName()+monthlySalesList.get(i).getDate());
-                    }
-                    if(jCheckBoxBarChart.isSelected()){
-                        JFreeChart chart=ChartFactory.createBarChart("Monthly Profit", "Date", "Profit(Rs)", dataset, PlotOrientation.VERTICAL, false, true, false);
-                        CategoryPlot p=chart.getCategoryPlot();
-                        p.setRangeGridlinePaint(Color.BLUE);
-                        ChartFrame frame=new ChartFrame("Bar Chart For Monthly Profits", chart);
-                        frame.setVisible(true);
-                        frame.setSize(800, 500);
-                    }
-                    if(jCheckBoxLineChart.isSelected()){
-                        JFreeChart chart=ChartFactory.createLineChart("Monthly Profit", "Date", "Profit(Rs)", dataset, PlotOrientation.VERTICAL, false, true, false);
-                        CategoryPlot p=chart.getCategoryPlot();
-                        p.setRangeGridlinePaint(Color.BLUE);
-                        ChartFrame frame=new ChartFrame("Line Chart For Monthly Profits", chart);
-                        frame.setVisible(true);
-                        frame.setSize(800, 500);
-                    }
-
-                }else if(input1==3){//annualy
-                    if(jTextFieldDateFrom.getText().equals("") && jTextFieldDateTo.getText().equals("")){
-                        annualSalesList=sdbops.getTotalSales(2,"","");
-                    }else{
-                        annualSalesList=sdbops.getTotalSales(5,dateFrom,dateTo);
-                    }
-                    for(int i=0;i<=annualSalesList.size()-1;i++){
-                        dataset.setValue(annualSalesList.get(i).getProfit(), "Profit",annualSalesList.get(i).getYearName());
-                    }
-                    if(jCheckBoxBarChart.isSelected()){
-                        JFreeChart chart=ChartFactory.createBarChart("Annual Profit", "Year", "Profit(Rs)", dataset, PlotOrientation.VERTICAL, false, true, false);
-                        CategoryPlot p=chart.getCategoryPlot();
-                        p.setRangeGridlinePaint(Color.BLUE);
-                        ChartFrame frame=new ChartFrame("Bar Chart For Annual Profit", chart);
-                        frame.setVisible(true);
-                        frame.setSize(800, 500);
-                    }
-                    if(jCheckBoxLineChart.isSelected()){
-                        JFreeChart chart=ChartFactory.createLineChart("Annual Profit", "Year", "Profit(Rs)", dataset, PlotOrientation.VERTICAL, false, true, false);
-                        CategoryPlot p=chart.getCategoryPlot();
-                        p.setRangeGridlinePaint(Color.BLUE);
-                        ChartFrame frame=new ChartFrame("Line Chart For Annual Profit", chart);
-                        frame.setVisible(true);
-                        frame.setSize(800, 500);
-                    }
-                }
-                break;
-            }
-        }catch(Exception e){
-            EasyPOSMessageDialog.showLocalizedError(this, ApplicationMessages.ERROR_REPORT_GRAPH_FAILED);
+        InstituteModel institute = RuntimeDataManager.getInstance().getRuntimeData().getSelectedInstitute();
+        if (institute == null) {
+            EasyPOSMessageDialog.showLocalizedError(this, ApplicationMessages.ERROR_GENERIC);
+            return;
         }
-    }//GEN-LAST:event_jButton27ActionPerformed
-
-    private void jButton7ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton7ActionPerformed
-        try{
-            boolean result=jTableReport.print();
-            if(result){
-            }else{
-                EasyPOSMessageDialog.showLocalizedError(this, ApplicationMessages.ERROR_PRINTER_STOPPED);
-            }
-        }catch(Exception e){
-            EasyPOSMessageDialog.showLocalizedError(this, ApplicationMessages.ERROR_PRINT_PROCESS_FAILED);
-        }
-    }//GEN-LAST:event_jButton7ActionPerformed
-
-    private void jComboBoxReportType2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jComboBoxReportType2ActionPerformed
-        // TODO add your handling code here:
-    }//GEN-LAST:event_jComboBoxReportType2ActionPerformed
-
-    private void jCheckBoxBarChartActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jCheckBoxBarChartActionPerformed
-        // TODO add your handling code here:
-    }//GEN-LAST:event_jCheckBoxBarChartActionPerformed
-
-    private void jCheckBoxLineChartActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jCheckBoxLineChartActionPerformed
-        // TODO add your handling code here:
-    }//GEN-LAST:event_jCheckBoxLineChartActionPerformed
+        new ZebraShippingLabelPrinter().print(selected, institute);
+    }//GEN-LAST:event_jButtonPrintShippingLabelActionPerformed
 
     private void jTableReportMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jTableReportMouseClicked
         //        try{
@@ -695,18 +280,63 @@ public class ReportPanel extends javax.swing.JPanel implements control.LanguageC
             //        }
     }//GEN-LAST:event_jTableReportMouseClicked
 
-    private void jTextFieldTodNwIncActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jTextFieldTodNwIncActionPerformed
-        // TODO add your handling code here:
-    }//GEN-LAST:event_jTextFieldTodNwIncActionPerformed
 
-    private void jTextFieldTodNwCosActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jTextFieldTodNwCosActionPerformed
-        // TODO add your handling code here:
-    }//GEN-LAST:event_jTextFieldTodNwCosActionPerformed
+    public void loadData() {
+        loadOnlineOrders("", "", "");
+    }
 
-    private void jTextFieldTodNwProfActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jTextFieldTodNwProfActionPerformed
-        // TODO add your handling code here:
-    }//GEN-LAST:event_jTextFieldTodNwProfActionPerformed
+    private void loadOnlineOrders(String dateFrom, String dateTo, String status) {
+        JRootPane root = getRootPane();
+        LoadingGlassPane loader = new LoadingGlassPane();
+        root.setGlassPane(loader);
 
+        SwingWorker<CommonResponse, Void> worker = new SwingWorker<CommonResponse, Void>() {
+            @Override
+            protected CommonResponse doInBackground() {
+                loader.start();
+                APIHeaderData headerData = new APIHeaderData();
+                headerData.setInstituteId(RuntimeDataManager.getInstance().getRuntimeData().getInstituteId());
+                headerData.setTerminalId(RuntimeDataManager.getInstance().getRuntimeData().getTerminalId());
+                return ServerAPIConnection.getInstance(headerData).getOnlineOrders(dateFrom, dateTo, status);
+            }
+
+            @Override
+            protected void done() {
+                loader.stop();
+                try {
+                    CommonResponse response = get();
+                    if (response.getAPIResponse().isSuccess()) {
+                        currentOrders = (List<OnlineOrder>) response.getData();
+
+                        // Populate status combo with unique values from this response
+                        Set<String> statuses = new LinkedHashSet<>();
+                        for (OnlineOrder o : currentOrders) {
+                            if (o.order_status != null && !o.order_status.isEmpty()) {
+                                statuses.add(o.order_status);
+                            }
+                        }
+                        DefaultComboBoxModel<String> comboModel = new DefaultComboBoxModel<>();
+                        comboModel.addElement("-- All --");
+                        for (String s : statuses) {
+                            comboModel.addElement(s);
+                        }
+                        jComboBoxOrderStatus.setModel(comboModel);
+
+                        jTableReport.setModel(new OnlineOrdersTbl(currentOrders));
+                        jTableReport.getColumnModel().getColumn(0).setMaxWidth(55);
+                    } else {
+                        EasyPOSMessageDialog.showErrorMessageDialog(ReportPanel.this.getRootPane(), response.getAPIResponse());
+                    }
+                } catch (InterruptedException | ExecutionException ex) {
+                    EasyPOSMessageDialog.showUnexpectedError(ReportPanel.this.getRootPane(), ex.getMessage());
+                    EasyPosLogger.getInstance().log(EasyPosLogger.LogLevel.ERROR, ex.toString());
+                }
+            }
+        };
+
+        loader.start();
+        worker.execute();
+    }
 
     void allSalesLoadTable(String searchInput1,String searchInput2){
 //        allSalesList=sdbops.getAllSales(searchInput1, searchInput2);
@@ -806,54 +436,31 @@ public class ReportPanel extends javax.swing.JPanel implements control.LanguageC
             ge.registerFont(customFont);
             jLabel4.setFont(customFont);
             jLabel32.setFont(customFont);
-            jButton26.setFont(customFont);
-            jButton27.setFont(customFont);
-            jButton7.setFont(customFont);
+            jButtonShowOrders.setFont(customFont);
+            jButtonPrintShippingLabel.setFont(customFont);
             jLabel88.setFont(customFont);
-            jCheckBoxBarChart.setFont(customFont);
-            jCheckBoxLineChart.setFont(customFont);
-            jLabel82.setFont(customFont);
-            jLabel83.setFont(customFont);
-            jLabel84.setFont(customFont);
         } catch (IOException | FontFormatException e) {
             System.err.println(e);
         }
         }
         jLabel4.setText(resourceBundle.getString("ReportPanel.jLabel4.text"));
         jLabel32.setText(resourceBundle.getString("ReportPanel.jLabel32.text"));
-        jButton26.setText(resourceBundle.getString("ReportPanel.jButton26.text"));
-        jButton27.setText(resourceBundle.getString("ReportPanel.jButton27.text"));
-        jButton7.setText(resourceBundle.getString("ReportPanel.jButton7.text"));
+        jButtonShowOrders.setText(resourceBundle.getString("ReportPanel.jButton26.text"));
+        jButtonPrintShippingLabel.setText(resourceBundle.getString("ReportPanel.jButton7.text"));
         jLabel88.setText(resourceBundle.getString("ReportPanel.jLabel88.text"));
-        jCheckBoxBarChart.setText(resourceBundle.getString("ReportPanel.jCheckBoxBarChart.text"));
-        jCheckBoxLineChart.setText(resourceBundle.getString("ReportPanel.jCheckBoxLineChart.text"));
-        jLabel82.setText(resourceBundle.getString("ReportPanel.jLabel82.text"));
-        jLabel83.setText(resourceBundle.getString("ReportPanel.jLabel83.text"));
-        jLabel84.setText(resourceBundle.getString("ReportPanel.jLabel84.text"));
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
-    private javax.swing.JButton jButton26;
-    private javax.swing.JButton jButton27;
-    private javax.swing.JButton jButton7;
-    private javax.swing.JCheckBox jCheckBoxBarChart;
-    private javax.swing.JCheckBox jCheckBoxLineChart;
-    private javax.swing.JComboBox jComboBoxReportType;
-    private javax.swing.JComboBox jComboBoxReportType2;
+    private javax.swing.JButton jButtonPrintShippingLabel;
+    private javax.swing.JButton jButtonShowOrders;
+    private javax.swing.JComboBox jComboBoxOrderStatus;
     private javax.swing.JLabel jLabel32;
     private javax.swing.JLabel jLabel4;
-    private javax.swing.JLabel jLabel82;
-    private javax.swing.JLabel jLabel83;
-    private javax.swing.JLabel jLabel84;
     private javax.swing.JLabel jLabel88;
     private javax.swing.JPanel jPanel15;
-    private javax.swing.JPanel jPanel31;
     private javax.swing.JScrollPane jScrollPane8;
     private javax.swing.JTable jTableReport;
     private javax.swing.JTextField jTextFieldDateFrom;
     private javax.swing.JTextField jTextFieldDateTo;
-    private javax.swing.JTextField jTextFieldTodNwCos;
-    private javax.swing.JTextField jTextFieldTodNwInc;
-    private javax.swing.JTextField jTextFieldTodNwProf;
     // End of variables declaration//GEN-END:variables
 }
