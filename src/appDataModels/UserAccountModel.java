@@ -20,6 +20,7 @@ public class UserAccountModel {
     private int hintType;
     private String note;
     private int status;
+    private int forcePasswordChange;
 
     // ✅ DTO → Model
     public UserAccountModel(UserAccount dto) {
@@ -34,6 +35,7 @@ public class UserAccountModel {
         this.hintType = dto.hint_type;
         this.note = dto.note;
         this.status = dto.status;
+        this.forcePasswordChange = dto.force_password_change;
     }
 
     // ✅ Model → DTO
@@ -50,6 +52,7 @@ public class UserAccountModel {
         dto.hint_type = this.getHintType();
         dto.note = this.getNote();
         dto.status = this.getStatus();
+        dto.force_password_change = this.getForcePasswordChange();
         return dto;
     }
 
@@ -86,4 +89,7 @@ public class UserAccountModel {
 
     public int getStatus() { return status; }
     public void setStatus(int status) { this.status = status; }
+
+    public int getForcePasswordChange() { return forcePasswordChange; }
+    public void setForcePasswordChange(int forcePasswordChange) { this.forcePasswordChange = forcePasswordChange; }
 }

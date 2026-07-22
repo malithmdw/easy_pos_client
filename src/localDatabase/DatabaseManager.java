@@ -101,7 +101,8 @@ public class DatabaseManager {
             "password_hint TEXT NOT NULL," +
             "hint_type INTEGER NOT NULL," +
             "note TEXT NOT NULL," +
-            "status INTEGER NOT NULL" +
+            "status INTEGER NOT NULL," +
+            "force_password_change INTEGER NOT NULL DEFAULT 0" +
             ");",
             
             "CREATE TABLE IF NOT EXISTS user_permission (" +
@@ -270,6 +271,7 @@ public class DatabaseManager {
         }
 
         migrateCategoryTable();
+        migrateUserAccountTable();
     }
 
     /**
@@ -293,6 +295,27 @@ public class DatabaseManager {
                 } catch (SQLException e) {
                     // Column already exists - ignore.
                 }
+            }
+
+        } catch (SQLException e) {
+            EasyPosLogger.getInstance().log(EasyPosLogger.LogLevel.ERROR, e.toString());
+        }
+    }
+
+    /**
+     * Adds the force_password_change column to pre-existing user_account
+     * tables that were created before this column existed. SQLite has no
+     * "ADD COLUMN IF NOT EXISTS", so failure (column already exists) is
+     * expected and silently ignored.
+     */
+    private static void migrateUserAccountTable() {
+        try (Connection conn = DatabaseManager.getConnection();
+             Statement stmt = conn.createStatement()) {
+
+            try {
+                stmt.execute("ALTER TABLE user_account ADD COLUMN force_password_change INTEGER NOT NULL DEFAULT 0;");
+            } catch (SQLException e) {
+                // Column already exists - ignore.
             }
 
         } catch (SQLException e) {
@@ -329,7 +352,8 @@ public class DatabaseManager {
                 userAccount.hint_type = rs.getInt("hint_type");
                 userAccount.note = rs.getString("note");
                 userAccount.status = rs.getInt("status");
-                
+                userAccount.force_password_change = rs.getInt("force_password_change");
+
                 LoginResponse loginResponse = new LoginResponse();
                 loginResponse.auth_token = null;
                 loginResponse.user = userAccount;
@@ -1229,8 +1253,8 @@ public class DatabaseManager {
     public void insertUser(UserAccount userAccount) {
 
         String sql = "INSERT INTO user_account "
-                   + "(user_code, institute_id, user_name, email, phone, password, password_hint, hint_type, note, status) "
-                   + "VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
+                   + "(user_code, institute_id, user_name, email, phone, password, password_hint, hint_type, note, status, force_password_change) "
+                   + "VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
 
         try (Connection conn = DatabaseManager.getConnection();
              PreparedStatement pstmt = conn.prepareStatement(sql)) {
@@ -1246,6 +1270,7 @@ public class DatabaseManager {
             pstmt.setInt(8, userAccount.hint_type);
             pstmt.setString(9, userAccount.note);
             pstmt.setInt(10, userAccount.status);
+            pstmt.setInt(11, userAccount.force_password_change);
 
             // Execute insert
             pstmt.executeUpdate();

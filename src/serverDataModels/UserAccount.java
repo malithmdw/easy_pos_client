@@ -17,4 +17,5 @@ public class UserAccount {
     public int hint_type;
     public String note;
     public int status;
+    public int force_password_change;
 }
