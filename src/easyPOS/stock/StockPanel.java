@@ -8,7 +8,11 @@ import dbOperations.StockDBOperation;
 import dbOperations.SuppliesDBOperation;
 import java.awt.HeadlessException;
 import java.awt.print.PrinterException;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.LinkedHashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.concurrent.ExecutionException;
 import easyPOS.localization.ApplicationMessages;
 import javax.swing.JOptionPane;
@@ -16,6 +20,7 @@ import javax.swing.JRootPane;
 import javax.swing.SwingWorker;
 import localDatabase.DatabaseManager;
 import serverDataModels.Item;
+import serverDataModels.RestockNeededRow;
 import serverResponseDataModel.CommonResponse;
 import tableModels.ExpiredStockTbl;
 import tableModels.RestockNeededTbl;
@@ -395,17 +400,39 @@ public class StockPanel extends javax.swing.JPanel {
                 try {
                     CommonResponse response = get();
                     if (response.getAPIResponse().isSuccess()) {
-                        List<Item> items = (List<Item>) response.getData();
+                        List<RestockNeededRow> rows = (List<RestockNeededRow>) response.getData();
+
+                        // get-stock-needto-restock.php returns one row per (item, batch) and
+                        // doesn't include category_id, so resolve category per item locally:
+                        // category_id comes from the synced item table, category name/details
+                        // from the synced category table.
                         List<CategoryModel> categories = DatabaseManager.getInstance().getCategories();
-                        for (Item item : items) {
-                            for (CategoryModel cat : categories) {
-                                if (cat.getCategoryId() == item.category_id) {
-                                    item.category = cat.newCategoryDTO();
-                                    break;
+                        Map<Integer, Integer> categoryIdByItemId = new HashMap<>();
+                        for (Item localItem : DatabaseManager.getInstance().getItems()) {
+                            categoryIdByItemId.put(localItem.item_id, localItem.category_id);
+                        }
+
+                        // Dedupe to one row per item - item-level fields and the server's
+                        // precomputed total_available_qty/shortage_qty repeat across that
+                        // item's batch rows.
+                        Map<Integer, RestockNeededRow> distinctByItem = new LinkedHashMap<>();
+                        for (RestockNeededRow row : rows) {
+                            distinctByItem.putIfAbsent(row.item_id, row);
+                        }
+
+                        for (RestockNeededRow row : distinctByItem.values()) {
+                            Integer categoryId = categoryIdByItemId.get(row.item_id);
+                            if (categoryId != null) {
+                                for (CategoryModel cat : categories) {
+                                    if (cat.getCategoryId() == categoryId) {
+                                        row.category = cat.newCategoryDTO();
+                                        break;
+                                    }
                                 }
                             }
                         }
-                        jTableToOrder.setModel(new RestockNeededTbl(items));
+
+                        jTableToOrder.setModel(new RestockNeededTbl(new ArrayList<>(distinctByItem.values())));
                     } else {
                         EasyPOSMessageDialog.showErrorMessageDialog(StockPanel.this.getRootPane(), response.getAPIResponse());
                     }

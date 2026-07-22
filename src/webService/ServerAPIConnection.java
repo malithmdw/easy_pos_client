@@ -22,6 +22,7 @@ import serverDataModels.MeasureUnit;
 import serverDataModels.OnlineOrder;
 import serverDataModels.ProductBrand;
 import serverDataModels.PurchaseInvoice;
+import serverDataModels.RestockNeededRow;
 import serverDataModels.SaleInvoice;
 import serverDataModels.SaleReturn;
 import serverDataModels.StockWastage;
@@ -735,9 +736,9 @@ public class ServerAPIConnection {
         if (commonResponse.getAPIResponse().isSuccess()) {
             ObjectMapper mapper = new ObjectMapper();
             try {
-                List<Item> items = mapper.convertValue(commonResponse.getData(),
-                        new com.fasterxml.jackson.core.type.TypeReference<List<Item>>() {});
-                commonResponse.setData(items);
+                List<RestockNeededRow> rows = mapper.convertValue(commonResponse.getData(),
+                        new com.fasterxml.jackson.core.type.TypeReference<List<RestockNeededRow>>() {});
+                commonResponse.setData(rows);
             } catch (IllegalArgumentException ex) {
                 commonResponse.setAPIResponse(ResponseCodes.get("95"));
                 EasyPosLogger.getInstance().error("", ex);
