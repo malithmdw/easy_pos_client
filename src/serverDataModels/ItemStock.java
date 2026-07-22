@@ -10,8 +10,9 @@ public class ItemStock {
     public String purchase_date; 
     public double quantity_purchased; 
     public double quantity_available; 
-    public double purchasing_price; 
-    public double label_price; 
+    public double purchasing_price;
+    public Double purchasing_unit_price;
+    public double label_price;
     public double discount; 
     public double selling_price; 
     public double wholesale_price; 

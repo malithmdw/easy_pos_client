@@ -15,6 +15,7 @@ public class ItemStockModel {
     private double quantityPurchased;
     private double quantityAvailable;
     private double purchasingPrice;
+    private Double purchasingUnitPrice;
     private double labelPrice;
     private double discount;
     private double sellingPrice;
@@ -30,6 +31,7 @@ public class ItemStockModel {
         this.quantityPurchased = dto.quantity_purchased;
         this.quantityAvailable = dto.quantity_available;
         this.purchasingPrice = dto.purchasing_price;
+        this.purchasingUnitPrice = dto.purchasing_unit_price;
         this.labelPrice = dto.label_price;
         this.discount = dto.discount;
         this.sellingPrice = dto.selling_price;
@@ -47,6 +49,7 @@ public class ItemStockModel {
         dto.quantity_purchased = this.getQuantityPurchased();
         dto.quantity_available = this.getQuantityAvailable();
         dto.purchasing_price = this.getPurchasingPrice();
+        dto.purchasing_unit_price = this.getPurchasingUnitPrice();
         dto.label_price = this.getLabelPrice();
         dto.discount = this.getDiscount();
         dto.selling_price = this.getSellingPrice();
@@ -74,6 +77,9 @@ public class ItemStockModel {
 
     public double getPurchasingPrice() { return purchasingPrice; }
     public void setPurchasingPrice(double purchasingPrice) { this.purchasingPrice = purchasingPrice; }
+
+    public Double getPurchasingUnitPrice() { return purchasingUnitPrice; }
+    public void setPurchasingUnitPrice(Double purchasingUnitPrice) { this.purchasingUnitPrice = purchasingUnitPrice; }
 
     public double getLabelPrice() { return labelPrice; }
     public void setLabelPrice(double labelPrice) { this.labelPrice = labelPrice; }
