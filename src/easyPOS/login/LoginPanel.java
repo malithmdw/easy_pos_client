@@ -279,8 +279,7 @@ public class LoginPanel extends javax.swing.JPanel implements control.LanguageCh
                 loader.start(); // show loader
                 
                 LoginResponseModel loginResponseModel = null; 
-                loginResponseModel = DatabaseManager.getInstance().login(RuntimeDataManager.getInstance().getRuntimeData().getInstituteId(), 
-                        userName, password);
+                loginResponseModel = DatabaseManager.getInstance().login(userName, password);
                 
                 if (loginResponseModel != null) {
                     
@@ -293,6 +292,7 @@ public class LoginPanel extends javax.swing.JPanel implements control.LanguageCh
                     for (Institute institute : DatabaseManager.getInstance().getInstitutes()){
                         if (institute.institute_id == loginResponseModel.getUser().getInstituteId()) {
                             RuntimeDataManager.getInstance().getRuntimeData().setSelectedInstitute(new InstituteModel(institute));
+                            RuntimeDataManager.getInstance().getRuntimeData().setInstituteId(Integer.toString(institute.institute_id));
                         }
                     }
                     
@@ -368,6 +368,7 @@ public class LoginPanel extends javax.swing.JPanel implements control.LanguageCh
                 if (commonResponse.getAPIResponse().isSuccess()) {
                     LoginResponseModel loginResponseModel = new LoginResponseModel((LoginResponse) commonResponse.getData());                    
                     RuntimeDataManager.getInstance().getRuntimeData().setUser(loginResponseModel.getUser());
+                    RuntimeDataManager.getInstance().getRuntimeData().setInstituteId(Integer.toString(loginResponseModel.getUser().getInstituteId()));
                     
                     UserAccountModel userAccountModel = loginResponseModel.getUser();
                     List<Permission> permissions = loginResponseModel.getPermissions();

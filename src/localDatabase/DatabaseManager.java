@@ -328,12 +328,12 @@ public class DatabaseManager {
     
     // Get data 
     
-    public LoginResponseModel login(String instituteId, String userName, String password) {
+    public LoginResponseModel login(String userName, String password) {
         LoginResponseModel loginResponseModel = null;
         UserAccount userAccount;
         
         String query = "SELECT * FROM user_account WHERE user_name = '" 
-                + userName + "' AND password = '" + password + "' AND institute_id = '" + instituteId + "' LIMIT 1;";
+                + userName + "' AND password = '" + password + "' LIMIT 1;";
 
         try (Connection conn = DatabaseManager.getConnection();
              PreparedStatement stmt = conn.prepareStatement(query);
@@ -359,7 +359,7 @@ public class DatabaseManager {
                 loginResponse.user = userAccount;
                 loginResponse.permissions = new ArrayList<>();
                 
-                List<Permission> permissions = getPermissionsOfUser(instituteId, userName);
+                List<Permission> permissions = getPermissionsOfUser(Integer.toString(userAccount.institute_id), userName);
                 
                 loginResponseModel = new LoginResponseModel(loginResponse);
                 loginResponseModel.setPermissions(permissions);
