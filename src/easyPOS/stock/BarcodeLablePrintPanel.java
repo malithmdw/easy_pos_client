@@ -90,6 +90,7 @@ public class BarcodeLablePrintPanel extends javax.swing.JPanel {
         jTableBarcodeLablePrintItems = new javax.swing.JTable();
         jButtonPrintAList = new javax.swing.JButton();
         jButtonStockFullPrint = new javax.swing.JButton();
+        jButtonPrintAList1 = new javax.swing.JButton();
 
         jScrollPane5.setAutoscrolls(true);
 
@@ -146,6 +147,18 @@ public class BarcodeLablePrintPanel extends javax.swing.JPanel {
             }
         });
 
+        jButtonPrintAList1.setFont(new java.awt.Font("Segoe UI", 0, 14)); // NOI18N
+        jButtonPrintAList1.setIcon(new javax.swing.ImageIcon(getClass().getResource("/images/printer.png"))); // NOI18N
+        jButtonPrintAList1.setText(bundle.getString("LiveStockPanel.jButtonPrintAList.text")); // NOI18N
+        jButtonPrintAList1.setMaximumSize(new java.awt.Dimension(173, 41));
+        jButtonPrintAList1.setMinimumSize(new java.awt.Dimension(173, 41));
+        jButtonPrintAList1.setPreferredSize(new java.awt.Dimension(175, 41));
+        jButtonPrintAList1.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jButtonPrintAList1ActionPerformed(evt);
+            }
+        });
+
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(this);
         this.setLayout(layout);
         layout.setHorizontalGroup(
@@ -156,9 +169,11 @@ public class BarcodeLablePrintPanel extends javax.swing.JPanel {
                     .addComponent(jScrollPane5, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, 901, Short.MAX_VALUE)
                     .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
                         .addGap(0, 0, Short.MAX_VALUE)
-                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(jButtonStockFullPrint, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addComponent(jButtonPrintAList, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))))
+                        .addComponent(jButtonStockFullPrint, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
+                        .addComponent(jButtonPrintAList1, javax.swing.GroupLayout.PREFERRED_SIZE, 218, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                        .addComponent(jButtonPrintAList, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))
                 .addContainerGap())
         );
         layout.setVerticalGroup(
@@ -169,7 +184,9 @@ public class BarcodeLablePrintPanel extends javax.swing.JPanel {
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(jScrollPane5, javax.swing.GroupLayout.DEFAULT_SIZE, 178, Short.MAX_VALUE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(jButtonPrintAList, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(jButtonPrintAList, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(jButtonPrintAList1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addContainerGap())
         );
     }// </editor-fold>//GEN-END:initComponents
@@ -182,7 +199,7 @@ public class BarcodeLablePrintPanel extends javax.swing.JPanel {
         // Print All
         ZebraStickerPrinter zebraPrinter = new ZebraStickerPrinter();
         zebraPrinter.print(barcodeLableItems, 
-                RuntimeDataManager.getInstance().getRuntimeData().getSelectedInstitute().getBusinessName());
+        RuntimeDataManager.getInstance().getRuntimeData().getSelectedInstitute().getBusinessName());
     }//GEN-LAST:event_jButtonPrintAListActionPerformed
 
     private void jButtonStockFullPrintActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonStockFullPrintActionPerformed
@@ -195,9 +212,15 @@ public class BarcodeLablePrintPanel extends javax.swing.JPanel {
         
     }//GEN-LAST:event_jButtonStockFullPrintActionPerformed
 
+    private void jButtonPrintAList1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonPrintAList1ActionPerformed
+        WarrantyStickerCountWindow warrantyStickerCountWindow = new WarrantyStickerCountWindow();
+        warrantyStickerCountWindow.show();
+    }//GEN-LAST:event_jButtonPrintAList1ActionPerformed
+
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton jButtonPrintAList;
+    private javax.swing.JButton jButtonPrintAList1;
     private javax.swing.JButton jButtonStockFullPrint;
     private javax.swing.JScrollPane jScrollPane5;
     private javax.swing.JTable jTableBarcodeLablePrintItems;
