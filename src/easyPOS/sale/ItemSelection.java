@@ -1,13 +1,11 @@
 package easyPOS.sale;
 
 import appDataModels.ItemCardDataModel;
-import appDataModels.ItemModel;
 import control.EventManager;
 import control.OnGridItemSelectListener;
 import control.SalesMenuItemClickListener;
 import easyPOS.NumberPanel;
 import java.awt.BorderLayout;
-import java.awt.FlowLayout;
 import java.awt.GridLayout;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;

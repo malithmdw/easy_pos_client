@@ -47,8 +47,16 @@ public class OnlineOrdersTbl extends AbstractTableModel {
     @Override
     public void setValueAt(Object value, int rowIndex, int columnIndex) {
         if (columnIndex == 0) {
-            selected[rowIndex] = (Boolean) value;
-            fireTableCellUpdated(rowIndex, columnIndex);
+            boolean checked = (Boolean) value;
+            if (checked) {
+                for (int i = 0; i < selected.length; i++) {
+                    selected[i] = (i == rowIndex);
+                }
+                fireTableDataChanged();
+            } else {
+                selected[rowIndex] = false;
+                fireTableCellUpdated(rowIndex, columnIndex);
+            }
         }
     }
 

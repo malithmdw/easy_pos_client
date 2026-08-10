@@ -25,9 +25,9 @@
                       <Component id="jButtonStockFullPrint" min="-2" max="-2" attributes="0"/>
                   </Group>
                   <Group type="102" alignment="1" attributes="0">
-                      <Component id="jButtonPrintAList1" min="-2" pref="218" max="-2" attributes="0"/>
+                      <Component id="jButtonPrintWarrantyStckrList" min="-2" pref="218" max="-2" attributes="0"/>
                       <EmptySpace max="32767" attributes="0"/>
-                      <Component id="jButtonPrintAList" min="-2" max="-2" attributes="0"/>
+                      <Component id="jButtonPrintAList" min="-2" pref="235" max="-2" attributes="0"/>
                   </Group>
               </Group>
               <EmptySpace max="-2" attributes="0"/>
@@ -44,7 +44,7 @@
               <EmptySpace max="-2" attributes="0"/>
               <Group type="103" groupAlignment="3" attributes="0">
                   <Component id="jButtonPrintAList" alignment="3" min="-2" max="-2" attributes="0"/>
-                  <Component id="jButtonPrintAList1" alignment="3" min="-2" max="-2" attributes="0"/>
+                  <Component id="jButtonPrintWarrantyStckrList" alignment="3" min="-2" max="-2" attributes="0"/>
               </Group>
               <EmptySpace max="-2" attributes="0"/>
           </Group>
@@ -148,7 +148,7 @@
         <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="jButtonStockFullPrintActionPerformed"/>
       </Events>
     </Component>
-    <Component class="javax.swing.JButton" name="jButtonPrintAList1">
+    <Component class="javax.swing.JButton" name="jButtonPrintWarrantyStckrList">
       <Properties>
         <Property name="font" type="java.awt.Font" editor="org.netbeans.beaninfo.editors.FontEditor">
           <Font name="Segoe UI" size="14" style="0"/>
@@ -157,7 +157,7 @@
           <Image iconType="3" name="/images/printer.png"/>
         </Property>
         <Property name="text" type="java.lang.String" editor="org.netbeans.modules.i18n.form.FormI18nStringEditor">
-          <ResourceString bundle="easyPOS/stock/Bundle.properties" key="LiveStockPanel.jButtonPrintAList.text" replaceFormat="java.util.ResourceBundle.getBundle(&quot;{bundleNameSlashes}&quot;).getString(&quot;{key}&quot;)"/>
+          <ResourceString bundle="easyPOS/stock/Bundle.properties" key="LiveStockPanel.jButtonPrintWarrantyStckrList.text" replaceFormat="java.util.ResourceBundle.getBundle(&quot;{bundleNameSlashes}&quot;).getString(&quot;{key}&quot;)"/>
         </Property>
         <Property name="maximumSize" type="java.awt.Dimension" editor="org.netbeans.beaninfo.editors.DimensionEditor">
           <Dimension value="[173, 41]"/>
@@ -170,7 +170,7 @@
         </Property>
       </Properties>
       <Events>
-        <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="jButtonPrintAList1ActionPerformed"/>
+        <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="jButtonPrintWarrantyStckrListActionPerformed"/>
       </Events>
     </Component>
   </SubComponents>

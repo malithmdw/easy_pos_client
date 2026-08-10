@@ -5,7 +5,6 @@ import appDataModels.InstituteModel;
 import control.ApplicationDataManager;
 import control.EasyPosLogger;
 import control.RuntimeDataManager;
-import control.ZebraShippingLabelPrinter;
 import dataModels.Language;
 import dataModels.SaleDataModel;
 import dbOperations.SalesDBOperation;
@@ -232,7 +231,9 @@ public class ReportPanel extends javax.swing.JPanel implements control.LanguageC
             EasyPOSMessageDialog.showLocalizedError(this, ApplicationMessages.ERROR_GENERIC);
             return;
         }
-        new ZebraShippingLabelPrinter().print(selected, institute);
+        ShippingLabelPrintWindow shippingLabelPrintWindow = new ShippingLabelPrintWindow();
+        shippingLabelPrintWindow.setData(selected, institute);
+        shippingLabelPrintWindow.show();
     }//GEN-LAST:event_jButtonPrintShippingLabelActionPerformed
 
     private void jTableReportMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jTableReportMouseClicked
