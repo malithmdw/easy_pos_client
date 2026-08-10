@@ -272,7 +272,7 @@ public class SaleInvoiceJPanel extends javax.swing.JPanel implements control.Lan
         jTextFieldItmName2.setText(im.getItemNameSin());
         jTextFieldUnitPrice.setText(df.format(ism.getSellingPrice()));
         jTextFieldItmDis.setText(df.format(ism.getDiscount()));
-        jTextFieldWholesalePrice.setText(df.format(ism.getSellingPrice()));
+        jTextFieldWholesalePrice.setText(df.format(ism.getWholeSalePrice()));
         jLabelMeasuringUnit.setText(Language.SINHALA.equals(ApplicationDataManager.getInstance().getApplicationLanguage())?
                 im.getMeasureUnitModel().getUnitNameSin():
                 im.getMeasureUnitModel().getUnitNameEng());
