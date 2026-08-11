@@ -600,6 +600,7 @@ public class SalePaymentFrame extends javax.swing.JFrame implements control.Lang
             // Setup Loyalty/Customer data
             if (selectedCustomer != null) {
                 billDataModel.setCustomerId(selectedCustomer.customer_id);
+                billDataModel.setCustomerContactNo(selectedCustomer.contact_number);
             }
 
             // Setup Payment method
