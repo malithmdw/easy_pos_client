@@ -4,7 +4,6 @@ import appDataModels.UserAccountModel;
 import control.MenuItemChangeEvent;
 import control.LoginEvent;
 import control.EventManager;
-import dataModels.SaleDataModel;
 import dbOperations.SuppliesDBOperation;
 import dbOperations.LoginDBOperation;
 import dbOperations.SalesDBOperation;
@@ -23,13 +22,10 @@ import static dataModels.MenuItemType.STOCK;
 import static dataModels.MenuItemType.SUPPLIER;
 import appDataModels.Permission;
 import java.awt.Toolkit;
-import easyPOS.localization.ApplicationMessages;
-import javax.swing.JOptionPane;
 import uiUtil.EasyPOSMessageDialog;
 import javax.swing.JPanel;
 import javax.swing.UIManager;
 import javax.swing.UnsupportedLookAndFeelException;
-import util.DateTimeUtil;
 
 public class OpenScreen extends javax.swing.JFrame{
 
@@ -38,10 +34,6 @@ public class OpenScreen extends javax.swing.JFrame{
     SalesDBOperation sdbops = new SalesDBOperation();
 
     private easyPOS.customerdisplay.CustomerScreenFrame customerScreenFrame;
-
-    String currentUser="";
-    
-    int showAlertAgain=1;
     
     public OpenScreen() {
         initComponents();
@@ -50,22 +42,6 @@ public class OpenScreen extends javax.swing.JFrame{
         setIcon();
 
         openCustomerDisplay();
-        
-        //delete sale items from table
-        //deleteSalesItemsData();
-        //add data to daily sales table
-//        addToDailySales();
-        //add data to monthly sales table
-//        addToMonthlySales();
-        //add data to annual sales table
-//        addToAnnualSales();
-        // delete oldest invoice data
-//        deleteInvoiceData();
-        // delete oldest invoice
-//        deleteSaleInvoice();
-        //update item movement table for a new month(if new month start)
-//        im.updateTableForNewMonth(dateFormatForDB(jTextFieldDate.getText()));
-        
         
         EventManager.getInstance().addLoginEvent(new LoginEvent() {
                         @Override
@@ -111,7 +87,6 @@ public class OpenScreen extends javax.swing.JFrame{
             {
                 loadPage(jPanelDailyTrans);
                 salePanel.setNextInvoiceNumber();
-//                alertForPayForSuppliers();
                 break;
             }
             case STOCK:
@@ -158,7 +133,7 @@ public class OpenScreen extends javax.swing.JFrame{
     
     private boolean checkMenuPermission(MenuItemType menuItemType)
     {
-        Permission permissionName;
+        Permission permissionName = null;
         switch (menuItemType) {
             case HOME:
             {
@@ -204,7 +179,7 @@ public class OpenScreen extends javax.swing.JFrame{
                 return true;
             }
             default:
-                throw new AssertionError();
+                EasyPosLogger.getInstance().log(EasyPosLogger.LogLevel.INFO, permissionName + " - Permission Not Defined");
         }
         
         return (ApplicationDataManager.getInstance().getPermissionsOfLoggedInUser().contains(permissionName));
@@ -224,263 +199,6 @@ public class OpenScreen extends javax.swing.JFrame{
         this.setIconImage(Toolkit.getDefaultToolkit().getImage(getClass().getResource("/logoes/logo.png")));
     }
     
-    void alertForPayForSuppliers(){
-        if(showAlertAgain==1){
-            String res=supp.alertForPay(DateTimeUtil.getTodayDateDBFormat()); 
-            if("".equals(res)){
-            }else{
-                int ans=JOptionPane.showConfirmDialog(rootPane,  "Attention !\nYou have to consider about this Payments for suppliers.\n\n"+res+"\n*rember again.  ",  "Alert !", JOptionPane.YES_NO_CANCEL_OPTION, 2, null);
-                if(ans==JOptionPane.NO_OPTION){
-                    showAlertAgain=0;
-                }                
-            }
-        }
-    }
-    
-    void addToDailySales(){
-        
-        String day=DateTimeUtil.getTodayDateDBFormat();
-        int d=Integer.parseInt(day.substring(0,2));
-        int m=Integer.parseInt(day.substring(3,5));
-        int y=Integer.parseInt(day.substring(6,10));
-        for(int i=1;i<35;i++){
-            //if data exist in daily sales table according to date & source data exist in sales table
-                //then add data to daily sales table
-            d=d-1;
-            if(d<=0){
-               d=31;
-               m=m-1;
-               if(m<=0){
-                   m=12;
-                   y=y-1;
-               }
-            }
-            String yyyy=new Integer(y).toString();
-            String mm="";
-            if(new Integer(m).toString().length()==1){
-                mm="0"+m+"";
-            }else{
-                mm=new Integer(m).toString();
-            }            
-            String dd="";
-            if(new Integer(d).toString().length()==1){
-                dd="0"+d+"";
-            }else{
-                dd=new Integer(d).toString();
-            }
-            
-            
-            day=""+yyyy+"-"+mm+"-"+dd+"";
-           
-            if(sdbops.checkExistInSales(day)==true && sdbops.checkExistInDailySales(day,day)==false){
-                
-                SaleDataModel res1=sdbops.todayTotalSales(day);
-                if(res1==null){
-                    EasyPOSMessageDialog.showLocalizedError(rootPane, ApplicationMessages.ERROR_DAILY_SALES_GET_FAILED);
-                }else{
-                    boolean res2=sdbops.addToDailySales(day,res1.getIncome(),res1.getCost(),res1.getProfit());
-                    if(res2==true){                        
-                    }else{
-                        EasyPOSMessageDialog.showLocalizedError(rootPane, ApplicationMessages.ERROR_DAILY_SALES_INSERT_FAILED);
-                    }
-                }
-            }
-        }
-    }
-    void addToMonthlySales(){
-        String day=DateTimeUtil.getTodayDateDBFormat();
-        int d=Integer.parseInt(day.substring(0,2));
-        int m=Integer.parseInt(day.substring(3,5));
-        int y=Integer.parseInt(day.substring(6,10));
-        for(int i=1;i<6;i++){
-            //if data exist in daily sales table according to date & source data exist in sales table
-                //then add data to daily sales table
-            m=m-1;
-            if(m<=0){
-                m=12;
-                y=y-1;
-            }
-            
-            String yyyy=new Integer(y).toString();
-            String mm="";
-            if(new Integer(m).toString().length()==1){
-                mm="0"+m+"";
-            }else{
-                mm=new Integer(m).toString();
-            }            
-                       
-            day=""+yyyy+"-"+mm+"-01";
-            String day2=""+yyyy+"-"+mm+"-30";
-            String monthName="";
-            
-            switch(m){
-                case 1: monthName="January";break;
-                case 2: monthName="Februaru";break;
-                case 3: monthName="March";break;    
-                case 4: monthName="April";break;    
-                case 5: monthName="May";break;    
-                case 6: monthName="June";break;   
-                case 7: monthName="July";break;    
-                case 8: monthName="August";break;
-                case 9: monthName="September";break;    
-                case 10: monthName="October";break;
-                case 11: monthName="November";break;    
-                case 12: monthName="December";break; 
-                default:monthName="Error";break; 
-            }
-            if(sdbops.checkExistInDailySales(day,day2)==true && sdbops.checkExistInMonthlySales(day,day2)==false){
-                SaleDataModel res1=sdbops.thisMonthTotalSales(yyyy,mm);
-                
-                if(res1==null){
-                    EasyPOSMessageDialog.showLocalizedError(rootPane, ApplicationMessages.ERROR_DAILY_SALES_GET_FAILED);
-                }else{
-                    if(m==2){//arrange for february
-                        day2=""+yyyy+"-"+mm+"-28";
-                    }
-                    boolean res2=sdbops.addToMonthlySales(monthName, day2, res1.getIncome(), res1.getCost(),res1.getProfit());
-                    if(res2==true){                        
-                    }else{
-                        EasyPOSMessageDialog.showLocalizedError(rootPane, ApplicationMessages.ERROR_DAILY_SALES_INSERT_FAILED);
-                    }
-                }
-                
-            }
-                
-        }        
-    }
-    void addToAnnualSales(){
-        String day=DateTimeUtil.getTodayDateDBFormat();
-        int d=Integer.parseInt(day.substring(0,2));
-        int m=Integer.parseInt(day.substring(3,5));
-        int y=Integer.parseInt(day.substring(6,10));
-        for(int i=1;i<3;i++){
-            //if data exist in daily sales table according to date & source data exist in sales table
-                //then add data to daily sales table
-            y=y-1;            
-            String yyyy=new Integer(y).toString();
-  
-            String day1=""+yyyy+"-01-01";
-            String day2=""+yyyy+"-12-31";
-            if(sdbops.checkExistInMonthlySales(day1,day2)==true && sdbops.checkExistInAnnualySales(day1,day2)==false){
-                
-                SaleDataModel res1=sdbops.thisYearTotalSales(yyyy);
-                if(res1==null){
-                    EasyPOSMessageDialog.showLocalizedError(rootPane, ApplicationMessages.ERROR_DAILY_SALES_GET_FAILED);
-                }else{
-                    boolean res2=sdbops.addToAnnualySales(y,day1,res1.getIncome(),res1.getCost(),res1.getProfit());
-                    if(res2==true){                        
-                    }else{
-                        EasyPOSMessageDialog.showLocalizedError(rootPane, ApplicationMessages.ERROR_DAILY_SALES_INSERT_FAILED);
-                    }
-                }
-                
-            }
-                
-        }       
-    }
-    
-    void deleteInvoiceData(){
-        int res1=sdbops.checkInvoiceItemCount(DateTimeUtil.getTodayDateDBFormat());
-        if(res1>12){
-            boolean res2=sdbops.deleteInvoiceData();
-            if(res2==true){  
-            }else{
-                EasyPOSMessageDialog.showLocalizedError(rootPane, ApplicationMessages.ERROR_OLD_INVOICE_DELETE_FAILED);
-            }
-        }else if(res1==-1){
-            
-        }
-        
-        
-    }
-    void deleteSaleInvoice(){
-        int res1=sdbops.checkInvoiceCount(DateTimeUtil.getTodayDateDBFormat());
-        if(res1>16){
-            boolean res2=sdbops.deleteInvoice();
-            if(res2==true){  
-            }else{
-                EasyPOSMessageDialog.showLocalizedError(rootPane, ApplicationMessages.ERROR_OLD_INVOICE_DELETE_FAILED);
-            }
-        }else if(res1==-1){
-            
-        }
-        
-        
-    }
-    
-    
-    void setNoOfDBFields(){
-//        int res1=sdbops.noOfFieldsOfSalesItemsDBTable();
-//        if(res1==-1){
-//            jTextFieldNoOfFieldsinvoices.setText("Error");
-//        }else{
-//            
-//            jTextFieldNoOfFieldsinvoices.setText(new Integer(res1).toString());
-//        }
-//        int res2=sdbops.noOfFieldsOfSalesDBTable();
-//        if(res2==-1){
-//            jTextField6.setText("Error");
-//        }else{
-//            jTextField6.setText(new Integer(res2).toString());
-//        }
-//        int res3=sdbops.noOfFieldsOfSalesDailyDBTable();
-//        if(res3==-1){
-//            jTextField8.setText("Error");
-//        }else{
-//            jTextField8.setText(new Integer(res3).toString());
-//        }
-//        int res4=sdbops.noOfFieldsOfSalesMonthlyDBTable();
-//        if(res4==-1){
-//            jTextField9.setText("Error");
-//        }else{
-//            jTextField9.setText(new Integer(res4).toString());
-//        }
-    }
-    
-  /*
-    void deleteSalesItemsData(){
-        SalesDBOperation s=new SalesDBOperation();
-        int lastInvNo=s.getLastInvNo();
-        if(lastInvNo>5000 && lastInvNo%100==0){
-            boolean res=sdbops.deleteSaleItems(lastInvNo-4900,0);
-            if(res==true){
-                JOptionPane.showMessageDialog(rootPane, "Invoice data of sold items for invoice number "+new Integer(lastInvNo-4900).toString()+" have been deleted !");
-            }
-        }
-    }
-    */
-   
-    
-   
-    
-    void setHomePage(){
-        loadPage(jPanelMainMenu);
-//        clearFieldsSupplierAddToBill();
-//        clearFieldsStokeAdd();
-//        clearFieldsAddNewUser();
-//        clearFieldsSupply();
-//        //stock
-//        jTextFieldStokeSearch.setText("");
-//        jTextFieldSearchBySuppCode.setText("");
-//        jTextFieldSearchExpStock.setText("");
-//        //supplies
-//        jTextFieldSearchSupplier.setText("");
-//        jTextFielddFrom.setText("");
-//        jTextFieldDTo.setText("");
-//        jTextFieldSupprCode.setText("");
-//        //report
-//        jTextFieldDateFrom.setText("");
-//        jTextFieldDateTo.setText("");
-//        //settings
-//        jTextFieldDelAcc.setText("");
-//        jCheckBoxClear1.setSelected(false);
-//        jCheckBoxClear2.setSelected(false);
-//        jCheckBoxClear3.setSelected(false);
-//        jCheckBoxClear4.setSelected(false);
-//        jPasswordForClear.setText("");
-//        jPasswordForClear2.setText("");
-    }
-    
     void logOut(){
         loadPage(jPanelLogScreen);
 //        clearFields();
@@ -488,38 +206,6 @@ public class OpenScreen extends javax.swing.JFrame{
 //        clearFieldsStokeAdd();
 //        clearFieldsAddNewUser();
 //        clearFieldsSupply();
-        
-        //reset for new customer
-//        jTextFieldGrossAmount.setText("");
-//        jTextFieldTotalDis.setText("");
-//        jTextFieldSalesNoOfItms.setText("");
-//        jTextFieldNetTot.setText("");
-//        jTextFieldEditableDis.setText("0");
-//        jTextFieldMRecieve.setText("");
-//        jTextFieldBal.setText("");
-//        clearSaleTbl();
-        //stock
-//        jTextFieldStokeSearch.setText("");
-//        jTextFieldSearchBySuppCode.setText("");
-//        jTextFieldSearchExpStock.setText("");
-//        //supplies
-//        jTextFieldSearchSupplier.setText("");
-//        jTextFielddFrom.setText("");
-//        jTextFieldDTo.setText("");
-//        jTextFieldSupprCode.setText("");
-//        //report
-//        jTextFieldDateFrom.setText("");
-//        jTextFieldDateTo.setText("");
-//        //settings
-//        jTextFieldDelAcc.setText("");
-//        jCheckBoxClear1.setSelected(false);
-//        jCheckBoxClear2.setSelected(false);
-//        jCheckBoxClear3.setSelected(false);
-//        jCheckBoxClear4.setSelected(false);
-//        jPasswordForClear.setText("");
-//        jPasswordForClear2.setText("");
-//        
-//        startAutoCreateInv=0;        
     }
     
    

@@ -132,7 +132,7 @@ public class SaleInvoiceJPanel extends javax.swing.JPanel implements control.Lan
             }
         });
         
-        EventManager.getInstance().addSalesPanelCustomNumberPadKeyEventListener(new NumberPadKeyPressListener() {
+        EventManager.getInstance().addNumberPadKeyEventListener(new NumberPadKeyPressListener() {
             @Override
             public void onKeyPressed(NumberPadKeyPressListener.NumberPadButton pressed) {
                 if (jTextFieldCustNo.isFocusOwner()) {
@@ -1043,15 +1043,13 @@ public class SaleInvoiceJPanel extends javax.swing.JPanel implements control.Lan
                             .addComponent(jTextFieldItmDis, javax.swing.GroupLayout.PREFERRED_SIZE, 200, javax.swing.GroupLayout.PREFERRED_SIZE)
                             .addComponent(jTextFieldUnitPrice, javax.swing.GroupLayout.PREFERRED_SIZE, 200, javax.swing.GroupLayout.PREFERRED_SIZE)
                             .addComponent(jTextFieldQty, javax.swing.GroupLayout.PREFERRED_SIZE, 200, javax.swing.GroupLayout.PREFERRED_SIZE))
-                        .addGroup(jPanelSaleInvoiceBaseLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                        .addGroup(jPanelSaleInvoiceBaseLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addGroup(jPanelSaleInvoiceBaseLayout.createSequentialGroup()
                                 .addGap(17, 17, 17)
-                                .addComponent(jLabel77, javax.swing.GroupLayout.PREFERRED_SIZE, 476, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                                .addComponent(jLabel77, javax.swing.GroupLayout.PREFERRED_SIZE, 476, javax.swing.GroupLayout.PREFERRED_SIZE))
                             .addGroup(jPanelSaleInvoiceBaseLayout.createSequentialGroup()
                                 .addGap(6, 6, 6)
-                                .addComponent(jLabelAmount, javax.swing.GroupLayout.PREFERRED_SIZE, 168, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                .addGap(368, 368, 368))))
+                                .addComponent(jLabelAmount, javax.swing.GroupLayout.PREFERRED_SIZE, 168, javax.swing.GroupLayout.PREFERRED_SIZE))))
                     .addGroup(jPanelSaleInvoiceBaseLayout.createSequentialGroup()
                         .addGroup(jPanelSaleInvoiceBaseLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
                             .addComponent(jLabelItemcode, javax.swing.GroupLayout.DEFAULT_SIZE, 168, Short.MAX_VALUE)
@@ -1081,8 +1079,8 @@ public class SaleInvoiceJPanel extends javax.swing.JPanel implements control.Lan
                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                                 .addComponent(jTextFieldCustName, javax.swing.GroupLayout.DEFAULT_SIZE, 163, Short.MAX_VALUE))
                             .addComponent(jTextFieldItmName2)
-                            .addComponent(jTextFieldItmName1))
-                        .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))))
+                            .addComponent(jTextFieldItmName1))))
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
         jPanelSaleInvoiceBaseLayout.setVerticalGroup(
             jPanelSaleInvoiceBaseLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)

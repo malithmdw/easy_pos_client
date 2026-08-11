@@ -33,7 +33,7 @@ public class NumberPanel extends javax.swing.JPanel {
     
     private void onButtonClick(NumberPadKeyPressListener.NumberPadButton button)
     {
-        EventManager.getInstance().notifySalesPanelCustomNumberPadKeyPressed(button);
+        EventManager.getInstance().notifyNumberPadKeyPressed(button);
     }
     
     public static String getText(String existing, NumberPadKeyPressListener.NumberPadButton button)

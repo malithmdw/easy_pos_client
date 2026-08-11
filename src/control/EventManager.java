@@ -62,11 +62,11 @@ public class EventManager {
         }
     } 
 
-    public void addSalesPanelCustomNumberPadKeyEventListener(NumberPadKeyPressListener numberPadKeyPressListener) {
+    public void addNumberPadKeyEventListener(NumberPadKeyPressListener numberPadKeyPressListener) {
         numberPadKeyPressEvents.add(numberPadKeyPressListener);
     }
         
-    public void notifySalesPanelCustomNumberPadKeyPressed(NumberPadKeyPressListener.NumberPadButton pressed) {
+    public void notifyNumberPadKeyPressed(NumberPadKeyPressListener.NumberPadButton pressed) {
         for (NumberPadKeyPressListener event : numberPadKeyPressEvents) {
             event.onKeyPressed(pressed);
         }

@@ -307,7 +307,7 @@
                 <DimensionLayout dim="0">
                   <Group type="103" groupAlignment="0" attributes="0">
                       <Component id="supplierPanel1" max="32767" attributes="0"/>
-                      <Component id="headerPanel1" alignment="1" pref="1036" max="32767" attributes="0"/>
+                      <Component id="headerPanel1" alignment="1" max="32767" attributes="0"/>
                   </Group>
                 </DimensionLayout>
                 <DimensionLayout dim="1">

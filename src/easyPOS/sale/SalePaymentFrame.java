@@ -4,6 +4,8 @@ import appDataModels.APIHeaderData;
 import appDataModels.InstituteModel;
 import control.ApplicationDataManager;
 import control.EasyPosLogger;
+import control.EventManager;
+import control.NumberPadKeyPressListener;
 import control.RuntimeDataManager;
 import control.ServerDataSubmissionQueue;
 import control.SimpleReceiptPrint;
@@ -23,6 +25,7 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 import dataModels.Language;
+import easyPOS.NumberPanel;
 import java.util.Locale;
 import java.util.ResourceBundle;
 import java.util.concurrent.ExecutionException;
@@ -44,6 +47,7 @@ import uiUtil.EasyPOSMessageDialog;
 import uiUtil.LoadingGlassPane;
 import webService.ServerAPIConnection;
 import easyPOS.localization.ApplicationMessages;
+import java.awt.event.KeyEvent;
 
 /**
  *
@@ -69,8 +73,61 @@ public class SalePaymentFrame extends javax.swing.JFrame implements control.Lang
         setInitData();
         calculateAmounts();
         control.EventManager.getInstance().addLanguageChangeListener(this);
+        
+        
+        EventManager.getInstance().addNumberPadKeyEventListener(new NumberPadKeyPressListener() {
+            @Override
+            public void onKeyPressed(NumberPadKeyPressListener.NumberPadButton pressed) {
+                if (jTextFieldCashAmt.isFocusOwner()) {
+                    if (NumberPadKeyPressListener.NumberPadButton.BUTTON_OK.equals(pressed)) {
+                        fireKeyPressEvent(jTextFieldCashAmt);
+                        return;
+                    }
+                    jTextFieldCashAmt.setText(NumberPanel.getNum(jTextFieldCashAmt.getText(), pressed));
+                    jTextFieldCashAmt.setRequestFocusEnabled(true);
+                }else if (jTextFieldCrdAmt.isFocusOwner()) {
+                    if (NumberPadKeyPressListener.NumberPadButton.BUTTON_OK.equals(pressed)) {
+                        fireKeyPressEvent(jTextFieldCrdAmt);
+                        return;
+                    }
+                    jTextFieldCrdAmt.setText(NumberPanel.getNum(jTextFieldCrdAmt.getText(), pressed));
+                }else if (voucherNumInputTextField.isFocusOwner()) {
+                    if (NumberPadKeyPressListener.NumberPadButton.BUTTON_OK.equals(pressed)) {
+                        fireKeyPressEvent(voucherNumInputTextField);
+                        return;
+                    }
+                    voucherNumInputTextField.setText(NumberPanel.getDouble(voucherNumInputTextField.getText(), pressed));
+                }else if (cardLast4DigInputTextField.isFocusOwner()) {
+                    if (NumberPadKeyPressListener.NumberPadButton.BUTTON_OK.equals(pressed)) {
+                        fireKeyPressEvent(cardLast4DigInputTextField);
+                        return;
+                    }
+                    cardLast4DigInputTextField.setText(NumberPanel.getDouble(cardLast4DigInputTextField.getText(), pressed));
+                }else if (salepanelCustNumTextField.isFocusOwner()) {
+                    if (NumberPadKeyPressListener.NumberPadButton.BUTTON_OK.equals(pressed)) {
+                        fireKeyPressEvent(salepanelCustNumTextField);
+                        return;
+                    }
+                    salepanelCustNumTextField.setText(NumberPanel.getDouble(salepanelCustNumTextField.getText(), pressed));
+                }
+            }
+        });
+        control.EventManager.getInstance().addLanguageChangeListener(this);
     }
 
+    private void fireKeyPressEvent(javax.swing.JTextField field)
+    {
+        KeyEvent enterPress = new KeyEvent(
+                field,
+                KeyEvent.KEY_PRESSED,
+                System.currentTimeMillis(),
+                0,
+                KeyEvent.VK_ENTER,
+                '\n'
+        );
+        field.dispatchEvent(enterPress);
+    }
+    
     @Override
     public void onLanguageChanged() {
         switchLanguage();
@@ -94,17 +151,17 @@ public class SalePaymentFrame extends javax.swing.JFrame implements control.Lang
         }
 
         salePaymentCashRadioButton.setSelected(true);
-        jTextField6.setText(util.GeneralUtil.getCurrencyString(billDataModel.getMoneyReceive()));
+        jTextFieldCashAmt.setText(util.GeneralUtil.getCurrencyString(billDataModel.getMoneyReceive()));
 
         jTextField9.setEnabled(true);
         jTextField9.setEditable(false);
         jTextField9.setText("0.00");        
-        jTextField7.setText("0.00");
+        jTextFieldCrdAmt.setText("0.00");
         setupVouchersTable();
         
         JTextField[] mopAmtTextFields = new JTextField[2];
-        mopAmtTextFields[0] = jTextField6;
-        mopAmtTextFields[1] = jTextField7;
+        mopAmtTextFields[0] = jTextFieldCashAmt;
+        mopAmtTextFields[1] = jTextFieldCrdAmt;
         
         for (JTextField textField : mopAmtTextFields) {
             textField.getDocument().addDocumentListener(new DocumentListener() {
@@ -126,6 +183,8 @@ public class SalePaymentFrame extends javax.swing.JFrame implements control.Lang
                 }
             });
         }
+        
+        calculateAmounts();
     }
 
     private void setupVouchersTable() {
@@ -253,9 +312,9 @@ public class SalePaymentFrame extends javax.swing.JFrame implements control.Lang
         
         for(DiscountRule disRule : localDatabase.DatabaseManager.getInstance().getDiscountRules())
         {
-            double cashAmount = Double.parseDouble(jTextField6.getText());
-            double cardAmount = Double.parseDouble(jTextField7.getText());
-            double voucherAmount = Double.parseDouble(jTextField9.getText());
+            double cashAmount = util.GeneralUtil.currencyStringToDouble(jTextFieldCashAmt.getText());
+            double cardAmount = util.GeneralUtil.currencyStringToDouble(jTextFieldCrdAmt.getText());
+            double voucherAmount = util.GeneralUtil.currencyStringToDouble(jTextField9.getText());
             
             // Define the liable amount for discount rules
             double billTotal = billDataModel.getNetTotal();
@@ -368,14 +427,14 @@ public class SalePaymentFrame extends javax.swing.JFrame implements control.Lang
         double voucherAmount = 0;
 
         try{
-            if (jTextField6.getText() != null && !jTextField6.getText().isEmpty()) {
-                cashAmount = Double.parseDouble(jTextField6.getText());
+            if (jTextFieldCashAmt.getText() != null && !jTextFieldCashAmt.getText().isEmpty()) {
+                cashAmount = util.GeneralUtil.currencyStringToDouble(jTextFieldCashAmt.getText());
             }
-            if (jTextField7.getText() != null && !jTextField7.getText().isEmpty()) {
-                cardAmount = Double.parseDouble(jTextField7.getText());
+            if (jTextFieldCrdAmt.getText() != null && !jTextFieldCrdAmt.getText().isEmpty()) {
+                cardAmount = util.GeneralUtil.currencyStringToDouble(jTextFieldCrdAmt.getText());
             }
             if (jTextField9.getText() != null && !jTextField9.getText().isEmpty()) {
-                voucherAmount = Double.parseDouble(jTextField9.getText());
+                voucherAmount = util.GeneralUtil.currencyStringToDouble(jTextField9.getText());
             }
 
             salepanelTotalTextField.setText("");
@@ -403,7 +462,7 @@ public class SalePaymentFrame extends javax.swing.JFrame implements control.Lang
                 salepanelCreditTextField.setForeground(Color.black);
             }
             
-            if (newNetAmount > cashAmount) {
+            if (newNetAmount < totalPaid) {
                 // No balance
                 salepanelBalanceTextField.setText(util.GeneralUtil.getCurrencyString(0));
             }
@@ -458,7 +517,7 @@ public class SalePaymentFrame extends javax.swing.JFrame implements control.Lang
 
     private boolean validateUIInputs(){
 
-        if (Double.parseDouble(salepanelBalanceTextField.getText()) < 0) {
+        if (util.GeneralUtil.currencyStringToDouble(salepanelBalanceTextField.getText()) < 0) {
             EasyPOSMessageDialog.showLocalizedWarning(parentPanel, ApplicationMessages.VALIDATION_CUSTOMER_REQUIRED_CREDIT);
             return false;
         }
@@ -468,23 +527,23 @@ public class SalePaymentFrame extends javax.swing.JFrame implements control.Lang
         double voucherAmountValue = 0;
 
         try{
-            cashAmountValue = Double.parseDouble(jTextField6.getText());
-            cardAmountValue = Double.parseDouble(jTextField7.getText());
-            voucherAmountValue = Double.parseDouble(jTextField9.getText());
+            cashAmountValue = util.GeneralUtil.currencyStringToDouble(jTextFieldCashAmt.getText());
+            cardAmountValue = util.GeneralUtil.currencyStringToDouble(jTextFieldCrdAmt.getText());
+            voucherAmountValue = util.GeneralUtil.currencyStringToDouble(jTextField9.getText());
         }catch(NumberFormatException e){
         }
         
         double totalPaidFromMOPSection = cashAmountValue + cardAmountValue + voucherAmountValue;
         
-        double billTotalOld = Double.parseDouble(salepanelBillTotalTextField.getText());
-        double billDiscountOld = Double.parseDouble(salepanelBillDisTextField.getText());
-        double billTotal = Double.parseDouble(salepanelTotalTextField.getText());        
-        double ruleDiscountValue = Double.parseDouble(salepanelRuleDisTextField.getText());
-        double newNetAmount = Double.parseDouble(salepanelNetAmtTextField.getText());
-        double totalPaid = Double.parseDouble(salepanelTotalPaidTextField.getText());
-        double cashPaid = Double.parseDouble(salepanelPaidTextField.getText());
-        double cashBalance = Double.parseDouble(salepanelBalanceTextField.getText());
-        double credit = Double.parseDouble(salepanelCreditTextField.getText());
+        double billTotalOld = util.GeneralUtil.currencyStringToDouble(salepanelBillTotalTextField.getText());
+        double billDiscountOld = util.GeneralUtil.currencyStringToDouble(salepanelBillDisTextField.getText());
+        double billTotal = util.GeneralUtil.currencyStringToDouble(salepanelTotalTextField.getText());        
+        double ruleDiscountValue = util.GeneralUtil.currencyStringToDouble(salepanelRuleDisTextField.getText());
+        double newNetAmount = util.GeneralUtil.currencyStringToDouble(salepanelNetAmtTextField.getText());
+        double totalPaid = util.GeneralUtil.currencyStringToDouble(salepanelTotalPaidTextField.getText());
+        double cashPaid = util.GeneralUtil.currencyStringToDouble(salepanelPaidTextField.getText());
+        double cashBalance = util.GeneralUtil.currencyStringToDouble(salepanelBalanceTextField.getText());
+        double credit = util.GeneralUtil.currencyStringToDouble(salepanelCreditTextField.getText());
         
 //        if (totalPaidFromMOPSection != totalPaid) {
 //            JOptionPane.showMessageDialog(parentPanel, "Calculation Error. total of MOP inputs does not match with the RHS values");
@@ -533,19 +592,19 @@ public class SalePaymentFrame extends javax.swing.JFrame implements control.Lang
 
             // Setup Payment method
             if (salePaymentCashRadioButton.isSelected()) {
-                billDataModel.setMoneyReceive(Double.parseDouble(jTextField6.getText()));
+                billDataModel.setMoneyReceive(util.GeneralUtil.currencyStringToDouble(jTextFieldCashAmt.getText()));
             } else if (salePaymentCardRadioButton.isSelected()) {
-                billDataModel.setCardReceive(Double.parseDouble(jTextField7.getText()));
+                billDataModel.setCardReceive(util.GeneralUtil.currencyStringToDouble(jTextFieldCrdAmt.getText()));
             }else if (salePaymentVoucherRadioButton.isSelected()) {
-                billDataModel.setVoucherReceive(Double.parseDouble(jTextField9.getText()));
+                billDataModel.setVoucherReceive(util.GeneralUtil.currencyStringToDouble(jTextField9.getText()));
             }
 
             // Setup Special Discount related changes
-            billDataModel.setRuleDiscount(Double.parseDouble(salepanelTotalTextField.getText()));
-            billDataModel.setNetTotal(Double.parseDouble(salepanelNetAmtTextField.getText()));
-            billDataModel.setMoneyReceive(Double.parseDouble(jTextField6.getText()));
-            billDataModel.setCashBalance(Double.parseDouble(salepanelBalanceTextField.getText()));
-            billDataModel.setCreditAmount(Double.parseDouble(salepanelCreditTextField.getText()));
+            billDataModel.setRuleDiscount(util.GeneralUtil.currencyStringToDouble(salepanelTotalTextField.getText()));
+            billDataModel.setNetTotal(util.GeneralUtil.currencyStringToDouble(salepanelNetAmtTextField.getText()));
+            billDataModel.setMoneyReceive(util.GeneralUtil.currencyStringToDouble(jTextFieldCashAmt.getText()));
+            billDataModel.setCashBalance(util.GeneralUtil.currencyStringToDouble(salepanelBalanceTextField.getText()));
+            billDataModel.setCreditAmount(util.GeneralUtil.currencyStringToDouble(salepanelCreditTextField.getText()));
             
             calcRuleDiscount(true);
                     
@@ -869,8 +928,8 @@ public class SalePaymentFrame extends javax.swing.JFrame implements control.Lang
         salePaymentCashRadioButton = new javax.swing.JRadioButton();
         salePaymentCardRadioButton = new javax.swing.JRadioButton();
         salePaymentVoucherRadioButton = new javax.swing.JRadioButton();
-        jTextField6 = new javax.swing.JTextField();
-        jTextField7 = new javax.swing.JTextField();
+        jTextFieldCashAmt = new javax.swing.JTextField();
+        jTextFieldCrdAmt = new javax.swing.JTextField();
         jTextField9 = new javax.swing.JTextField();
         voucherNumInputTextField = new javax.swing.JTextField();
         paymentMethodInputLabel = new javax.swing.JLabel();
@@ -893,6 +952,7 @@ public class SalePaymentFrame extends javax.swing.JFrame implements control.Lang
         jButton3 = new javax.swing.JButton();
         jButton1 = new javax.swing.JButton();
         jButton2 = new javax.swing.JButton();
+        numberPanel1 = new easyPOS.NumberPanel();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 
@@ -902,60 +962,60 @@ public class SalePaymentFrame extends javax.swing.JFrame implements control.Lang
         jLabel1.setText("Bill Total :");
 
         salepanelBillTotalTextField.setEditable(false);
-        salepanelBillTotalTextField.setFont(new java.awt.Font("Segoe UI", 0, 16)); // NOI18N
+        salepanelBillTotalTextField.setFont(new java.awt.Font("Segoe UI", 0, 20)); // NOI18N
         salepanelBillTotalTextField.setHorizontalAlignment(javax.swing.JTextField.RIGHT);
 
         jLabel2.setFont(new java.awt.Font("Segoe UI", 0, 16)); // NOI18N
         jLabel2.setText("Bill Discount :");
 
         salepanelBillDisTextField.setEditable(false);
-        salepanelBillDisTextField.setFont(new java.awt.Font("Segoe UI", 0, 16)); // NOI18N
+        salepanelBillDisTextField.setFont(new java.awt.Font("Segoe UI", 0, 20)); // NOI18N
         salepanelBillDisTextField.setHorizontalAlignment(javax.swing.JTextField.RIGHT);
 
         jLabel3.setFont(new java.awt.Font("Segoe UI", 0, 16)); // NOI18N
         jLabel3.setText("Total :");
 
         salepanelTotalTextField.setEditable(false);
-        salepanelTotalTextField.setFont(new java.awt.Font("Segoe UI", 0, 16)); // NOI18N
+        salepanelTotalTextField.setFont(new java.awt.Font("Segoe UI", 0, 20)); // NOI18N
         salepanelTotalTextField.setHorizontalAlignment(javax.swing.JTextField.RIGHT);
 
         jLabel4.setFont(new java.awt.Font("Segoe UI", 0, 16)); // NOI18N
         jLabel4.setText("Cash Paid :");
 
         salepanelPaidTextField.setEditable(false);
-        salepanelPaidTextField.setFont(new java.awt.Font("Segoe UI", 0, 16)); // NOI18N
+        salepanelPaidTextField.setFont(new java.awt.Font("Segoe UI", 0, 20)); // NOI18N
         salepanelPaidTextField.setHorizontalAlignment(javax.swing.JTextField.RIGHT);
 
         jLabel5.setFont(new java.awt.Font("Segoe UI", 0, 16)); // NOI18N
         jLabel5.setText("Cash Balance :");
 
         salepanelBalanceTextField.setEditable(false);
-        salepanelBalanceTextField.setFont(new java.awt.Font("Segoe UI", 0, 16)); // NOI18N
+        salepanelBalanceTextField.setFont(new java.awt.Font("Segoe UI", 0, 20)); // NOI18N
         salepanelBalanceTextField.setHorizontalAlignment(javax.swing.JTextField.RIGHT);
 
         jLabel8.setFont(new java.awt.Font("Segoe UI", 1, 16)); // NOI18N
         jLabel8.setText("NET AMOUNT :");
 
         salepanelNetAmtTextField.setEditable(false);
-        salepanelNetAmtTextField.setFont(new java.awt.Font("Segoe UI", 1, 16)); // NOI18N
+        salepanelNetAmtTextField.setFont(new java.awt.Font("Segoe UI", 1, 18)); // NOI18N
         salepanelNetAmtTextField.setHorizontalAlignment(javax.swing.JTextField.RIGHT);
 
         jLabel9.setFont(new java.awt.Font("Segoe UI", 0, 16)); // NOI18N
         jLabel9.setText("Special Discount :");
 
         salepanelRuleDisTextField.setEditable(false);
-        salepanelRuleDisTextField.setFont(new java.awt.Font("Segoe UI", 0, 16)); // NOI18N
+        salepanelRuleDisTextField.setFont(new java.awt.Font("Segoe UI", 0, 20)); // NOI18N
         salepanelRuleDisTextField.setHorizontalAlignment(javax.swing.JTextField.RIGHT);
 
         jLabel10.setFont(new java.awt.Font("Segoe UI", 0, 16)); // NOI18N
         jLabel10.setText("Total Paid :");
 
         salepanelTotalPaidTextField.setEditable(false);
-        salepanelTotalPaidTextField.setFont(new java.awt.Font("Segoe UI", 0, 16)); // NOI18N
+        salepanelTotalPaidTextField.setFont(new java.awt.Font("Segoe UI", 0, 20)); // NOI18N
         salepanelTotalPaidTextField.setHorizontalAlignment(javax.swing.JTextField.RIGHT);
 
         salepanelCreditTextField.setEditable(false);
-        salepanelCreditTextField.setFont(new java.awt.Font("Segoe UI", 1, 16)); // NOI18N
+        salepanelCreditTextField.setFont(new java.awt.Font("Segoe UI", 0, 20)); // NOI18N
         salepanelCreditTextField.setHorizontalAlignment(javax.swing.JTextField.RIGHT);
 
         jLabel11.setFont(new java.awt.Font("Segoe UI", 0, 16)); // NOI18N
@@ -1069,16 +1129,17 @@ public class SalePaymentFrame extends javax.swing.JFrame implements control.Lang
             }
         });
 
-        jTextField6.setFont(new java.awt.Font("Segoe UI", 0, 16)); // NOI18N
-        jTextField6.setHorizontalAlignment(javax.swing.JTextField.RIGHT);
+        jTextFieldCashAmt.setFont(new java.awt.Font("Segoe UI", 0, 20)); // NOI18N
+        jTextFieldCashAmt.setHorizontalAlignment(javax.swing.JTextField.RIGHT);
 
-        jTextField7.setFont(new java.awt.Font("Segoe UI", 0, 16)); // NOI18N
-        jTextField7.setHorizontalAlignment(javax.swing.JTextField.RIGHT);
+        jTextFieldCrdAmt.setFont(new java.awt.Font("Segoe UI", 0, 20)); // NOI18N
+        jTextFieldCrdAmt.setHorizontalAlignment(javax.swing.JTextField.RIGHT);
 
-        jTextField9.setFont(new java.awt.Font("Segoe UI", 0, 16)); // NOI18N
+        jTextField9.setFont(new java.awt.Font("Segoe UI", 0, 20)); // NOI18N
         jTextField9.setHorizontalAlignment(javax.swing.JTextField.RIGHT);
         jTextField9.setEnabled(false);
 
+        voucherNumInputTextField.setFont(new java.awt.Font("Segoe UI", 0, 20)); // NOI18N
         voucherNumInputTextField.setAutoscrolls(false);
 
         paymentMethodInputLabel.setText("Voucher Number :");
@@ -1123,6 +1184,8 @@ public class SalePaymentFrame extends javax.swing.JFrame implements control.Lang
 
         paymentMethodInputLabel1.setText("Card num 4 digit");
 
+        cardLast4DigInputTextField.setFont(new java.awt.Font("Segoe UI", 0, 20)); // NOI18N
+
         javax.swing.GroupLayout jPanel3Layout = new javax.swing.GroupLayout(jPanel3);
         jPanel3.setLayout(jPanel3Layout);
         jPanel3Layout.setHorizontalGroup(
@@ -1140,15 +1203,7 @@ public class SalePaymentFrame extends javax.swing.JFrame implements control.Lang
                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                                 .addComponent(voucherSearchButton)
                                 .addGap(0, 0, Short.MAX_VALUE))
-                            .addComponent(jTextField9)))
-                    .addGroup(jPanel3Layout.createSequentialGroup()
-                        .addComponent(salePaymentCashRadioButton, javax.swing.GroupLayout.PREFERRED_SIZE, 98, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(jTextField6))
-                    .addGroup(jPanel3Layout.createSequentialGroup()
-                        .addComponent(salePaymentCardRadioButton, javax.swing.GroupLayout.PREFERRED_SIZE, 98, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(jTextField7))
+                            .addComponent(jTextField9, javax.swing.GroupLayout.PREFERRED_SIZE, 130, javax.swing.GroupLayout.PREFERRED_SIZE)))
                     .addGroup(jPanel3Layout.createSequentialGroup()
                         .addContainerGap()
                         .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -1171,7 +1226,15 @@ public class SalePaymentFrame extends javax.swing.JFrame implements control.Lang
                                         .addComponent(paymentMethodInputLabel1)
                                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                                         .addComponent(cardLast4DigInputTextField, javax.swing.GroupLayout.PREFERRED_SIZE, 117, javax.swing.GroupLayout.PREFERRED_SIZE)))
-                                .addGap(0, 0, Short.MAX_VALUE)))))
+                                .addGap(0, 0, Short.MAX_VALUE))))
+                    .addGroup(jPanel3Layout.createSequentialGroup()
+                        .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(salePaymentCardRadioButton, javax.swing.GroupLayout.PREFERRED_SIZE, 98, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(salePaymentCashRadioButton, javax.swing.GroupLayout.PREFERRED_SIZE, 98, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(jTextFieldCrdAmt, javax.swing.GroupLayout.PREFERRED_SIZE, 130, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(jTextFieldCashAmt, javax.swing.GroupLayout.PREFERRED_SIZE, 130, javax.swing.GroupLayout.PREFERRED_SIZE))))
                 .addContainerGap())
         );
         jPanel3Layout.setVerticalGroup(
@@ -1180,11 +1243,11 @@ public class SalePaymentFrame extends javax.swing.JFrame implements control.Lang
                 .addContainerGap()
                 .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(salePaymentCashRadioButton)
-                    .addComponent(jTextField6, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addComponent(jTextFieldCashAmt, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(salePaymentCardRadioButton)
-                    .addComponent(jTextField7, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addComponent(jTextFieldCrdAmt, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(salePaymentVoucherRadioButton)
@@ -1200,7 +1263,7 @@ public class SalePaymentFrame extends javax.swing.JFrame implements control.Lang
                 .addGap(44, 44, 44)
                 .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(paymentMethodInputLabel1, javax.swing.GroupLayout.PREFERRED_SIZE, 22, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(cardLast4DigInputTextField))
+                    .addComponent(cardLast4DigInputTextField, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(visaRadioButton)
@@ -1216,9 +1279,14 @@ public class SalePaymentFrame extends javax.swing.JFrame implements control.Lang
 
         jPanel4.setBorder(javax.swing.BorderFactory.createTitledBorder("Loyalty"));
 
-        salepanelCustNumTextField.setFont(new java.awt.Font("Segoe UI", 0, 16)); // NOI18N
+        salepanelCustNumTextField.setFont(new java.awt.Font("Segoe UI", 0, 20)); // NOI18N
+        salepanelCustNumTextField.addKeyListener(new java.awt.event.KeyAdapter() {
+            public void keyPressed(java.awt.event.KeyEvent evt) {
+                salepanelCustNumTextFieldKeyPressed(evt);
+            }
+        });
 
-        salepanelCustNameTextField.setFont(new java.awt.Font("Segoe UI", 0, 16)); // NOI18N
+        salepanelCustNameTextField.setFont(new java.awt.Font("Segoe UI", 0, 20)); // NOI18N
         salepanelCustNameTextField.setEnabled(false);
 
         jLabel6.setFont(new java.awt.Font("Segoe UI", 0, 16)); // NOI18N
@@ -1249,7 +1317,7 @@ public class SalePaymentFrame extends javax.swing.JFrame implements control.Lang
                         .addComponent(salepanelCustNumTextField, javax.swing.GroupLayout.PREFERRED_SIZE, 104, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addGap(4, 4, 4)
                         .addComponent(jButton3))
-                    .addComponent(salepanelCustNameTextField))
+                    .addComponent(salepanelCustNameTextField, javax.swing.GroupLayout.PREFERRED_SIZE, 143, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addContainerGap())
         );
         jPanel4Layout.setVerticalGroup(
@@ -1268,6 +1336,7 @@ public class SalePaymentFrame extends javax.swing.JFrame implements control.Lang
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
 
+        jButton1.setFont(new java.awt.Font("Segoe UI", 0, 18)); // NOI18N
         jButton1.setText("Print");
         jButton1.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -1275,6 +1344,7 @@ public class SalePaymentFrame extends javax.swing.JFrame implements control.Lang
             }
         });
 
+        jButton2.setFont(new java.awt.Font("Segoe UI", 0, 18)); // NOI18N
         jButton2.setText("Cancel");
 
         javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
@@ -1317,11 +1387,18 @@ public class SalePaymentFrame extends javax.swing.JFrame implements control.Lang
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(jPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+            .addGroup(layout.createSequentialGroup()
+                .addComponent(jPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(numberPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addComponent(jPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+            .addGroup(layout.createSequentialGroup()
+                .addGap(18, 18, 18)
+                .addComponent(numberPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
         );
 
         pack();
@@ -1338,45 +1415,20 @@ public class SalePaymentFrame extends javax.swing.JFrame implements control.Lang
     }//GEN-LAST:event_jButton3ActionPerformed
 
     private void salePaymentCashRadioButtonStateChanged(javax.swing.event.ChangeEvent evt) {//GEN-FIRST:event_salePaymentCashRadioButtonStateChanged
-        if (salePaymentCashRadioButton.isSelected()) {
-            jTextField6.setEditable(true);
-        }
-        else{
-            jTextField6.setText("0.00");
-            jTextField6.setEditable(false);
-        }
-        arrangeUIBasedOnMOPSelection();
-        calculateAmounts();
+        onPaymentMethodChanged();
     }//GEN-LAST:event_salePaymentCashRadioButtonStateChanged
 
     private void salePaymentCardRadioButtonStateChanged(javax.swing.event.ChangeEvent evt) {//GEN-FIRST:event_salePaymentCardRadioButtonStateChanged
-        double voucherAmount = 0;
-        try {
-            voucherAmount = Double.parseDouble(jTextField9.getText());
-        } catch (NumberFormatException e) {
+        if (salePaymentCardRadioButton.isSelected() && salePaymentCashRadioButton.isSelected()) {
+            jTextFieldCashAmt.setText("0.00");
+            salePaymentCashRadioButton.setSelected(false);
         }
         
-        if (salePaymentCardRadioButton.isSelected()) {
-            jTextField7.setText(util.GeneralUtil.getCurrencyString(billDataModel.getNetTotal() - voucherAmount));
-            jTextField7.setEditable(true);
-        }
-        else{
-            jTextField7.setText("0.00");
-            jTextField7.setEditable(false);
-        }
-        arrangeUIBasedOnMOPSelection();
-        calculateAmounts();
+        onPaymentMethodChanged();
     }//GEN-LAST:event_salePaymentCardRadioButtonStateChanged
 
     private void salePaymentVoucherRadioButtonStateChanged(javax.swing.event.ChangeEvent evt) {//GEN-FIRST:event_salePaymentVoucherRadioButtonStateChanged
-        if (salePaymentVoucherRadioButton.isSelected()) {
-            updateVoucherTotalField();
-        }
-        else{
-            jTextField9.setText("0.00");
-        }
-        arrangeUIBasedOnMOPSelection();
-        calculateAmounts();
+        onPaymentMethodChanged();
     }//GEN-LAST:event_salePaymentVoucherRadioButtonStateChanged
 
     private void voucherSearchButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_voucherSearchButtonActionPerformed
@@ -1389,6 +1441,44 @@ public class SalePaymentFrame extends javax.swing.JFrame implements control.Lang
         onlineSearchVoucherAction(voucherID);
     }//GEN-LAST:event_voucherSearchButtonActionPerformed
 
+    private void salepanelCustNumTextFieldKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_salepanelCustNumTextFieldKeyPressed
+        if(evt.getKeyCode()==KeyEvent.VK_ENTER){
+            onlineSearchCustomerAction(salepanelCustNumTextField.getText());
+        }
+    }//GEN-LAST:event_salepanelCustNumTextFieldKeyPressed
+
+    private void onPaymentMethodChanged(){
+        if (salePaymentCashRadioButton.isSelected()) {
+            jTextFieldCashAmt.setEditable(true);
+        }
+        else{
+            jTextFieldCashAmt.setText("0.00");
+            jTextFieldCashAmt.setEditable(false);
+        }
+        
+        if (salePaymentCardRadioButton.isSelected()) {
+            double voucherAmount = 0;
+            try {
+                voucherAmount = util.GeneralUtil.currencyStringToDouble(jTextField9.getText());
+            } catch (NumberFormatException e) {
+            }
+            jTextFieldCrdAmt.setText(util.GeneralUtil.getCurrencyString(billDataModel.getNetTotal() - voucherAmount));
+            jTextFieldCrdAmt.setEditable(true);
+        }
+        else{
+            jTextFieldCrdAmt.setText("0.00");
+            jTextFieldCrdAmt.setEditable(false);
+        }
+        
+        if (salePaymentVoucherRadioButton.isSelected()) {
+            updateVoucherTotalField();
+        }
+        else{
+            jTextField9.setText("0.00");
+        }
+        arrangeUIBasedOnMOPSelection();
+        calculateAmounts();
+    }
 
     public static void main(String args[]) {
         /* Set the Nimbus look and feel */
@@ -1445,11 +1535,12 @@ public class SalePaymentFrame extends javax.swing.JFrame implements control.Lang
     private javax.swing.JPanel jPanel3;
     private javax.swing.JPanel jPanel4;
     private javax.swing.JScrollPane jScrollPaneVoucherTbl;
-    private javax.swing.JTextField jTextField6;
-    private javax.swing.JTextField jTextField7;
     private javax.swing.JTextField jTextField9;
+    private javax.swing.JTextField jTextFieldCashAmt;
+    private javax.swing.JTextField jTextFieldCrdAmt;
     private javax.swing.JRadioButton jcbRadioButton;
     private javax.swing.JRadioButton masterRadioButton;
+    private easyPOS.NumberPanel numberPanel1;
     private javax.swing.JRadioButton otherRadioButton;
     private javax.swing.JLabel paymentMethodInputLabel;
     private javax.swing.JLabel paymentMethodInputLabel1;
