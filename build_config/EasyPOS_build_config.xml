@@ -3,7 +3,7 @@
   <dontWrapJar>false</dontWrapJar>
   <headerType>gui</headerType>
   <jar>C:\Users\malit\OneDrive\Documents\NetBeansProjects\EasyPOS\EasyPOS\EasyPOS\EasyPOS\dist\EasyPOS.jar</jar>
-  <outfile>C:\Users\malit\OneDrive\Documents\NetBeansProjects\EasyPOS\EasyPOS\EasyPOS\dist\EasyPOS.exe</outfile>
+  <outfile>C:\Users\malit\OneDrive\Documents\NetBeansProjects\EasyPOS\EasyPOS\EasyPOS\EasyPOS\dist\EasyPOS.exe</outfile>
   <errTitle></errTitle>
   <cmdLine></cmdLine>
   <chdir>.</chdir>

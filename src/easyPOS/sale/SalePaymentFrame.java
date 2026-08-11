@@ -462,13 +462,14 @@ public class SalePaymentFrame extends javax.swing.JFrame implements control.Lang
                 salepanelCreditTextField.setForeground(Color.black);
             }
             
-            if (newNetAmount < totalPaid) {
+            if (newNetAmount > totalPaid) {
                 // No balance
                 salepanelBalanceTextField.setText(util.GeneralUtil.getCurrencyString(0));
             }
             else{
-                double toBePaidByCash = newNetAmount - (cardAmount + voucherAmount);                
-                salepanelBalanceTextField.setText(util.GeneralUtil.getCurrencyString(cashAmount - toBePaidByCash));
+                double toBePaidByCash = newNetAmount - (cardAmount + voucherAmount);
+                double balance = cashAmount - toBePaidByCash;
+                salepanelBalanceTextField.setText(util.GeneralUtil.getCurrencyString(balance> 0? balance : 0));
             }
         }catch(NumberFormatException e){
 
@@ -517,7 +518,8 @@ public class SalePaymentFrame extends javax.swing.JFrame implements control.Lang
 
     private boolean validateUIInputs(){
 
-        if (util.GeneralUtil.currencyStringToDouble(salepanelBalanceTextField.getText()) < 0) {
+        if (util.GeneralUtil.currencyStringToDouble(salepanelBalanceTextField.getText()) < 0 
+                && selectedCustomer == null) {
             EasyPOSMessageDialog.showLocalizedWarning(parentPanel, ApplicationMessages.VALIDATION_CUSTOMER_REQUIRED_CREDIT);
             return false;
         }
@@ -600,7 +602,7 @@ public class SalePaymentFrame extends javax.swing.JFrame implements control.Lang
             }
 
             // Setup Special Discount related changes
-            billDataModel.setRuleDiscount(util.GeneralUtil.currencyStringToDouble(salepanelTotalTextField.getText()));
+            billDataModel.setRuleDiscount(util.GeneralUtil.currencyStringToDouble(salepanelRuleDisTextField.getText()));
             billDataModel.setNetTotal(util.GeneralUtil.currencyStringToDouble(salepanelNetAmtTextField.getText()));
             billDataModel.setMoneyReceive(util.GeneralUtil.currencyStringToDouble(jTextFieldCashAmt.getText()));
             billDataModel.setCashBalance(util.GeneralUtil.currencyStringToDouble(salepanelBalanceTextField.getText()));
@@ -1346,6 +1348,11 @@ public class SalePaymentFrame extends javax.swing.JFrame implements control.Lang
 
         jButton2.setFont(new java.awt.Font("Segoe UI", 0, 18)); // NOI18N
         jButton2.setText("Cancel");
+        jButton2.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jButton2ActionPerformed(evt);
+            }
+        });
 
         javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
         jPanel1.setLayout(jPanel1Layout);
@@ -1446,6 +1453,11 @@ public class SalePaymentFrame extends javax.swing.JFrame implements control.Lang
             onlineSearchCustomerAction(salepanelCustNumTextField.getText());
         }
     }//GEN-LAST:event_salepanelCustNumTextFieldKeyPressed
+
+    private void jButton2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton2ActionPerformed
+        // TODO add your handling code here:
+        this.dispose();
+    }//GEN-LAST:event_jButton2ActionPerformed
 
     private void onPaymentMethodChanged(){
         if (salePaymentCashRadioButton.isSelected()) {
