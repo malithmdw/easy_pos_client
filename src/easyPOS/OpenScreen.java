@@ -323,7 +323,7 @@ public class OpenScreen extends javax.swing.JFrame{
         );
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
-        setTitle("RxD Pharmacy");
+        setTitle("Easy POS");
 
         jPanelBase.setPreferredSize(new java.awt.Dimension(1036, 550));
         jPanelBase.setLayout(new java.awt.CardLayout());
