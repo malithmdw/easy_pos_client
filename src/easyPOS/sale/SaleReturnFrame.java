@@ -665,7 +665,7 @@ public class SaleReturnFrame extends javax.swing.JFrame implements control.Langu
         line.setBatchId(selectedItem.getBatchId());
         line.setItemCode(selectedItem.getItemCode());
         line.setItemName(selectedItem.getItemName());
-        line.setUnitPrice(selectedItem.getUnitPrice());
+        line.setUnitPrice(selectedItem.getLineTotal()/selectedItem.getQtySold());
         line.setReturnQty(qty);
 
         returnItemsTableModel.addReturnLine(line);

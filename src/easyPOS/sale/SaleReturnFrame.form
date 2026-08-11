@@ -59,7 +59,6 @@
                           <Component id="saleReturnAmtTextField" min="-2" pref="123" max="-2" attributes="0"/>
                       </Group>
                       <Group type="102" alignment="1" attributes="0">
-                          <EmptySpace max="32767" attributes="0"/>
                           <Component id="jLabel10" min="-2" max="-2" attributes="0"/>
                           <EmptySpace max="-2" attributes="0"/>
                           <Component id="returnVoucherNumberTextField" min="-2" pref="187" max="-2" attributes="0"/>
