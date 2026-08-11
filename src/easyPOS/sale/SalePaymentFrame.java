@@ -684,7 +684,7 @@ public class SalePaymentFrame extends javax.swing.JFrame implements control.Lang
         invoice.card_received = billDataModel.getCardReceive();
         invoice.voucher_received = billDataModel.getVoucherReceive();
         invoice.total_received = (invoice.money_received + invoice.card_received + invoice.voucher_received);
-        invoice.balance_amount = billDataModel.getCreditAmount();
+        invoice.balance_amount = billDataModel.getCreditAmount() * (-1);
         invoice.settle_date_time = saleDateTime;
         invoice.settle_update_by = billDataModel.getCashierName();
 

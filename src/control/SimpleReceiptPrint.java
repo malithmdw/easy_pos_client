@@ -350,7 +350,7 @@ public class SimpleReceiptPrint implements Printable{
                     df.format(billItem.getUnitPrice()),
                     df.format(billItem.getQty()),
                     df.format(billItem.getDiscountPerone()),
-                    df.format(billItem.getAmount()));
+                    df.format(billItem.getNetAmount()));
             
             pag[i * 2] = itemLine1;
             pag[(i * 2) + 1] = itemLine2;
