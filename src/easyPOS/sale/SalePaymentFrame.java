@@ -308,7 +308,8 @@ public class SalePaymentFrame extends javax.swing.JFrame implements control.Lang
             selectedMOPIDs.add(3);
         }
 
-        double totalRuleDiscount = 0;
+        double percentageDiscountTotal = 0;
+        double fixDiscountTotal = 0;
         
         for(DiscountRule disRule : localDatabase.DatabaseManager.getInstance().getDiscountRules())
         {
@@ -349,7 +350,10 @@ public class SalePaymentFrame extends javax.swing.JFrame implements control.Lang
                         // Apply for ALL CATEGORIES
                         double totalRulePercDis = (liableAmount * disRule.discount_percentage/100);
                         double totalRuleFixDis = disRule.fix_discount;
-                        totalRuleDiscount = totalRulePercDis + totalRuleFixDis;
+                        
+                        fixDiscountTotal += totalRuleFixDis;
+                        percentageDiscountTotal += totalRulePercDis;
+                        
                         discountRulesApplied.add(disRule);
                         
                         if (applyChangesForBillData) {
@@ -397,7 +401,10 @@ public class SalePaymentFrame extends javax.swing.JFrame implements control.Lang
                         
                             double totalRulePercDis = (liableAmount * disRule.discount_percentage/100);
                             double totalRuleFixDis = disRule.fix_discount;
-                            totalRuleDiscount = totalRulePercDis + totalRuleFixDis;
+                            
+                            fixDiscountTotal = totalRuleFixDis;
+                            percentageDiscountTotal += totalRulePercDis;
+                            
                             discountRulesApplied.add(disRule);
                                 
                             if (applyChangesForBillData) {
@@ -417,6 +424,9 @@ public class SalePaymentFrame extends javax.swing.JFrame implements control.Lang
         if (applyChangesForBillData) {
             billDataModel.setDiscountRulesApplied(discountRulesApplied);
         }
+                
+        double totalRuleDiscount = percentageDiscountTotal + fixDiscountTotal;
+        
         return totalRuleDiscount;
     }
 
