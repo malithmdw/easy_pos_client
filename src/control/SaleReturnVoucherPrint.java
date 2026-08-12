@@ -166,8 +166,8 @@ public class SaleReturnVoucherPrint implements Printable {
             barcode128.setCode(voucherId);
             barcode128.setBarHeight(40);
             Image barcodeImage = barcode128.createAwtImage(Color.BLACK, Color.WHITE);
-            g2.drawImage(barcodeImage, x, y, 200, 50, null);
-            y = y + 60;
+            g2.drawImage(barcodeImage, x, y, 160, 40, null);
+            y = y + 40;
         } catch (Exception ex) {
             EasyPosLogger.getInstance().error("", ex);
         }
