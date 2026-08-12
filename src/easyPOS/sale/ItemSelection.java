@@ -27,17 +27,24 @@ public class ItemSelection extends javax.swing.JPanel {
         EventManager.getInstance().addSalesMenuItemClickEvent(new SalesMenuItemClickListener() {
             @Override
             public void onMenuItemClicked(SalesMenuItemClickListener.SalesMenuItem menuItem) {
-                if (SalesMenuItemClickListener.SalesMenuItem.SEARCH_STOCK.equals(menuItem)) {
-                    itemGridPanel.removeAll();
-                    itemGridPanel.revalidate();
-                    itemGridPanel.repaint();
-                    
-                    // load the table
-                }
-                else if (SalesMenuItemClickListener.SalesMenuItem.SALE_RETURN.equals(menuItem)) {
-                    SaleReturnFrame saleReturnFrame = new SaleReturnFrame();
-                    saleReturnFrame.setDefaultCloseOperation(SalePaymentFrame.DISPOSE_ON_CLOSE);
-                    saleReturnFrame.setVisible(true);            
+                if (null != menuItem) switch (menuItem) {
+                    case SEARCH_STOCK:
+                    {
+                        itemGridPanel.removeAll();
+                        itemGridPanel.revalidate();
+                        itemGridPanel.repaint();
+                        // load the table
+                        break;
+                    }
+                    case SALE_RETURN:
+                    {
+                        SaleReturnFrame saleReturnFrame = new SaleReturnFrame();
+                        saleReturnFrame.setDefaultCloseOperation(SalePaymentFrame.DISPOSE_ON_CLOSE);
+                        saleReturnFrame.setVisible(true);
+                        break;
+                    }
+                    default:
+                        break;
                 }
             }
         });

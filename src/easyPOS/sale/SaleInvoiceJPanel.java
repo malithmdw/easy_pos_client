@@ -38,8 +38,6 @@ import java.util.ResourceBundle;
 import java.util.concurrent.ExecutionException;
 import control.EasyPosLogger;
 import javax.print.PrintService;
-import javax.swing.JLabel;
-import javax.swing.JOptionPane;
 import javax.swing.JRootPane;
 import javax.swing.SwingWorker;
 import javax.swing.table.DefaultTableCellRenderer;
@@ -132,6 +130,21 @@ public class SaleInvoiceJPanel extends javax.swing.JPanel implements control.Lan
             }
         });
         
+        EventManager.getInstance().addSalesMenuItemClickEvent(new SalesMenuItemClickListener() {
+            @Override
+            public void onMenuItemClicked(SalesMenuItemClickListener.SalesMenuItem menuItem) {
+                if (null != menuItem) switch (menuItem) {
+                    case RE_PRINT:
+                    {
+                        printLastBill();
+                        break;
+                    }
+                    default:
+                        break;
+                }
+            }
+        });
+        
         EventManager.getInstance().addNumberPadKeyEventListener(new NumberPadKeyPressListener() {
             @Override
             public void onKeyPressed(NumberPadKeyPressListener.NumberPadButton pressed) {
@@ -207,13 +220,18 @@ public class SaleInvoiceJPanel extends javax.swing.JPanel implements control.Lan
         // Fetch bill number
         String formattedNextInvNo = ApplicationDataManager.getInstance().getNextInvoiceNumber();
         jTextFieldInvNo.setText(formattedNextInvNo);
+        jCheckBoxActivateWholeSale.setSelected(false);
+        jCheckBoxActivateWholeSale.setEnabled(true);
+        isWholeSaleBill = false;
     }
     
     public void printLastBill(){
-        printBill(lastIssuedBillDataModel);
+        if (lastIssuedBillDataModel != null) {
+            printBill(lastIssuedBillDataModel);
+        }else{
+            EasyPOSMessageDialog.showLocalizedError(this, ApplicationMessages.ERROR_ITEM_NOT_FOUND);
+        }
     }
-    
-    
     
     private void fetchItem()
     {
@@ -388,6 +406,9 @@ public class SaleInvoiceJPanel extends javax.swing.JPanel implements control.Lan
                 // Clear item data panel
                 clearFieldsItemPanel();
                 jTextFieldItmCode.requestFocus();
+                
+                //disable WS selection for further change
+                jCheckBoxActivateWholeSale.setEnabled(false);
             }
             catch(NumberFormatException e)
             {
@@ -845,6 +866,7 @@ public class SaleInvoiceJPanel extends javax.swing.JPanel implements control.Lan
         jLabelCustomerNo = new javax.swing.JLabel();
         jTextFieldCustNo = new javax.swing.JTextField();
         jTextFieldCustName = new javax.swing.JTextField();
+        jCheckBoxActivateWholeSale = new javax.swing.JCheckBox();
         jScrollPane1 = new javax.swing.JScrollPane();
         jTableSaleToBill = new javax.swing.JTable();
         jPanel5 = new javax.swing.JPanel();
@@ -1023,6 +1045,13 @@ public class SaleInvoiceJPanel extends javax.swing.JPanel implements control.Lan
             }
         });
 
+        jCheckBoxActivateWholeSale.setText(bundle.getString("SaleInvoiceJPanel.jCheckBoxActivateWholeSale.text")); // NOI18N
+        jCheckBoxActivateWholeSale.addItemListener(new java.awt.event.ItemListener() {
+            public void itemStateChanged(java.awt.event.ItemEvent evt) {
+                jCheckBoxActivateWholeSaleItemStateChanged(evt);
+            }
+        });
+
         javax.swing.GroupLayout jPanelSaleInvoiceBaseLayout = new javax.swing.GroupLayout(jPanelSaleInvoiceBase);
         jPanelSaleInvoiceBase.setLayout(jPanelSaleInvoiceBaseLayout);
         jPanelSaleInvoiceBaseLayout.setHorizontalGroup(
@@ -1067,19 +1096,25 @@ public class SaleInvoiceJPanel extends javax.swing.JPanel implements control.Lan
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addGroup(jPanelSaleInvoiceBaseLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
                             .addGroup(jPanelSaleInvoiceBaseLayout.createSequentialGroup()
+                                .addComponent(jTextFieldCustNo, javax.swing.GroupLayout.PREFERRED_SIZE, 125, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                .addComponent(jTextFieldCustName, javax.swing.GroupLayout.DEFAULT_SIZE, 178, Short.MAX_VALUE))
+                            .addComponent(jTextFieldItmName2)
+                            .addComponent(jTextFieldItmName1)
+                            .addGroup(jPanelSaleInvoiceBaseLayout.createSequentialGroup()
                                 .addGroup(jPanelSaleInvoiceBaseLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
                                     .addComponent(jTextFieldAmount, javax.swing.GroupLayout.DEFAULT_SIZE, 200, Short.MAX_VALUE)
                                     .addComponent(jTextFieldWholesalePrice))
                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                                 .addGroup(jPanelSaleInvoiceBaseLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                    .addComponent(jButtonAddToBill, javax.swing.GroupLayout.PREFERRED_SIZE, 40, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                    .addComponent(jButtonSellCancel, javax.swing.GroupLayout.PREFERRED_SIZE, 40, javax.swing.GroupLayout.PREFERRED_SIZE)))
-                            .addGroup(jPanelSaleInvoiceBaseLayout.createSequentialGroup()
-                                .addComponent(jTextFieldCustNo, javax.swing.GroupLayout.PREFERRED_SIZE, 125, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                .addComponent(jTextFieldCustName, javax.swing.GroupLayout.DEFAULT_SIZE, 163, Short.MAX_VALUE))
-                            .addComponent(jTextFieldItmName2)
-                            .addComponent(jTextFieldItmName1))))
+                                    .addGroup(jPanelSaleInvoiceBaseLayout.createSequentialGroup()
+                                        .addComponent(jButtonSellCancel, javax.swing.GroupLayout.PREFERRED_SIZE, 40, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                        .addComponent(jButtonAddToBill, javax.swing.GroupLayout.PREFERRED_SIZE, 40, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 17, Short.MAX_VALUE))
+                                    .addGroup(jPanelSaleInvoiceBaseLayout.createSequentialGroup()
+                                        .addComponent(jCheckBoxActivateWholeSale)
+                                        .addGap(0, 0, Short.MAX_VALUE)))))))
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
         jPanelSaleInvoiceBaseLayout.setVerticalGroup(
@@ -1106,23 +1141,26 @@ public class SaleInvoiceJPanel extends javax.swing.JPanel implements control.Lan
                         .addComponent(jLabelUnitPrice)
                         .addComponent(jTextFieldItmName2, javax.swing.GroupLayout.PREFERRED_SIZE, 40, javax.swing.GroupLayout.PREFERRED_SIZE)))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addGroup(jPanelSaleInvoiceBaseLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                .addGroup(jPanelSaleInvoiceBaseLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(jPanelSaleInvoiceBaseLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                         .addComponent(jTextFieldItmDis, javax.swing.GroupLayout.PREFERRED_SIZE, 40, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addComponent(jTextFieldWholesalePrice, javax.swing.GroupLayout.PREFERRED_SIZE, 40, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addComponent(jLabelWholesalePrice))
-                    .addComponent(jLabelDiscount)
-                    .addComponent(jButtonAddToBill, javax.swing.GroupLayout.PREFERRED_SIZE, 0, Short.MAX_VALUE))
+                        .addComponent(jLabelWholesalePrice)
+                        .addComponent(jCheckBoxActivateWholeSale))
+                    .addComponent(jLabelDiscount))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(jPanelSaleInvoiceBaseLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(jButtonSellCancel, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, 42, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addGroup(jPanelSaleInvoiceBaseLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                        .addComponent(jTextFieldQty, javax.swing.GroupLayout.PREFERRED_SIZE, 40, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addComponent(jLabelQty)
-                        .addComponent(jLabelAmount, javax.swing.GroupLayout.PREFERRED_SIZE, 40, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addComponent(jTextFieldAmount, javax.swing.GroupLayout.PREFERRED_SIZE, 40, javax.swing.GroupLayout.PREFERRED_SIZE)))
-                .addGap(0, 0, 0)
-                .addComponent(jLabel77)
+                    .addGroup(jPanelSaleInvoiceBaseLayout.createSequentialGroup()
+                        .addGroup(jPanelSaleInvoiceBaseLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(jButtonSellCancel, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, 42, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addGroup(jPanelSaleInvoiceBaseLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                                .addComponent(jTextFieldQty, javax.swing.GroupLayout.PREFERRED_SIZE, 40, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addComponent(jLabelQty)
+                                .addComponent(jLabelAmount, javax.swing.GroupLayout.PREFERRED_SIZE, 40, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addComponent(jTextFieldAmount, javax.swing.GroupLayout.PREFERRED_SIZE, 40, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                        .addGap(0, 0, 0)
+                        .addComponent(jLabel77))
+                    .addComponent(jButtonAddToBill, javax.swing.GroupLayout.PREFERRED_SIZE, 40, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addContainerGap())
         );
 
@@ -1496,7 +1534,11 @@ public class SaleInvoiceJPanel extends javax.swing.JPanel implements control.Lan
 
     private void jButtonSellCancelActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonSellCancelActionPerformed
         clearFieldsItemPanel();
+        
         jTextFieldItmCode.requestFocus();
+        if (billDataModel != null && billDataModel.getBillItems() != null && billDataModel.getBillItems().isEmpty()) {
+            jCheckBoxActivateWholeSale.setEnabled(true);
+        }
     }//GEN-LAST:event_jButtonSellCancelActionPerformed
 
     private void jButtonAddToBillKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_jButtonAddToBillKeyPressed
@@ -1586,6 +1628,10 @@ public class SaleInvoiceJPanel extends javax.swing.JPanel implements control.Lan
         billDataModel = new BillDataModel();
         updateItemUITable();
         clearFieldsTotalPanel();
+
+        if (billDataModel != null && billDataModel.getBillItems() != null && billDataModel.getBillItems().isEmpty()) {
+            jCheckBoxActivateWholeSale.setEnabled(true);
+        }
     }//GEN-LAST:event_jButtonCancellBillActionPerformed
 
     private void jButtonCancellBillKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_jButtonCancellBillKeyPressed
@@ -1601,12 +1647,23 @@ public class SaleInvoiceJPanel extends javax.swing.JPanel implements control.Lan
         onlineSearchCustomerAction(jTextFieldCustNo.getText());
     }//GEN-LAST:event_jTextFieldCustNoActionPerformed
 
+    private void jCheckBoxActivateWholeSaleItemStateChanged(java.awt.event.ItemEvent evt) {//GEN-FIRST:event_jCheckBoxActivateWholeSaleItemStateChanged
+        if (jCheckBoxActivateWholeSale.isSelected()) {
+            EasyPOSMessageDialog.showLocalizedInfo(this, ApplicationMessages.INFO_SALE_WHOLE_SALE_ACTIVATED);
+            isWholeSaleBill = true;
+        }else{
+            EasyPOSMessageDialog.showLocalizedInfo(this, ApplicationMessages.INFO_SALE_WHOLE_SALE_DEACTIVATED);
+            isWholeSaleBill = false;
+        }
+    }//GEN-LAST:event_jCheckBoxActivateWholeSaleItemStateChanged
+
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton jButton34;
     private javax.swing.JButton jButtonAddToBill;
     private javax.swing.JButton jButtonCancellBill;
     private javax.swing.JButton jButtonIssueBill;
     private javax.swing.JButton jButtonSellCancel;
+    private javax.swing.JCheckBox jCheckBoxActivateWholeSale;
     private javax.swing.JLabel jLabel77;
     private javax.swing.JLabel jLabelAmount;
     private javax.swing.JLabel jLabelBalance;

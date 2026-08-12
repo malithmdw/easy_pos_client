@@ -86,6 +86,8 @@ public class ApplicationMessages {
     public static final String INFO_AUTO_INVOICE_STARTED               = "info.auto.invoice.started";
     public static final String INFO_INVOICE_DATA_DELETED               = "info.invoice.data.deleted";
     public static final String INFO_SALE_RETURN_SUCCESS                = "info.sale.return.success";
+    public static final String INFO_SALE_WHOLE_SALE_ACTIVATED                = "info.sale.wholesale.activated";
+    public static final String INFO_SALE_WHOLE_SALE_DEACTIVATED                = "info.sale.wholesale.deactivated";
 
     public static String getMessage(String key) {
         Language lang = ApplicationDataManager.getInstance().getApplicationLanguage();
