@@ -173,6 +173,7 @@ public class SaleInvoiceJPanel extends javax.swing.JPanel implements control.Lan
                         return;
                     }
                     jTextFieldQty.setText(NumberPanel.getDouble(jTextFieldQty.getText(), pressed));
+                    jTextFieldQty.setRequestFocusEnabled(true);
                     calculateAmountOnTypeInput();
                 }else if (jTextFieldWholesalePrice.isFocusOwner()) {
                     if (NumberPadKeyPressListener.NumberPadButton.BUTTON_OK.equals(pressed)) {
