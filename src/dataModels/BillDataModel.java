@@ -18,6 +18,7 @@ public class BillDataModel {
     private List<BillItemDataModel> billItems = new ArrayList<>();
     private List<Voucher> voucherList = new ArrayList<>();
     private List<DiscountRule> discountRulesApplied = new ArrayList<>();
+    private int billType;
     
     private double totalGrossAmount;
     private double noOfItems;
@@ -392,5 +393,16 @@ public class BillDataModel {
      */
     public void setCreditAmount(double creditAmount) {
         this.creditAmount = creditAmount;
+    }
+
+    public int getBillType() {
+        return billType;
+    }
+    
+    /**
+     * @param billType the billType to set
+     */
+    public void setBillType(int billType) {
+        this.billType = billType;
     }
 }

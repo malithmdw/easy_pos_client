@@ -349,6 +349,7 @@ public class SaleInvoiceJPanel extends javax.swing.JPanel implements control.Lan
                 if (isWholeSaleBill) 
                 {
                     amount = wholeSalePrice;
+                    unitPrice = wholeSalePrice;
                 }
                 else
                 {
@@ -677,6 +678,7 @@ public class SaleInvoiceJPanel extends javax.swing.JPanel implements control.Lan
 
             Font customFont1 = Font.createFont(Font.TRUETYPE_FONT, ApplicationDataManager.getInstance().getSinhalaFontFile()).deriveFont(18f);
             Font customFont2 = Font.createFont(Font.TRUETYPE_FONT, ApplicationDataManager.getInstance().getSinhalaFontFile()).deriveFont(20f);
+            Font customFont3 = Font.createFont(Font.TRUETYPE_FONT, ApplicationDataManager.getInstance().getSinhalaFontFile()).deriveFont(12f);
             GraphicsEnvironment ge = GraphicsEnvironment.getLocalGraphicsEnvironment();
             //register the font
             ge.registerFont(customFont1);
@@ -689,6 +691,7 @@ public class SaleInvoiceJPanel extends javax.swing.JPanel implements control.Lan
             jLabelWholesalePrice.setFont(customFont1);
             jLabelQty.setFont(customFont1);
             jLabelAmount.setFont(customFont1);
+            jCheckBoxActivateWholeSale.setFont(customFont3);
 
             ge.registerFont(customFont2);
             jLabelTotalGrossAmount.setFont(customFont2);
@@ -717,6 +720,7 @@ public class SaleInvoiceJPanel extends javax.swing.JPanel implements control.Lan
         jLabelWholesalePrice.setText(resourceBundle.getString("SaleInvoiceJPanel.jLabelWholesalePrice.text"));
         jLabelQty.setText(resourceBundle.getString("SaleInvoiceJPanel.jLabelQty.text"));
         jLabelAmount.setText(resourceBundle.getString("SaleInvoiceJPanel.jLabelAmount.text"));   
+        jCheckBoxActivateWholeSale.setText(resourceBundle.getString("SaleInvoiceJPanel.jCheckBoxActivateWholeSale.text"));
                 
         jLabelTotalGrossAmount.setText(resourceBundle.getString("SaleInvoiceJPanel.jLabelTotalGrossAmount.text"));
         jLabelNoOfItems.setText(resourceBundle.getString("SaleInvoiceJPanel.jLabelNoOfItems.text"));
@@ -1049,6 +1053,11 @@ public class SaleInvoiceJPanel extends javax.swing.JPanel implements control.Lan
         jCheckBoxActivateWholeSale.addItemListener(new java.awt.event.ItemListener() {
             public void itemStateChanged(java.awt.event.ItemEvent evt) {
                 jCheckBoxActivateWholeSaleItemStateChanged(evt);
+            }
+        });
+        jCheckBoxActivateWholeSale.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jCheckBoxActivateWholeSaleActionPerformed(evt);
             }
         });
 
@@ -1486,6 +1495,8 @@ public class SaleInvoiceJPanel extends javax.swing.JPanel implements control.Lan
 
     private void jButtonIssueBillActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonIssueBillActionPerformed
         if (btnActionProcessBill2()) {
+            billDataModel.setBillType(isWholeSaleBill? 2 : 1); // 1-Retail Bill, 2-Wholesale Bill
+            
             SalePaymentFrame salePaymentFrame = new SalePaymentFrame(this, billDataModel);
             salePaymentFrame.setDefaultCloseOperation(SalePaymentFrame.DISPOSE_ON_CLOSE);
             salePaymentFrame.setVisible(true);            
@@ -1509,6 +1520,10 @@ public class SaleInvoiceJPanel extends javax.swing.JPanel implements control.Lan
             // Update the table & total values
             updateItemUITable();
             arrangeTotalValues();
+            
+            if (billDataModel != null && billDataModel.getBillItems() != null && billDataModel.getBillItems().isEmpty()) {
+                jCheckBoxActivateWholeSale.setEnabled(true);
+            }
 
         }catch(Exception e){
             EasyPOSMessageDialog.showLocalizedWarning(this, ApplicationMessages.VALIDATION_SELECT_ROW);
@@ -1631,6 +1646,8 @@ public class SaleInvoiceJPanel extends javax.swing.JPanel implements control.Lan
 
         if (billDataModel != null && billDataModel.getBillItems() != null && billDataModel.getBillItems().isEmpty()) {
             jCheckBoxActivateWholeSale.setEnabled(true);
+            isWholeSaleBill = false;
+            jCheckBoxActivateWholeSale.setSelected(false);
         }
     }//GEN-LAST:event_jButtonCancellBillActionPerformed
 
@@ -1648,6 +1665,10 @@ public class SaleInvoiceJPanel extends javax.swing.JPanel implements control.Lan
     }//GEN-LAST:event_jTextFieldCustNoActionPerformed
 
     private void jCheckBoxActivateWholeSaleItemStateChanged(java.awt.event.ItemEvent evt) {//GEN-FIRST:event_jCheckBoxActivateWholeSaleItemStateChanged
+        
+    }//GEN-LAST:event_jCheckBoxActivateWholeSaleItemStateChanged
+
+    private void jCheckBoxActivateWholeSaleActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jCheckBoxActivateWholeSaleActionPerformed
         if (jCheckBoxActivateWholeSale.isSelected()) {
             EasyPOSMessageDialog.showLocalizedInfo(this, ApplicationMessages.INFO_SALE_WHOLE_SALE_ACTIVATED);
             isWholeSaleBill = true;
@@ -1655,7 +1676,7 @@ public class SaleInvoiceJPanel extends javax.swing.JPanel implements control.Lan
             EasyPOSMessageDialog.showLocalizedInfo(this, ApplicationMessages.INFO_SALE_WHOLE_SALE_DEACTIVATED);
             isWholeSaleBill = false;
         }
-    }//GEN-LAST:event_jCheckBoxActivateWholeSaleItemStateChanged
+    }//GEN-LAST:event_jCheckBoxActivateWholeSaleActionPerformed
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton jButton34;

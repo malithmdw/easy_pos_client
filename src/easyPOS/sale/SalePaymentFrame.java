@@ -688,7 +688,7 @@ public class SalePaymentFrame extends javax.swing.JFrame implements control.Lang
         invoice.settle_date_time = saleDateTime;
         invoice.settle_update_by = billDataModel.getCashierName();
 
-        invoice.invoice_type = 1; // Retail sale
+        invoice.invoice_type = billDataModel.getBillType();
         String discountRuleData = "";
         for (DiscountRule discountRule : billDataModel.getDiscountRulesApplied()) {
             discountRuleData += discountRule.rule_id + "|";
