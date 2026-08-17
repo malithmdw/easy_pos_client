@@ -59,6 +59,9 @@ public class CustomerScreenLogoPanel extends javax.swing.JPanel {
         cusScreenCustomerNameLbl.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
         cusScreenCustomerNameLbl.setText("Branch Name");
 
+        cusScreenLogoLbl.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
+        cusScreenLogoLbl.setIcon(new javax.swing.ImageIcon(getClass().getResource("/logoes/pagelogo.png"))); // NOI18N
+
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(this);
         this.setLayout(layout);
         layout.setHorizontalGroup(

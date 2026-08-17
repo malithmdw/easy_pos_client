@@ -27,6 +27,7 @@ import util.DateTimeUtil;
  */
 public class SimpleCustomerStatementPrint implements Printable{
     
+    private final Font FONT_ARIAL_P_8 = new Font("Arial", Font.PLAIN , 8);
     private final Font FONT_ARIAL_P_9 = new Font("Arial", Font.PLAIN , 9);
     private final Font FONT_TIMES_B_12 = new Font("Times New Roman", Font.BOLD, 12);
     private final Font FONT_TIMES_B_10 = new Font("Times New Roman", Font.BOLD, 10);
@@ -203,15 +204,15 @@ public class SimpleCustomerStatementPrint implements Printable{
         // Items
         for (int i = 0; i < page().length; i++) {
             if (i%2 == 0) {
+                // First Line
+                g2.setFont(FONT_ARIAL_P_8);
+            }else{
+                // Second Line
                 if (Language.SINHALA.equals(ApplicationDataManager.getInstance().getReceiptItemLanguage())) {
                     g2.setFont(FONT_SINHAL_P_9);
-                }else{
-                    g2.setFont(FONT_MONOS_P_9);
+                } else {
+                    g2.setFont(FONT_ARIAL_P_9);
                 }
-            }
-            else
-            {
-                g2.setFont(FONT_MONOS_P_9);
             }
             
             g2.drawString(page()[i] + "\n", x,y);
@@ -325,7 +326,7 @@ public class SimpleCustomerStatementPrint implements Printable{
             String itemLine1 = customerLedgerModel.getTransactionDate() + " " + customerLedgerModel.getTranId();
             String itemLine2 = String.format("%20s %12s",
                     trantype,
-                    customerLedgerModel.getTransactionAmount());
+                    util.GeneralUtil.getCurrencyString(customerLedgerModel.getTransactionAmount()));
             
             pag[i * 2] = itemLine1;
             pag[(i * 2) + 1] = itemLine2;
