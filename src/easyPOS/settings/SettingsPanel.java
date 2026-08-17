@@ -12,8 +12,6 @@ import java.util.Locale;
 import java.util.Map;
 import java.util.ResourceBundle;
 import javax.swing.DefaultComboBoxModel;
-import easyPOS.localization.ApplicationMessages;
-import uiUtil.EasyPOSMessageDialog;
 import localDatabase.DatabaseManager;
 
 /**
@@ -21,10 +19,6 @@ import localDatabase.DatabaseManager;
  * @author malit
  */
 public class SettingsPanel extends javax.swing.JPanel implements control.LanguageChangeListener {
-
-
-    private LoginDBOperation logScr=new LoginDBOperation();
-    private String currentUser="";
 
     /**
      * Creates new form SettingsPanel
@@ -69,7 +63,7 @@ public class SettingsPanel extends javax.swing.JPanel implements control.Languag
 
         jTextField18.setText(ApplicationDataManager.getInstance().getReceiptPrinterName());
         jTextField19.setText(ApplicationDataManager.getInstance().getLabelPrinterName());
-        customerPoleDisplayCOMPortTextField.setText(ApplicationDataManager.getInstance().getLabelPrinterName());
+        customerPoleDisplayCOMPortTextField.setText(ApplicationDataManager.getInstance().getCustomerPoleDisplayCOMPORT());
     }
     
     @SuppressWarnings("unchecked")
