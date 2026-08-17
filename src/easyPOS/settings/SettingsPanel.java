@@ -13,7 +13,6 @@ import java.util.Map;
 import java.util.ResourceBundle;
 import javax.swing.DefaultComboBoxModel;
 import easyPOS.localization.ApplicationMessages;
-import javax.swing.JOptionPane;
 import uiUtil.EasyPOSMessageDialog;
 import localDatabase.DatabaseManager;
 
@@ -70,6 +69,7 @@ public class SettingsPanel extends javax.swing.JPanel implements control.Languag
 
         jTextField18.setText(ApplicationDataManager.getInstance().getReceiptPrinterName());
         jTextField19.setText(ApplicationDataManager.getInstance().getLabelPrinterName());
+        customerPoleDisplayCOMPortTextField.setText(ApplicationDataManager.getInstance().getLabelPrinterName());
     }
     
     @SuppressWarnings("unchecked")
@@ -113,6 +113,8 @@ public class SettingsPanel extends javax.swing.JPanel implements control.Languag
         jComboBox4 = new javax.swing.JComboBox<>();
         jComboBox5 = new javax.swing.JComboBox<>();
         jLabel47 = new javax.swing.JLabel();
+        jLabel48 = new javax.swing.JLabel();
+        customerPoleDisplayCOMPortTextField = new javax.swing.JTextField();
 
         jTabbedPane3.setFont(new java.awt.Font("Tahoma", 0, 12)); // NOI18N
 
@@ -314,6 +316,8 @@ public class SettingsPanel extends javax.swing.JPanel implements control.Languag
 
         jLabel47.setText("Receipt Footer Language");
 
+        jLabel48.setText("Customer Pole Display COM Port");
+
         javax.swing.GroupLayout jPanel21Layout = new javax.swing.GroupLayout(jPanel21);
         jPanel21.setLayout(jPanel21Layout);
         jPanel21Layout.setHorizontalGroup(
@@ -321,23 +325,23 @@ public class SettingsPanel extends javax.swing.JPanel implements control.Languag
             .addGroup(jPanel21Layout.createSequentialGroup()
                 .addContainerGap()
                 .addGroup(jPanel21Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(jPanel21Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                        .addGroup(jPanel21Layout.createSequentialGroup()
-                            .addGroup(jPanel21Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                .addComponent(jLabel46, javax.swing.GroupLayout.PREFERRED_SIZE, 140, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                .addComponent(jLabel45, javax.swing.GroupLayout.PREFERRED_SIZE, 171, javax.swing.GroupLayout.PREFERRED_SIZE))
-                            .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                            .addGroup(jPanel21Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                .addComponent(jComboBox3, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, 144, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                .addComponent(jComboBox4, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, 144, javax.swing.GroupLayout.PREFERRED_SIZE)))
-                        .addGroup(jPanel21Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                            .addComponent(jButton1)
+                    .addGroup(jPanel21Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                        .addComponent(jButton1)
+                        .addGroup(jPanel21Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                            .addGroup(jPanel21Layout.createSequentialGroup()
+                                .addGroup(jPanel21Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                    .addComponent(jLabel46, javax.swing.GroupLayout.PREFERRED_SIZE, 140, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                    .addComponent(jLabel45, javax.swing.GroupLayout.PREFERRED_SIZE, 171, javax.swing.GroupLayout.PREFERRED_SIZE))
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                                .addGroup(jPanel21Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                    .addComponent(jComboBox3, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, 144, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                    .addComponent(jComboBox4, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, 144, javax.swing.GroupLayout.PREFERRED_SIZE)))
                             .addGroup(jPanel21Layout.createSequentialGroup()
                                 .addGroup(jPanel21Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
                                     .addComponent(jLabel44, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                                    .addComponent(jLabel43, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                                     .addComponent(jLabel42, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                                    .addComponent(jLabel40, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                                    .addComponent(jLabel40, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                                    .addComponent(jLabel43, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.PREFERRED_SIZE, 210, javax.swing.GroupLayout.PREFERRED_SIZE))
                                 .addGroup(jPanel21Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                                     .addGroup(jPanel21Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                                         .addGroup(jPanel21Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -345,19 +349,23 @@ public class SettingsPanel extends javax.swing.JPanel implements control.Languag
                                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                                                 .addComponent(jTextField18, javax.swing.GroupLayout.PREFERRED_SIZE, 144, javax.swing.GroupLayout.PREFERRED_SIZE))
                                             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel21Layout.createSequentialGroup()
-                                                .addGap(12, 12, 12)
+                                                .addGap(0, 0, 0)
                                                 .addComponent(jTextField19, javax.swing.GroupLayout.PREFERRED_SIZE, 144, javax.swing.GroupLayout.PREFERRED_SIZE)))
                                         .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel21Layout.createSequentialGroup()
-                                            .addGap(12, 12, 12)
+                                            .addGap(0, 0, 0)
                                             .addComponent(jComboBox1, javax.swing.GroupLayout.PREFERRED_SIZE, 144, javax.swing.GroupLayout.PREFERRED_SIZE)))
                                     .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel21Layout.createSequentialGroup()
-                                        .addGap(12, 12, 12)
-                                        .addComponent(jComboBox2, javax.swing.GroupLayout.PREFERRED_SIZE, 144, javax.swing.GroupLayout.PREFERRED_SIZE))))))
+                                        .addGap(0, 0, 0)
+                                        .addComponent(jComboBox2, javax.swing.GroupLayout.PREFERRED_SIZE, 144, javax.swing.GroupLayout.PREFERRED_SIZE))))
+                            .addGroup(jPanel21Layout.createSequentialGroup()
+                                .addComponent(jLabel47, javax.swing.GroupLayout.PREFERRED_SIZE, 171, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                                .addComponent(jComboBox5, javax.swing.GroupLayout.PREFERRED_SIZE, 144, javax.swing.GroupLayout.PREFERRED_SIZE))))
                     .addGroup(jPanel21Layout.createSequentialGroup()
-                        .addComponent(jLabel47, javax.swing.GroupLayout.PREFERRED_SIZE, 171, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addComponent(jLabel48, javax.swing.GroupLayout.PREFERRED_SIZE, 210, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                        .addComponent(jComboBox5, javax.swing.GroupLayout.PREFERRED_SIZE, 144, javax.swing.GroupLayout.PREFERRED_SIZE)))
-                .addContainerGap(598, Short.MAX_VALUE))
+                        .addComponent(customerPoleDisplayCOMPortTextField, javax.swing.GroupLayout.PREFERRED_SIZE, 144, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                .addContainerGap(551, Short.MAX_VALUE))
         );
         jPanel21Layout.setVerticalGroup(
             jPanel21Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -374,7 +382,11 @@ public class SettingsPanel extends javax.swing.JPanel implements control.Languag
                 .addGroup(jPanel21Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jComboBox1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(jLabel43))
-                .addGap(21, 21, 21)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addGroup(jPanel21Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(jLabel48)
+                    .addComponent(customerPoleDisplayCOMPortTextField, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addGap(31, 31, 31)
                 .addGroup(jPanel21Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jComboBox2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(jLabel44))
@@ -387,12 +399,12 @@ public class SettingsPanel extends javax.swing.JPanel implements control.Languag
                     .addComponent(jComboBox4, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(jLabel46))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addGroup(jPanel21Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                .addGroup(jPanel21Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jLabel47)
                     .addComponent(jComboBox5, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addGap(15, 15, 15)
                 .addComponent(jButton1)
-                .addContainerGap(237, Short.MAX_VALUE))
+                .addContainerGap(190, Short.MAX_VALUE))
         );
 
         jTabbedPane3.addTab("Advanced Settings", jPanel21);
@@ -418,206 +430,6 @@ public class SettingsPanel extends javax.swing.JPanel implements control.Languag
                     .addContainerGap()))
         );
     }// </editor-fold>//GEN-END:initComponents
-
-    private void createUser(){
-//        jPanelSettingsPwdChangeDelete.setVisible(false);
-//
-//        if(jTextFieldUserNme.getText().equals("")){
-//            JOptionPane.showMessageDialog(this, "Fill the required fields !");
-//        }else{
-//            if(jCheckBoxCreateAdminAcc.isSelected()){//create administrator account
-//                if(accountType==1){//if loged in admin account?
-//                    if(jPasswordFieldCreatePwd.getText().equals(jPasswordFieldCreatePwd2.getText())){
-//                        //create admin account
-//                        UserDataModel usrv=new UserDataModel();
-//
-//                        usrv.setAccountType(1);
-//                        usrv.setUserName(jTextFieldUserNme.getText());
-//                        usrv.setPassword(jPasswordFieldCreatePwd.getText());
-//                        usrv.setPwdHint(jTextFieldSecAns.getText());
-//                        usrv.setHintType(jComboBoxCreateAcc.getSelectedIndex() + 1);
-//                        usrv.setStocks(1);
-//                        usrv.setEditStocks(1);
-//                        usrv.setAddStocks(1);
-//                        usrv.setDelStocks(1);
-//                        usrv.setSupplies(1);
-//                        usrv.setAddSupplies(1);
-//                        usrv.setEditSupplies(1);
-//                        usrv.setDelSupplies(1);
-//                        usrv.setReports(1);
-//
-//                        boolean res=logScr.addNewUser(usrv);
-//                        if(res==true){
-//                            JOptionPane.showMessageDialog(this, "Your account is successfully created !");
-//                            //clear fields
-//                            clearFieldsAddNewUser();
-//                        }else{
-//                            JOptionPane.showMessageDialog(this, "Can not do your process !");
-//                        }
-//
-//                    }else{//pwd mismatch
-//                        JOptionPane.showMessageDialog(this, "passwords do not match !");
-//                        jPasswordFieldCreatePwd.setText("");
-//                        jPasswordFieldCreatePwd.setText("");
-//                    }
-//                    //create account.....
-//                }else{
-//                    JOptionPane.showMessageDialog(this, "You should loggin with administrater account !");
-//                }
-//
-//            }else{//normal account
-//                //show access levels
-//                jPanelAccessLevels1.setVisible(true);
-//
-//            }
-//        }
-    }
-    
-    private void changePassword(){
-        if(jPasswordFieldChangePwd.getText().equals(jPasswordFieldChangePwd2.getText())){
-            int res=logScr.checkPassWord(currentUser, jPasswordFieldCurPwd.getText());
-            if(res==0){
-                //change account password
-                boolean res2=logScr.changeUserPwd(currentUser, jPasswordFieldChangePwd.getText());
-                if(res2==true){
-                    EasyPOSMessageDialog.showLocalizedInfo(this, ApplicationMessages.INFO_PASSWORD_CHANGED);
-                    //clear fields
-                    jTextField25.setText("");
-                    jPasswordFieldCurPwd.setText("");
-                    jPasswordFieldChangePwd.setText("");
-                    jPasswordFieldChangePwd2.setText("");
-                }else{
-                    EasyPOSMessageDialog.showLocalizedError(this, ApplicationMessages.ERROR_PROCESS_FAILED);
-                }
-
-            }else{
-                EasyPOSMessageDialog.showLocalizedWarning(this, ApplicationMessages.VALIDATION_PASSWORD_CURRENT_MISMATCH);
-            }
-        }else{
-            EasyPOSMessageDialog.showLocalizedWarning(this, ApplicationMessages.VALIDATION_PASSWORD_NEW_MISMATCH);
-        }
-    }
-    
-    private void deleteUser(){
-        if(jPasswordFieldChangePwd.getText().equals(jPasswordFieldChangePwd2.getText())){
-            int res=logScr.checkPassWord(currentUser, jPasswordFieldCurPwd.getText());
-            if(res==0){
-                //delete account
-                boolean res2=logScr.deleteUserAccount(currentUser);
-                if(res2==true){
-                    EasyPOSMessageDialog.showLocalizedInfo(this, ApplicationMessages.INFO_ACCOUNT_DELETED);
-                    //clear fields
-                    jTextField25.setText("");
-                    jPasswordFieldCurPwd.setText("");
-                    jPasswordFieldChangePwd.setText("");
-                    jPasswordFieldChangePwd2.setText("");
-                }else{
-                    EasyPOSMessageDialog.showLocalizedError(this, ApplicationMessages.ERROR_PROCESS_FAILED);
-                }
-
-            }else{
-                EasyPOSMessageDialog.showLocalizedWarning(this, ApplicationMessages.VALIDATION_PASSWORD_CURRENT_MISMATCH);
-            }
-        }else{
-            EasyPOSMessageDialog.showLocalizedWarning(this, ApplicationMessages.VALIDATION_PASSWORD_NEW_MISMATCH);
-        }
-    }
-    
-    private void savePermissions(){
-        //create normal account
-//        String controlSet="";
-//
-//        if(jTextFieldUserNme.getText().equals("")){
-//            JOptionPane.showMessageDialog(this, "Fill the required fields !");
-//        }else{
-//            if(logScr.userType(currentUser)==true){//if loged in admin account?
-//                if(jPasswordFieldCreatePwd.getText().equals(jPasswordFieldCreatePwd2.getText())){
-//
-//                    UserDataModel usrv=new UserDataModel();
-//
-//                    usrv.setAccountType(0);
-//                    usrv.setUserName(jTextFieldUserNme.getText());
-//                    usrv.setPassword(jPasswordFieldCreatePwd.getText());
-//                    usrv.setPwdHint(jTextFieldSecAns.getText());
-//                    usrv.setHintType(jComboBoxCreateAcc.getSelectedIndex() + 1);
-//                    if(jCheckBoxStock.isSelected()){
-//                        usrv.setStocks(1);
-//                    }else{
-//                        usrv.setStocks(0);
-//                    }
-//                    if(jCheckBox3.isSelected()){
-//                        usrv.setEditStocks(1);
-//                    }else{
-//                        usrv.setEditStocks(0);
-//                    }
-//                    if(jCheckBox14.isSelected()){
-//                        usrv.setAddStocks(1);
-//                    }else{
-//                        usrv.setAddStocks(0);
-//                    }
-//                    if(jCheckBox13.isSelected()){
-//                        usrv.setDelStocks(1);
-//                    }else{
-//                        usrv.setDelStocks(0);
-//                    }
-//
-//                    if(jCheckBox15.isSelected()){
-//                        usrv.setSupplies(1);
-//                    }else{
-//                        usrv.setSupplies(0);
-//                    }
-//                    if(jCheckBox16.isSelected()){
-//                        usrv.setAddSupplies(1);
-//                    }else{
-//                        usrv.setAddSupplies(0);
-//                    }
-//                    if(jCheckBox17.isSelected()){
-//                        usrv.setEditSupplies(1);
-//                    }else{
-//                        usrv.setEditSupplies(0);
-//                    }
-//                    if(jCheckBox18.isSelected()){
-//                        usrv.setDelSupplies(1);
-//                    }else{
-//                        usrv.setDelSupplies(0);
-//                    }
-//                    if(jCheckBox19.isSelected()){
-//                        usrv.setReports(1);
-//                    }else{
-//                        usrv.setReports(0);
-//                    }
-//
-//                    boolean res=logScr.addNewUser(usrv);
-//                    if(res==true){
-//                        JOptionPane.showMessageDialog(this, "Your account is successfully created !");
-//                        //clear fields
-//                        clearFieldsAddNewUser();
-//                        //hide panel
-//                        jPanelAccessLevels1.setVisible(false);
-//                    }else{
-//                        JOptionPane.showMessageDialog(this, "Can not do your process !");
-//                    }
-//
-//                }else{//pwd mismatch
-//                    JOptionPane.showMessageDialog(this, "passwords do not match !");
-//                    jPasswordFieldCreatePwd.setText("");
-//                    jPasswordFieldCreatePwd.setText("");
-//                }
-//
-//            }else{
-//                JOptionPane.showMessageDialog(this, "You should loggin with administrater account !");
-//            }
-//
-//        }
-
-        /*
-        if(DB result==ok){
-            JOptionPane.showMessageDialog(this, "Normal use account is successfully created.");
-            jPanelAccessLevels1.setVisible(false);
-        }else{
-            JOptionPane.showMessageDialog(this, "Can not do your process.");
-        }*/
-    }
     
     private void jButton41ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton41ActionPerformed
         jPanelSettingsPwdChangeDelete.setVisible(false);
@@ -630,6 +442,7 @@ public class SettingsPanel extends javax.swing.JPanel implements control.Languag
     private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
         ApplicationDataManager.getInstance().setReceiptPrinterName(jTextField18.getText());
         ApplicationDataManager.getInstance().setLabelPrinterName(jTextField19.getText());
+        ApplicationDataManager.getInstance().setCustomerPoleDisplayCOMPORT(customerPoleDisplayCOMPortTextField.getText());
         
         ApplicationDataManager.getInstance().setApplicationLanguage((Language) jComboBox1.getSelectedItem());        
         
@@ -650,15 +463,6 @@ public class SettingsPanel extends javax.swing.JPanel implements control.Languag
         control.EventManager.getInstance().notifyLanguageChanged();
     }//GEN-LAST:event_jButton1ActionPerformed
 
-    void clearFieldsAddNewUser(){
-        jTextFieldUserName.setText("");
-        jTextFieldUserCode.setText("");
-        jTextFieldUserEmail.setText("");
-//        jTextFieldSecAns.setText("");
-//        jPasswordFieldCreatePwd.setText("");
-//        jPasswordFieldCreatePwd2.setText("");
-    }
-
     private void switchLanguage() {
         Language appLang = ApplicationDataManager.getInstance().getApplicationLanguage();
         Locale locale = (appLang == Language.SINHALA) ? new Locale("si", "LK") : Locale.ENGLISH;
@@ -677,6 +481,7 @@ public class SettingsPanel extends javax.swing.JPanel implements control.Languag
                 jLabel43.setFont(customFont); jLabel44.setFont(customFont);
                 jLabel45.setFont(customFont); jLabel46.setFont(customFont);
                 jLabel47.setFont(customFont); jButton1.setFont(customFont);
+                jLabel48.setFont(customFont);
                 jButton41.setFont(customFont);
             } catch (IOException | FontFormatException e) {
                 System.err.println(e);
@@ -701,9 +506,11 @@ public class SettingsPanel extends javax.swing.JPanel implements control.Languag
         jLabel46.setText(resourceBundle.getString("SettingsPanel.jLabel46.text"));
         jLabel47.setText(resourceBundle.getString("SettingsPanel.jLabel47.text"));
         jButton1.setText(resourceBundle.getString("SettingsPanel.jButton1.text"));
+        jLabel48.setText(resourceBundle.getString("SettingsPanel.jLabel48.text"));        
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
+    private javax.swing.JTextField customerPoleDisplayCOMPortTextField;
     private javax.swing.JButton jButton1;
     private javax.swing.JButton jButton41;
     private javax.swing.JComboBox<String> jComboBox1;
@@ -720,6 +527,7 @@ public class SettingsPanel extends javax.swing.JPanel implements control.Languag
     private javax.swing.JLabel jLabel45;
     private javax.swing.JLabel jLabel46;
     private javax.swing.JLabel jLabel47;
+    private javax.swing.JLabel jLabel48;
     private javax.swing.JLabel jLabel61;
     private javax.swing.JLabel jLabel62;
     private javax.swing.JLabel jLabel63;

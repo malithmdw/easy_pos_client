@@ -37,6 +37,7 @@ import java.util.Locale;
 import java.util.ResourceBundle;
 import java.util.concurrent.ExecutionException;
 import control.EasyPosLogger;
+import easyPOS.customerdisplay.CustomerPoleDisplay;
 import javax.print.PrintService;
 import javax.swing.JRootPane;
 import javax.swing.SwingWorker;
@@ -70,19 +71,24 @@ public class SaleInvoiceJPanel extends javax.swing.JPanel implements control.Lan
     }
 
     private void pushToCustomerDisplay() {
-        if (customerScreenFrame == null) return;
-        easyPOS.customerdisplay.CustomerScreenInvoicePanel invoicePanel = customerScreenFrame.getInvoicePanel();
-        easyPOS.customerdisplay.CustomerScreenLogoPanel logoPanel = customerScreenFrame.getLogoPanel();
-        invoicePanel.updateTable(jTableSaleToBill.getModel());
-        invoicePanel.updateSummary(
-            jTextFieldSalesNoOfItms.getText(),
-            jTextFieldGrossAmount.getText(),
-            jTextFieldTotalDis.getText(),
-            jTextFieldNetTot.getText(),
-            jTextFieldMRecieve.getText(),
-            jTextFieldBal.getText()
-        );
-        logoPanel.setCustomerName(jTextFieldCustName.getText());
+        if (customerScreenFrame != null){
+            easyPOS.customerdisplay.CustomerScreenInvoicePanel invoicePanel = customerScreenFrame.getInvoicePanel();
+            easyPOS.customerdisplay.CustomerScreenLogoPanel logoPanel = customerScreenFrame.getLogoPanel();
+            invoicePanel.updateTable(jTableSaleToBill.getModel());
+            invoicePanel.updateSummary(
+                jTextFieldSalesNoOfItms.getText(),
+                jTextFieldGrossAmount.getText(),
+                jTextFieldTotalDis.getText(),
+                jTextFieldNetTot.getText(),
+                jTextFieldMRecieve.getText(),
+                jTextFieldBal.getText()
+            );
+            logoPanel.setCustomerName(jTextFieldCustName.getText());
+        }
+        
+        CustomerPoleDisplay.getInstance(ApplicationDataManager.getInstance().getCustomerPoleDisplayCOMPORT()).initializePortAndSendData(
+                ApplicationDataManager.getInstance().getCustomerPoleDisplayCOMPORT(), 
+                jTextFieldNetTot.getText());
     }
 
     BillDataModel billDataModel = new BillDataModel();

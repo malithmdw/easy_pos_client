@@ -52,6 +52,7 @@ public class ApplicationDataManager {
     private Language receiptFooterLanguage=Language.SINHALA;
     private String receiptPrinterName = "BIXOLON SRP-E302";
     private String labelPrinterName = "ZDesigner ZD888-203dpi ZPL";
+    private String customerPoleDisplayCOMPORT = "COM1";
     private int lastInvoiceNumber = 0;
     private File receiptLogo;
     
@@ -69,6 +70,7 @@ public class ApplicationDataManager {
         appData.put("LAST_INVOICE_NUMBER", Integer.toString(lastInvoiceNumber));
         appData.put("RECEIPT_PRINTER_NAME", receiptPrinterName);
         appData.put("LABEL_PRINTER_NAME", labelPrinterName);
+        appData.put("CUSTOMER_POLE_DISPLAY_COM_PORT", customerPoleDisplayCOMPORT);
         return appData;
     }
     
@@ -107,6 +109,9 @@ public class ApplicationDataManager {
                     break;
                 case "LABEL_PRINTER_NAME":
                     labelPrinterName =  value;
+                    break;
+                case "CUSTOMER_POLE_DISPLAY_COM_PORT":
+                    customerPoleDisplayCOMPORT =  value;
                     break;
         
                 default:
@@ -341,4 +346,19 @@ public class ApplicationDataManager {
     public void setLabelPrinterName(String labelPrinterName) {
         this.labelPrinterName = labelPrinterName;
     }
+    
+    /**
+     * @return the customerPoleDisplayCOMPORT
+     */
+    public String getCustomerPoleDisplayCOMPORT() {
+        return customerPoleDisplayCOMPORT;
+    }
+
+    /**
+     * @param customerPoleDisplayCOMPORT the customerPoleDisplayCOMPORT to set
+     */
+    public void setCustomerPoleDisplayCOMPORT(String customerPoleDisplayCOMPORT) {
+        this.customerPoleDisplayCOMPORT = customerPoleDisplayCOMPORT;
+    }
+
 }
