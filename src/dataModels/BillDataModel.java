@@ -38,22 +38,30 @@ public class BillDataModel {
         date = billDataModel.date;
         time = billDataModel.time;
         invoiceNumber = billDataModel.invoiceNumber;
+        billNumber = billDataModel.billNumber;
         cashierName = billDataModel.cashierName;
         cashierId = billDataModel.cashierId;
+        customerContactNo = billDataModel.customerContactNo;
         customerId = billDataModel.customerId;
         billItems = new ArrayList<>();
         for (BillItemDataModel billItem : billDataModel.billItems) {
             billItems.add(new BillItemDataModel(billItem));
         }
 
+        billType = billDataModel.billType;
         totalGrossAmount = billDataModel.totalGrossAmount;
         noOfItems = billDataModel.noOfItems;
         billDiscount = billDataModel.billDiscount;
         ruleDiscount = billDataModel.ruleDiscount;
         netTotal = billDataModel.netTotal;
         moneyReceive = billDataModel.moneyReceive;
+        cardReceive = billDataModel.cardReceive;
+        voucherReceive = billDataModel.voucherReceive;
         cashBalance = billDataModel.cashBalance;
+        creditAmount = billDataModel.creditAmount;
         methodOfPayment = billDataModel.methodOfPayment;
+        cardType = billDataModel.cardType;
+        cardRef = billDataModel.cardRef;
     }
 
     public BillDataModel() {

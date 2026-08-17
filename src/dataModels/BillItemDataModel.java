@@ -20,14 +20,17 @@ public class BillItemDataModel {
     private double netAmount;
 
     public BillItemDataModel(BillItemDataModel billItem) {
-        itemId = billItem.itemId;
-        batchId = billItem.batchId;
-        itemName = billItem.itemName;
-        qty = billItem.qty;
-        unitPrice = billItem.unitPrice;
-        discountPerone = billItem.discountPerone;
-        amount = billItem.amount;
-        netAmount = billItem.netAmount;
+        this.itemId = billItem.itemId;
+        this.batchId = billItem.batchId;
+        this.itemName = billItem.itemName;
+        this.itemNameSin = billItem.itemNameSin;
+        this.itemNameTam = billItem.itemNameTam;
+        this.qty = billItem.qty;
+        this.unitPrice = billItem.unitPrice;
+        this.discountPerone = billItem.discountPerone;
+        this.amount = billItem.amount;
+        this.costOfUnit = billItem.costOfUnit;
+        this.netAmount = billItem.netAmount;
     }
 
     public BillItemDataModel() {
