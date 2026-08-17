@@ -18,6 +18,9 @@ import java.util.Locale;
 import java.util.ResourceBundle;
 import java.util.concurrent.ExecutionException;
 import control.EasyPosLogger;
+import control.EventManager;
+import control.NumberPadKeyPressListener;
+import easyPOS.NumberPanel;
 import javax.swing.DefaultComboBoxModel;
 import javax.swing.JRootPane;
 import javax.swing.SwingWorker;
@@ -43,6 +46,55 @@ public class PurchasingInvoiceDataPanel extends javax.swing.JPanel implements co
         initComponents();
         switchLanguage();
         control.EventManager.getInstance().addLanguageChangeListener(this);
+        
+        EventManager.getInstance().addNumberPadKeyEventListener(new NumberPadKeyPressListener() {
+            @Override
+            public void onKeyPressed(NumberPadKeyPressListener.NumberPadButton pressed) {
+                if (!PurchasingInvoiceDataPanel.this.isShowing()) {
+                    return;
+                }
+                
+                if (jTextFieldInvNo.isFocusOwner()) {
+                    if (NumberPadKeyPressListener.NumberPadButton.BUTTON_OK.equals(pressed)) {
+                        NumberPanel.fireKeyPressEvent(jTextFieldInvNo);
+                        return;
+                    }
+                    jTextFieldInvNo.setText(NumberPanel.getNum(jTextFieldInvNo.getText(), pressed));
+                    jTextFieldInvNo.setRequestFocusEnabled(true);
+                }else if (jTextFieldInvTotal.isFocusOwner()) {
+                    if (NumberPadKeyPressListener.NumberPadButton.BUTTON_OK.equals(pressed)) {
+                        NumberPanel.fireKeyPressEvent(jTextFieldInvTotal);
+                        return;
+                    }
+                    jTextFieldInvTotal.setText(NumberPanel.getNum(jTextFieldInvTotal.getText(), pressed));
+                }else if (jTextFieldInvDis.isFocusOwner()) {
+                    if (NumberPadKeyPressListener.NumberPadButton.BUTTON_OK.equals(pressed)) {
+                        NumberPanel.fireKeyPressEvent(jTextFieldInvDis);
+                        return;
+                    }
+                    jTextFieldInvDis.setText(NumberPanel.getDouble(jTextFieldInvDis.getText(), pressed));
+                }else if (jTextFieldInvnetTot.isFocusOwner()) {
+                    if (NumberPadKeyPressListener.NumberPadButton.BUTTON_OK.equals(pressed)) {
+                        NumberPanel.fireKeyPressEvent(jTextFieldInvnetTot);
+                        return;
+                    }
+                    jTextFieldInvnetTot.setText(NumberPanel.getDouble(jTextFieldInvnetTot.getText(), pressed));
+                    jTextFieldInvnetTot.setRequestFocusEnabled(true);
+                }else if (jTextFieldInvPaid.isFocusOwner()) {
+                    if (NumberPadKeyPressListener.NumberPadButton.BUTTON_OK.equals(pressed)) {
+                        NumberPanel.fireKeyPressEvent(jTextFieldInvPaid);
+                        return;
+                    }
+                    jTextFieldInvPaid.setText(NumberPanel.getDouble(jTextFieldInvPaid.getText(), pressed));
+                }else if (jTextFieldInvBal.isFocusOwner()) {
+                    if (NumberPadKeyPressListener.NumberPadButton.BUTTON_OK.equals(pressed)) {
+                        NumberPanel.fireKeyPressEvent(jTextFieldInvBal);
+                        return;
+                    }
+                    jTextFieldInvBal.setText(NumberPanel.getDouble(jTextFieldInvBal.getText(), pressed));
+                }
+            }
+        });
     }
 
     @Override
@@ -186,6 +238,7 @@ public class PurchasingInvoiceDataPanel extends javax.swing.JPanel implements co
         jDateChooserPIDataDueDate = new com.toedter.calendar.JDateChooser();
         jDateChooserPIDataAlrtDate = new com.toedter.calendar.JDateChooser();
         jDateChooserPIDataDate = new com.toedter.calendar.JDateChooser();
+        numberPanel1 = new easyPOS.NumberPanel();
 
         jLabelPIDataDate.setFont(new java.awt.Font("Tahoma", 0, 18)); // NOI18N
         jLabelPIDataDate.setHorizontalAlignment(javax.swing.SwingConstants.RIGHT);
@@ -261,6 +314,7 @@ public class PurchasingInvoiceDataPanel extends javax.swing.JPanel implements co
             }
         });
 
+        jButtonPIDataSave.setFont(new java.awt.Font("Segoe UI", 0, 18)); // NOI18N
         jButtonPIDataSave.setText(bundle.getString("PurchasingInvoiceDataPanel.SaveChanges")); // NOI18N
         jButtonPIDataSave.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -311,6 +365,8 @@ public class PurchasingInvoiceDataPanel extends javax.swing.JPanel implements co
                     .addComponent(jDateChooserPIDataDueDate, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                     .addComponent(jDateChooserPIDataAlrtDate, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                     .addComponent(jDateChooserPIDataDate, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addComponent(numberPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
         layout.setVerticalGroup(
@@ -318,53 +374,56 @@ public class PurchasingInvoiceDataPanel extends javax.swing.JPanel implements co
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
                 .addContainerGap()
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                        .addComponent(jLabelPIDataSupplier)
-                        .addComponent(jComboBoxInvSupplier, javax.swing.GroupLayout.PREFERRED_SIZE, 36, javax.swing.GroupLayout.PREFERRED_SIZE))
-                    .addComponent(jButton1, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, 36, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(jLabelPIDataDate, javax.swing.GroupLayout.PREFERRED_SIZE, 36, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(jDateChooserPIDataDate, javax.swing.GroupLayout.PREFERRED_SIZE, 36, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                    .addComponent(jTextFieldInvNo)
-                    .addComponent(jLabelPIDataInvNo, javax.swing.GroupLayout.PREFERRED_SIZE, 36, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(jTextFieldInvSysInvNo, javax.swing.GroupLayout.PREFERRED_SIZE, 36, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(jLabelPIDataSysInvNo, javax.swing.GroupLayout.PREFERRED_SIZE, 36, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(jTextFieldInvTotal, javax.swing.GroupLayout.PREFERRED_SIZE, 36, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(jLabelPIDataTotal))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(jTextFieldInvDis, javax.swing.GroupLayout.PREFERRED_SIZE, 36, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(jLabelPIDataDiscount))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(jTextFieldInvnetTot, javax.swing.GroupLayout.PREFERRED_SIZE, 36, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(jLabelPIDataNetTot))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(jTextFieldInvPaid, javax.swing.GroupLayout.PREFERRED_SIZE, 36, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(jLabelPIDataPaid))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(jTextFieldInvBal, javax.swing.GroupLayout.PREFERRED_SIZE, 36, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(jLabelPIDataBalance))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(jLabelPIDataPaymentDueDate)
-                    .addComponent(jDateChooserPIDataDueDate, javax.swing.GroupLayout.PREFERRED_SIZE, 36, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addGroup(layout.createSequentialGroup()
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                                .addComponent(jLabelPIDataSupplier)
+                                .addComponent(jComboBoxInvSupplier, javax.swing.GroupLayout.PREFERRED_SIZE, 36, javax.swing.GroupLayout.PREFERRED_SIZE))
+                            .addComponent(jButton1, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, 36, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(jLabelPIDataDate, javax.swing.GroupLayout.PREFERRED_SIZE, 36, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(jDateChooserPIDataDate, javax.swing.GroupLayout.PREFERRED_SIZE, 36, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                            .addComponent(jTextFieldInvNo)
+                            .addComponent(jLabelPIDataInvNo, javax.swing.GroupLayout.PREFERRED_SIZE, 36, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                            .addComponent(jTextFieldInvSysInvNo, javax.swing.GroupLayout.PREFERRED_SIZE, 36, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(jLabelPIDataSysInvNo, javax.swing.GroupLayout.PREFERRED_SIZE, 36, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                            .addComponent(jTextFieldInvTotal, javax.swing.GroupLayout.PREFERRED_SIZE, 36, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(jLabelPIDataTotal))
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                            .addComponent(jTextFieldInvDis, javax.swing.GroupLayout.PREFERRED_SIZE, 36, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(jLabelPIDataDiscount))
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                            .addComponent(jTextFieldInvnetTot, javax.swing.GroupLayout.PREFERRED_SIZE, 36, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(jLabelPIDataNetTot))
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                            .addComponent(jTextFieldInvPaid, javax.swing.GroupLayout.PREFERRED_SIZE, 36, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(jLabelPIDataPaid))
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                            .addComponent(jTextFieldInvBal, javax.swing.GroupLayout.PREFERRED_SIZE, 36, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(jLabelPIDataBalance))
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(jLabelPIDataPaymentDueDate)
+                            .addComponent(jDateChooserPIDataDueDate, javax.swing.GroupLayout.PREFERRED_SIZE, 36, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                    .addComponent(numberPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addComponent(jLabelPIDataAlertDate)
                     .addComponent(jDateChooserPIDataAlrtDate, javax.swing.GroupLayout.PREFERRED_SIZE, 36, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(jButtonPIDataSave)
-                .addContainerGap(7, Short.MAX_VALUE))
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
     }// </editor-fold>//GEN-END:initComponents
 
@@ -499,5 +558,6 @@ public class PurchasingInvoiceDataPanel extends javax.swing.JPanel implements co
     private javax.swing.JTextField jTextFieldInvSysInvNo;
     private javax.swing.JTextField jTextFieldInvTotal;
     private javax.swing.JTextField jTextFieldInvnetTot;
+    private easyPOS.NumberPanel numberPanel1;
     // End of variables declaration//GEN-END:variables
 }

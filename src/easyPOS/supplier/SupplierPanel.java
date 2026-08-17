@@ -1,12 +1,9 @@
 
 package easyPOS.supplier;
 
-import easyPOS.supplier.AddSupplier;
 import control.ApplicationDataManager;
-import dataModels.StockItemDataModel;
 import dataModels.SupplierDataModel;
 import dataModels.SupplyVariables;
-import dbOperations.StockDBOperation;
 import dbOperations.SuppliesDBOperation;
 import java.awt.Font;
 import java.awt.FontFormatException;
@@ -35,10 +32,8 @@ public class SupplierPanel extends javax.swing.JPanel implements control.Languag
     
     DecimalFormat df = new DecimalFormat("#0.00");
     
-    ArrayList<StockItemDataModel> stList;
     ArrayList<SupplierDataModel> supprList;
     ArrayList<SupplyVariables> suppliesList;
-    StockDBOperation stock=new StockDBOperation();
     SuppliesDBOperation supp=new SuppliesDBOperation();
     
     /**

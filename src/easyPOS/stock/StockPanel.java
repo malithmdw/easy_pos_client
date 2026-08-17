@@ -4,8 +4,6 @@ import appDataModels.APIHeaderData;
 import appDataModels.CategoryModel;
 import control.EasyPosLogger;
 import control.RuntimeDataManager;
-import dbOperations.StockDBOperation;
-import dbOperations.SuppliesDBOperation;
 import java.awt.HeadlessException;
 import java.awt.print.PrinterException;
 import java.util.ArrayList;
@@ -33,9 +31,6 @@ import webService.ServerAPIConnection;
  * @author malit
  */
 public class StockPanel extends javax.swing.JPanel {
-    
-    SuppliesDBOperation supp=new SuppliesDBOperation();
-    StockDBOperation stockRepository = new StockDBOperation();
     
     /**
      * Creates new form StockContentPanel

@@ -5,6 +5,7 @@ import com.fazecast.jSerialComm.SerialPort;
 import control.EasyPosLogger;
 import java.io.OutputStream;
 import java.nio.charset.StandardCharsets;
+import java.util.concurrent.LinkedBlockingQueue;
 
 /**
  *
@@ -14,7 +15,11 @@ public class CustomerPoleDisplay {
 
     private static final int LINE_WIDTH = 20;
 
-    private CustomerPoleDisplay(){}
+    private final LinkedBlockingQueue<Runnable> queue = new LinkedBlockingQueue<>();
+
+    private CustomerPoleDisplay(){
+        startWorker();
+    }
 
     private static CustomerPoleDisplay INSTANCE;
 
@@ -26,11 +31,33 @@ public class CustomerPoleDisplay {
         return INSTANCE;
     }
 
+    private void startWorker() {
+        Thread worker = new Thread(() -> {
+            while (true) {
+                try {
+                    queue.take().run(); // waits if empty
+                } catch (InterruptedException e) {
+                    EasyPosLogger.getInstance().log(EasyPosLogger.LogLevel.ERROR, e.toString());
+                }
+            }
+        });
+
+        worker.setName("CustomerPoleDisplay-Writer");
+        worker.setDaemon(true);
+        worker.start();
+    }
+
     public void initializePortAndSendData(String port, String line1) {
         initializePortAndSendData(port, line1, null);
     }
 
     public void initializePortAndSendData(String port, String line1, String line2) {
+        // Serial I/O blocks, so it must never run on the caller's thread (typically the
+        // Swing EDT) - queue it on the single writer thread instead.
+        queue.offer(() -> writeToDisplay(port, line1, line2));
+    }
+
+    private void writeToDisplay(String port, String line1, String line2) {
         // 1. Replace with the COM port you found in Device Manager
         SerialPort comPort = SerialPort.getCommPort(port);
 

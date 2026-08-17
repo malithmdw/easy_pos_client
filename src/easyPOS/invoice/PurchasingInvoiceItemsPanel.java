@@ -7,9 +7,10 @@ import appDataModels.ItemStockModel;
 import appDataModels.PurchaseInvoiceModel;
 import appDataModels.PurchaseItemModel;
 import appDataModels.PurchasingInvoiceItemUIDataModel;
-import appDataModels.SupplierModel;
 import control.ApplicationDataManager;
 import control.EasyPosLogger;
+import control.EventManager;
+import control.NumberPadKeyPressListener;
 import control.RuntimeDataManager;
 import java.awt.Font;
 import java.awt.FontFormatException;
@@ -19,12 +20,11 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 import dataModels.Language;
+import easyPOS.NumberPanel;
 import java.util.Locale;
 import java.util.ResourceBundle;
 import java.util.concurrent.ExecutionException;
 import javax.swing.DefaultComboBoxModel;
-import javax.swing.JLabel;
-import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JRootPane;
 import javax.swing.SwingWorker;
@@ -57,6 +57,55 @@ public class PurchasingInvoiceItemsPanel extends javax.swing.JPanel implements c
         switchLanguage();
         this.thisPanel = this;
         control.EventManager.getInstance().addLanguageChangeListener(this);
+        
+        EventManager.getInstance().addNumberPadKeyEventListener(new NumberPadKeyPressListener() {
+            @Override
+            public void onKeyPressed(NumberPadKeyPressListener.NumberPadButton pressed) {
+                if (!PurchasingInvoiceItemsPanel.this.isShowing()) {
+                    return;
+                }
+                
+                if (jTextFieldPIItmPurchasePrice.isFocusOwner()) {
+                    if (NumberPadKeyPressListener.NumberPadButton.BUTTON_OK.equals(pressed)) {
+                        NumberPanel.fireKeyPressEvent(jTextFieldPIItmPurchasePrice);
+                        return;
+                    }
+                    jTextFieldPIItmPurchasePrice.setText(NumberPanel.getNum(jTextFieldPIItmPurchasePrice.getText(), pressed));
+                    jTextFieldPIItmPurchasePrice.setRequestFocusEnabled(true);
+                }else if (jTextFieldPIItmLabelSellPrice.isFocusOwner()) {
+                    if (NumberPadKeyPressListener.NumberPadButton.BUTTON_OK.equals(pressed)) {
+                        NumberPanel.fireKeyPressEvent(jTextFieldPIItmLabelSellPrice);
+                        return;
+                    }
+                    jTextFieldPIItmLabelSellPrice.setText(NumberPanel.getNum(jTextFieldPIItmLabelSellPrice.getText(), pressed));
+                }else if (jTextFieldPIItmDis.isFocusOwner()) {
+                    if (NumberPadKeyPressListener.NumberPadButton.BUTTON_OK.equals(pressed)) {
+                        NumberPanel.fireKeyPressEvent(jTextFieldPIItmDis);
+                        return;
+                    }
+                    jTextFieldPIItmDis.setText(NumberPanel.getDouble(jTextFieldPIItmDis.getText(), pressed));
+                }else if (jTextFieldPIItmRetailSellPrice.isFocusOwner()) {
+                    if (NumberPadKeyPressListener.NumberPadButton.BUTTON_OK.equals(pressed)) {
+                        NumberPanel.fireKeyPressEvent(jTextFieldPIItmRetailSellPrice);
+                        return;
+                    }
+                    jTextFieldPIItmRetailSellPrice.setText(NumberPanel.getDouble(jTextFieldPIItmRetailSellPrice.getText(), pressed));
+                    jTextFieldPIItmRetailSellPrice.setRequestFocusEnabled(true);
+                }else if (jTextFieldPIItmWholeSalePrice.isFocusOwner()) {
+                    if (NumberPadKeyPressListener.NumberPadButton.BUTTON_OK.equals(pressed)) {
+                        NumberPanel.fireKeyPressEvent(jTextFieldPIItmWholeSalePrice);
+                        return;
+                    }
+                    jTextFieldPIItmWholeSalePrice.setText(NumberPanel.getDouble(jTextFieldPIItmWholeSalePrice.getText(), pressed));
+                }else if (jTextFieldPIItmQty.isFocusOwner()) {
+                    if (NumberPadKeyPressListener.NumberPadButton.BUTTON_OK.equals(pressed)) {
+                        NumberPanel.fireKeyPressEvent(jTextFieldPIItmQty);
+                        return;
+                    }
+                    jTextFieldPIItmQty.setText(NumberPanel.getDouble(jTextFieldPIItmQty.getText(), pressed));
+                }
+            }
+        });
     }
 
     @Override
@@ -234,6 +283,7 @@ public class PurchasingInvoiceItemsPanel extends javax.swing.JPanel implements c
         jLabelPIItemNewSalelUnitPrice = new javax.swing.JLabel();
         jTextFieldPIItmRetailSellPrice = new javax.swing.JTextField();
         jDateChooserPIItmExpDate = new com.toedter.calendar.JDateChooser();
+        numberPanel1 = new easyPOS.NumberPanel();
         jPanel3 = new javax.swing.JPanel();
         jButton2 = new javax.swing.JButton();
         jButton5 = new javax.swing.JButton();
@@ -533,6 +583,7 @@ public class PurchasingInvoiceItemsPanel extends javax.swing.JPanel implements c
             }
         });
 
+        jButtonPIItemAddToStock.setFont(new java.awt.Font("Segoe UI", 0, 18)); // NOI18N
         jButtonPIItemAddToStock.setText(bundle.getString("PurchasingInvoiceItemPanel.AddToStock")); // NOI18N
         jButtonPIItemAddToStock.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -576,26 +627,28 @@ public class PurchasingInvoiceItemsPanel extends javax.swing.JPanel implements c
         jPanel2Layout.setHorizontalGroup(
             jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel2Layout.createSequentialGroup()
-                .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                    .addComponent(jButtonPIItemAddToStock)
-                    .addGroup(jPanel2Layout.createSequentialGroup()
-                        .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
-                            .addComponent(jLabelPIItemNewQty, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                            .addComponent(jLabelPIItemNewWholeSalePrice, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                            .addComponent(jLabelPIItemNewDiscount, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                            .addComponent(jLabelPIItemNewLabelUnitPrice, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                            .addComponent(jLabelPIItemNewPurchasingUnitPrice, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                            .addComponent(jLabelPIItemNewSalelUnitPrice, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                            .addComponent(jLabelPIItemNewExpDate, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                            .addComponent(jTextFieldPIItmQty, javax.swing.GroupLayout.DEFAULT_SIZE, 175, Short.MAX_VALUE)
-                            .addComponent(jTextFieldPIItmWholeSalePrice, javax.swing.GroupLayout.DEFAULT_SIZE, 175, Short.MAX_VALUE)
-                            .addComponent(jTextFieldPIItmLabelSellPrice, javax.swing.GroupLayout.DEFAULT_SIZE, 175, Short.MAX_VALUE)
-                            .addComponent(jTextFieldPIItmPurchasePrice, javax.swing.GroupLayout.DEFAULT_SIZE, 175, Short.MAX_VALUE)
-                            .addComponent(jTextFieldPIItmDis, javax.swing.GroupLayout.DEFAULT_SIZE, 175, Short.MAX_VALUE)
-                            .addComponent(jTextFieldPIItmRetailSellPrice, javax.swing.GroupLayout.DEFAULT_SIZE, 175, Short.MAX_VALUE)
-                            .addComponent(jDateChooserPIItmExpDate, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))))
+                .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(numberPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                        .addComponent(jButtonPIItemAddToStock)
+                        .addGroup(jPanel2Layout.createSequentialGroup()
+                            .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
+                                .addComponent(jLabelPIItemNewQty, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                                .addComponent(jLabelPIItemNewWholeSalePrice, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                                .addComponent(jLabelPIItemNewDiscount, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                                .addComponent(jLabelPIItemNewLabelUnitPrice, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                                .addComponent(jLabelPIItemNewPurchasingUnitPrice, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                                .addComponent(jLabelPIItemNewSalelUnitPrice, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                                .addComponent(jLabelPIItemNewExpDate, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                            .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                            .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                                .addComponent(jTextFieldPIItmQty, javax.swing.GroupLayout.DEFAULT_SIZE, 175, Short.MAX_VALUE)
+                                .addComponent(jTextFieldPIItmWholeSalePrice, javax.swing.GroupLayout.DEFAULT_SIZE, 175, Short.MAX_VALUE)
+                                .addComponent(jTextFieldPIItmLabelSellPrice, javax.swing.GroupLayout.DEFAULT_SIZE, 175, Short.MAX_VALUE)
+                                .addComponent(jTextFieldPIItmPurchasePrice, javax.swing.GroupLayout.DEFAULT_SIZE, 175, Short.MAX_VALUE)
+                                .addComponent(jTextFieldPIItmDis, javax.swing.GroupLayout.DEFAULT_SIZE, 175, Short.MAX_VALUE)
+                                .addComponent(jTextFieldPIItmRetailSellPrice, javax.swing.GroupLayout.DEFAULT_SIZE, 175, Short.MAX_VALUE)
+                                .addComponent(jDateChooserPIItmExpDate, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)))))
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
         jPanel2Layout.setVerticalGroup(
@@ -631,6 +684,8 @@ public class PurchasingInvoiceItemsPanel extends javax.swing.JPanel implements c
                     .addComponent(jDateChooserPIItmExpDate, javax.swing.GroupLayout.PREFERRED_SIZE, 36, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(jButtonPIItemAddToStock)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(numberPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
 
@@ -669,7 +724,7 @@ public class PurchasingInvoiceItemsPanel extends javax.swing.JPanel implements c
         jPanel3Layout.setHorizontalGroup(
             jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel3Layout.createSequentialGroup()
-                .addContainerGap(145, Short.MAX_VALUE)
+                .addContainerGap(415, Short.MAX_VALUE)
                 .addComponent(jButton2)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(jButton5)
@@ -684,7 +739,7 @@ public class PurchasingInvoiceItemsPanel extends javax.swing.JPanel implements c
                     .addComponent(jButton2)
                     .addComponent(jButton5))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 0, Short.MAX_VALUE))
+                .addComponent(jScrollPane1))
         );
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(this);
@@ -704,11 +759,11 @@ public class PurchasingInvoiceItemsPanel extends javax.swing.JPanel implements c
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
                 .addGap(9, 9, 9)
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
-                    .addComponent(jPanel2, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                    .addComponent(jPanel1, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                    .addComponent(jPanel3, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(jPanel3, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addComponent(jPanel2, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addComponent(jPanel1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                .addContainerGap())
         );
     }// </editor-fold>//GEN-END:initComponents
 
@@ -1137,6 +1192,7 @@ public class PurchasingInvoiceItemsPanel extends javax.swing.JPanel implements c
     private javax.swing.JTextField jTextFieldPIItmQty;
     private javax.swing.JTextField jTextFieldPIItmRetailSellPrice;
     private javax.swing.JTextField jTextFieldPIItmWholeSalePrice;
+    private easyPOS.NumberPanel numberPanel1;
     // End of variables declaration//GEN-END:variables
 
 }

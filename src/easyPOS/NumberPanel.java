@@ -2,6 +2,7 @@ package easyPOS;
 
 import control.EventManager;
 import control.NumberPadKeyPressListener;
+import java.awt.event.KeyEvent;
 
 /**
  *
@@ -34,6 +35,19 @@ public class NumberPanel extends javax.swing.JPanel {
     private void onButtonClick(NumberPadKeyPressListener.NumberPadButton button)
     {
         EventManager.getInstance().notifyNumberPadKeyPressed(button);
+    }
+    
+    public static void fireKeyPressEvent(javax.swing.JTextField field)
+    {
+        KeyEvent enterPress = new KeyEvent(
+                field,
+                KeyEvent.KEY_PRESSED,
+                System.currentTimeMillis(),
+                0,
+                KeyEvent.VK_ENTER,
+                '\n'
+        );
+        field.dispatchEvent(enterPress);
     }
     
     public static String getText(String existing, NumberPadKeyPressListener.NumberPadButton button)

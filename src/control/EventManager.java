@@ -68,7 +68,9 @@ public class EventManager {
         
     public void notifyNumberPadKeyPressed(NumberPadKeyPressListener.NumberPadButton pressed) {
         for (NumberPadKeyPressListener event : numberPadKeyPressEvents) {
-            event.onKeyPressed(pressed);
+            if (event != null) {
+                event.onKeyPressed(pressed);                
+            }
         }
     }
 

@@ -31,12 +31,12 @@
       <Group type="103" groupAlignment="0" attributes="0">
           <Group type="102" alignment="0" attributes="0">
               <EmptySpace min="-2" pref="9" max="-2" attributes="0"/>
-              <Group type="103" groupAlignment="1" max="-2" attributes="0">
-                  <Component id="jPanel2" alignment="0" max="32767" attributes="0"/>
+              <Group type="103" groupAlignment="0" attributes="0">
+                  <Component id="jPanel3" max="32767" attributes="0"/>
+                  <Component id="jPanel2" max="32767" attributes="0"/>
                   <Component id="jPanel1" alignment="0" max="32767" attributes="0"/>
-                  <Component id="jPanel3" alignment="0" max="32767" attributes="0"/>
               </Group>
-              <EmptySpace max="32767" attributes="0"/>
+              <EmptySpace max="-2" attributes="0"/>
           </Group>
       </Group>
     </DimensionLayout>
@@ -457,27 +457,30 @@
         <DimensionLayout dim="0">
           <Group type="103" groupAlignment="0" attributes="0">
               <Group type="102" alignment="0" attributes="0">
-                  <Group type="103" groupAlignment="1" attributes="0">
-                      <Component id="jButtonPIItemAddToStock" min="-2" max="-2" attributes="0"/>
-                      <Group type="102" attributes="0">
-                          <Group type="103" groupAlignment="1" max="-2" attributes="0">
-                              <Component id="jLabelPIItemNewQty" max="32767" attributes="0"/>
-                              <Component id="jLabelPIItemNewWholeSalePrice" alignment="0" max="32767" attributes="0"/>
-                              <Component id="jLabelPIItemNewDiscount" alignment="0" max="32767" attributes="0"/>
-                              <Component id="jLabelPIItemNewLabelUnitPrice" alignment="0" max="32767" attributes="0"/>
-                              <Component id="jLabelPIItemNewPurchasingUnitPrice" alignment="0" max="32767" attributes="0"/>
-                              <Component id="jLabelPIItemNewSalelUnitPrice" max="32767" attributes="0"/>
-                              <Component id="jLabelPIItemNewExpDate" max="32767" attributes="0"/>
-                          </Group>
-                          <EmptySpace max="-2" attributes="0"/>
-                          <Group type="103" groupAlignment="0" max="-2" attributes="0">
-                              <Component id="jTextFieldPIItmQty" pref="175" max="32767" attributes="0"/>
-                              <Component id="jTextFieldPIItmWholeSalePrice" pref="175" max="32767" attributes="0"/>
-                              <Component id="jTextFieldPIItmLabelSellPrice" pref="175" max="32767" attributes="0"/>
-                              <Component id="jTextFieldPIItmPurchasePrice" pref="175" max="32767" attributes="0"/>
-                              <Component id="jTextFieldPIItmDis" alignment="0" pref="175" max="32767" attributes="0"/>
-                              <Component id="jTextFieldPIItmRetailSellPrice" pref="175" max="32767" attributes="0"/>
-                              <Component id="jDateChooserPIItmExpDate" alignment="0" max="32767" attributes="0"/>
+                  <Group type="103" groupAlignment="0" attributes="0">
+                      <Component id="numberPanel1" min="-2" max="-2" attributes="0"/>
+                      <Group type="103" alignment="0" groupAlignment="1" attributes="0">
+                          <Component id="jButtonPIItemAddToStock" min="-2" max="-2" attributes="0"/>
+                          <Group type="102" attributes="0">
+                              <Group type="103" groupAlignment="1" max="-2" attributes="0">
+                                  <Component id="jLabelPIItemNewQty" max="32767" attributes="0"/>
+                                  <Component id="jLabelPIItemNewWholeSalePrice" alignment="0" max="32767" attributes="0"/>
+                                  <Component id="jLabelPIItemNewDiscount" alignment="0" max="32767" attributes="0"/>
+                                  <Component id="jLabelPIItemNewLabelUnitPrice" alignment="0" max="32767" attributes="0"/>
+                                  <Component id="jLabelPIItemNewPurchasingUnitPrice" alignment="0" max="32767" attributes="0"/>
+                                  <Component id="jLabelPIItemNewSalelUnitPrice" max="32767" attributes="0"/>
+                                  <Component id="jLabelPIItemNewExpDate" max="32767" attributes="0"/>
+                              </Group>
+                              <EmptySpace max="-2" attributes="0"/>
+                              <Group type="103" groupAlignment="0" max="-2" attributes="0">
+                                  <Component id="jTextFieldPIItmQty" pref="175" max="32767" attributes="0"/>
+                                  <Component id="jTextFieldPIItmWholeSalePrice" pref="175" max="32767" attributes="0"/>
+                                  <Component id="jTextFieldPIItmLabelSellPrice" pref="175" max="32767" attributes="0"/>
+                                  <Component id="jTextFieldPIItmPurchasePrice" pref="175" max="32767" attributes="0"/>
+                                  <Component id="jTextFieldPIItmDis" alignment="0" pref="175" max="32767" attributes="0"/>
+                                  <Component id="jTextFieldPIItmRetailSellPrice" pref="175" max="32767" attributes="0"/>
+                                  <Component id="jDateChooserPIItmExpDate" alignment="0" max="32767" attributes="0"/>
+                              </Group>
                           </Group>
                       </Group>
                   </Group>
@@ -525,6 +528,8 @@
                   </Group>
                   <EmptySpace max="-2" attributes="0"/>
                   <Component id="jButtonPIItemAddToStock" min="-2" max="-2" attributes="0"/>
+                  <EmptySpace max="-2" attributes="0"/>
+                  <Component id="numberPanel1" min="-2" max="-2" attributes="0"/>
                   <EmptySpace max="32767" attributes="0"/>
               </Group>
           </Group>
@@ -622,6 +627,9 @@
         </Component>
         <Component class="javax.swing.JButton" name="jButtonPIItemAddToStock">
           <Properties>
+            <Property name="font" type="java.awt.Font" editor="org.netbeans.beaninfo.editors.FontEditor">
+              <Font name="Segoe UI" size="18" style="0"/>
+            </Property>
             <Property name="text" type="java.lang.String" editor="org.netbeans.modules.i18n.form.FormI18nStringEditor">
               <ResourceString bundle="easyPOS/invoice/Bundle.properties" key="PurchasingInvoiceItemPanel.AddToStock" replaceFormat="java.util.ResourceBundle.getBundle(&quot;{bundleNameSlashes}&quot;).getString(&quot;{key}&quot;)"/>
             </Property>
@@ -686,6 +694,8 @@
         </Component>
         <Component class="com.toedter.calendar.JDateChooser" name="jDateChooserPIItmExpDate">
         </Component>
+        <Component class="easyPOS.NumberPanel" name="numberPanel1">
+        </Component>
       </SubComponents>
     </Container>
     <Container class="javax.swing.JPanel" name="jPanel3">
@@ -703,7 +713,7 @@
         <DimensionLayout dim="0">
           <Group type="103" groupAlignment="0" attributes="0">
               <Group type="102" alignment="1" attributes="0">
-                  <EmptySpace pref="145" max="32767" attributes="0"/>
+                  <EmptySpace pref="415" max="32767" attributes="0"/>
                   <Component id="jButton2" min="-2" max="-2" attributes="0"/>
                   <EmptySpace max="-2" attributes="0"/>
                   <Component id="jButton5" min="-2" max="-2" attributes="0"/>
@@ -721,7 +731,7 @@
                       <Component id="jButton5" alignment="0" min="-2" max="-2" attributes="0"/>
                   </Group>
                   <EmptySpace max="-2" attributes="0"/>
-                  <Component id="jScrollPane1" pref="0" max="32767" attributes="0"/>
+                  <Component id="jScrollPane1" max="32767" attributes="0"/>
               </Group>
           </Group>
         </DimensionLayout>

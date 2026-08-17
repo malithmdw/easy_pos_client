@@ -4,9 +4,6 @@ import appDataModels.UserAccountModel;
 import control.MenuItemChangeEvent;
 import control.LoginEvent;
 import control.EventManager;
-import dbOperations.SuppliesDBOperation;
-import dbOperations.LoginDBOperation;
-import dbOperations.SalesDBOperation;
 import com.jtattoo.plaf.aluminium.AluminiumLookAndFeel;
 import control.ApplicationDataManager;
 import control.EasyPosLogger;
@@ -28,10 +25,6 @@ import javax.swing.UIManager;
 import javax.swing.UnsupportedLookAndFeelException;
 
 public class OpenScreen extends javax.swing.JFrame{
-
-    LoginDBOperation logScr = new LoginDBOperation();
-    SuppliesDBOperation supp = new SuppliesDBOperation();
-    SalesDBOperation sdbops = new SalesDBOperation();
 
     private easyPOS.customerdisplay.CustomerScreenFrame customerScreenFrame;
     

@@ -7,11 +7,9 @@ import control.ApplicationDataManager;
 import control.EasyPosLogger;
 import control.RuntimeDataManager;
 import dataModels.SupplierDataModel;
-import dbOperations.StockDBOperation;
 import dbOperations.SupplierDBOperation;
 import java.awt.Font;
 import java.awt.FontFormatException;
-import java.awt.GraphicsEnvironment;
 import java.awt.event.KeyEvent;
 import java.io.IOException;
 import java.util.ArrayList;
@@ -19,12 +17,10 @@ import java.util.List;
 import java.util.concurrent.ExecutionException;
 import javax.swing.DefaultComboBoxModel;
 import javax.swing.JLabel;
-import javax.swing.JOptionPane;
 import javax.swing.JRootPane;
 import javax.swing.SwingWorker;
 import javax.swing.table.DefaultTableCellRenderer;
 import localDatabase.DatabaseManager;
-import serverDataModels.Category;
 import serverDataModels.Item;
 import serverDataModels.ItemStock;
 import easyPOS.localization.ApplicationMessages;
@@ -548,6 +544,7 @@ public class LiveStockPanel extends javax.swing.JPanel {
             
             BarcodeStickerCountWindow barcodeStickerCountWindow = new BarcodeStickerCountWindow();
             barcodeStickerCountWindow.setData(dm, parent.getBarcodeLablePrintPanel());
+            barcodeStickerCountWindow.setDefaultCloseOperation(BarcodeStickerCountWindow.DISPOSE_ON_CLOSE);
             barcodeStickerCountWindow.show();
         }
     }//GEN-LAST:event_jButtonStockBarcodePrintActionPerformed

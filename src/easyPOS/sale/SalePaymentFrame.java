@@ -78,6 +78,10 @@ public class SalePaymentFrame extends javax.swing.JFrame implements control.Lang
         EventManager.getInstance().addNumberPadKeyEventListener(new NumberPadKeyPressListener() {
             @Override
             public void onKeyPressed(NumberPadKeyPressListener.NumberPadButton pressed) {
+                if (!SalePaymentFrame.this.isShowing()) {
+                    return;
+                }
+                
                 if (jTextFieldCashAmt.isFocusOwner()) {
                     if (NumberPadKeyPressListener.NumberPadButton.BUTTON_OK.equals(pressed)) {
                         fireKeyPressEvent(jTextFieldCashAmt);

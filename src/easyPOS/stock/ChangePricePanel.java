@@ -4,6 +4,8 @@ import appDataModels.APIHeaderData;
 import appDataModels.ItemModel;
 import appDataModels.ItemStockModel;
 import control.ApplicationDataManager;
+import control.EventManager;
+import control.NumberPadKeyPressListener;
 import control.RuntimeDataManager;
 import java.awt.Font;
 import java.awt.FontFormatException;
@@ -13,11 +15,11 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 import dataModels.Language;
+import easyPOS.NumberPanel;
 import java.util.Locale;
 import java.util.ResourceBundle;
 import java.util.concurrent.ExecutionException;
 import javax.swing.DefaultComboBoxModel;
-import javax.swing.JLabel;
 import javax.swing.JOptionPane;
 import javax.swing.JRootPane;
 import javax.swing.SwingWorker;
@@ -41,6 +43,49 @@ public class ChangePricePanel extends javax.swing.JPanel implements control.Lang
         initComponents();
         switchLanguage();
         control.EventManager.getInstance().addLanguageChangeListener(this);
+        
+        EventManager.getInstance().addNumberPadKeyEventListener(new NumberPadKeyPressListener() {
+            @Override
+            public void onKeyPressed(NumberPadKeyPressListener.NumberPadButton pressed) {
+                if (!ChangePricePanel.this.isShowing()) {
+                    return;
+                }
+                
+                if (jTextFieldItmCode.isFocusOwner()) {
+                    if (NumberPadKeyPressListener.NumberPadButton.BUTTON_OK.equals(pressed)) {
+                        NumberPanel.fireKeyPressEvent(jTextFieldItmCode);
+                        return;
+                    }
+                    jTextFieldItmCode.setText(NumberPanel.getNum(jTextFieldItmCode.getText(), pressed));
+                    jTextFieldItmCode.setRequestFocusEnabled(true);
+                }else if (jTextFieldNewLabelPrice.isFocusOwner()) {
+                    if (NumberPadKeyPressListener.NumberPadButton.BUTTON_OK.equals(pressed)) {
+                        NumberPanel.fireKeyPressEvent(jTextFieldNewLabelPrice);
+                        return;
+                    }
+                    jTextFieldNewLabelPrice.setText(NumberPanel.getNum(jTextFieldNewLabelPrice.getText(), pressed));
+                }else if (jTextFieldNewDiscount.isFocusOwner()) {
+                    if (NumberPadKeyPressListener.NumberPadButton.BUTTON_OK.equals(pressed)) {
+                        NumberPanel.fireKeyPressEvent(jTextFieldNewDiscount);
+                        return;
+                    }
+                    jTextFieldNewDiscount.setText(NumberPanel.getDouble(jTextFieldNewDiscount.getText(), pressed));
+                }else if (jTextFieldNewSellingPrice.isFocusOwner()) {
+                    if (NumberPadKeyPressListener.NumberPadButton.BUTTON_OK.equals(pressed)) {
+                        NumberPanel.fireKeyPressEvent(jTextFieldNewSellingPrice);
+                        return;
+                    }
+                    jTextFieldNewSellingPrice.setText(NumberPanel.getDouble(jTextFieldNewSellingPrice.getText(), pressed));
+                    jTextFieldNewSellingPrice.setRequestFocusEnabled(true);
+                }else if (jTextFieldNewWholeSalePrice.isFocusOwner()) {
+                    if (NumberPadKeyPressListener.NumberPadButton.BUTTON_OK.equals(pressed)) {
+                        NumberPanel.fireKeyPressEvent(jTextFieldNewWholeSalePrice);
+                        return;
+                    }
+                    jTextFieldNewWholeSalePrice.setText(NumberPanel.getDouble(jTextFieldNewWholeSalePrice.getText(), pressed));
+                }
+            }
+        });
     }
 
     @Override
@@ -168,7 +213,6 @@ public class ChangePricePanel extends javax.swing.JPanel implements control.Lang
         jTextFieldNewSellingPrice = new javax.swing.JTextField();
         jLabelChangePriceNewDis = new javax.swing.JLabel();
         jTextFieldNewDiscount = new javax.swing.JTextField();
-        jButton2 = new javax.swing.JButton();
         jButton1 = new javax.swing.JButton();
         jLabelChangePriceNewlabelPrice = new javax.swing.JLabel();
         jTextFieldNewLabelPrice = new javax.swing.JTextField();
@@ -194,6 +238,8 @@ public class ChangePricePanel extends javax.swing.JPanel implements control.Lang
         jTextFieldInvItmPurchAmount = new javax.swing.JTextField();
         jLabelPIItemExpDate = new javax.swing.JLabel();
         jTextFieldInvItmExp = new javax.swing.JTextField();
+        jButton2 = new javax.swing.JButton();
+        numberPanel1 = new easyPOS.NumberPanel();
 
         java.util.ResourceBundle bundle = java.util.ResourceBundle.getBundle("easyPOS/stock/Bundle"); // NOI18N
         jPanel2.setBorder(javax.swing.BorderFactory.createTitledBorder(bundle.getString("StockItemForm.jPanel2.border.title"))); // NOI18N
@@ -282,7 +328,7 @@ public class ChangePricePanel extends javax.swing.JPanel implements control.Lang
         jPanel3.setBorder(javax.swing.BorderFactory.createTitledBorder(bundle.getString("StockItemForm.jPanel2.border.title"))); // NOI18N
 
         jLabelChangePriceNewWSPrice.setFont(new java.awt.Font("Tahoma", 0, 18)); // NOI18N
-        jLabelChangePriceNewWSPrice.setHorizontalAlignment(javax.swing.SwingConstants.RIGHT);
+        jLabelChangePriceNewWSPrice.setHorizontalAlignment(javax.swing.SwingConstants.LEFT);
         jLabelChangePriceNewWSPrice.setText(bundle.getString("ChangePricePanel.jLabel33.text")); // NOI18N
 
         jTextFieldNewWholeSalePrice.setBackground(new java.awt.Color(204, 204, 255));
@@ -295,7 +341,7 @@ public class ChangePricePanel extends javax.swing.JPanel implements control.Lang
         });
 
         jLabelChangePriceNewSellPrice.setFont(new java.awt.Font("Tahoma", 0, 18)); // NOI18N
-        jLabelChangePriceNewSellPrice.setHorizontalAlignment(javax.swing.SwingConstants.RIGHT);
+        jLabelChangePriceNewSellPrice.setHorizontalAlignment(javax.swing.SwingConstants.LEFT);
         jLabelChangePriceNewSellPrice.setText(bundle.getString("ChangePricePanel.jLabel28.text")); // NOI18N
 
         jTextFieldNewSellingPrice.setBackground(new java.awt.Color(204, 204, 255));
@@ -313,7 +359,7 @@ public class ChangePricePanel extends javax.swing.JPanel implements control.Lang
         });
 
         jLabelChangePriceNewDis.setFont(new java.awt.Font("Tahoma", 0, 18)); // NOI18N
-        jLabelChangePriceNewDis.setHorizontalAlignment(javax.swing.SwingConstants.RIGHT);
+        jLabelChangePriceNewDis.setHorizontalAlignment(javax.swing.SwingConstants.LEFT);
         jLabelChangePriceNewDis.setText(bundle.getString("ChangePricePanel.jLabel46.text")); // NOI18N
 
         jTextFieldNewDiscount.setBackground(new java.awt.Color(204, 204, 255));
@@ -325,13 +371,7 @@ public class ChangePricePanel extends javax.swing.JPanel implements control.Lang
             }
         });
 
-        jButton2.setText("Cancel");
-        jButton2.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jButton2ActionPerformed(evt);
-            }
-        });
-
+        jButton1.setFont(new java.awt.Font("Segoe UI", 0, 18)); // NOI18N
         jButton1.setText("Save");
         jButton1.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -340,7 +380,7 @@ public class ChangePricePanel extends javax.swing.JPanel implements control.Lang
         });
 
         jLabelChangePriceNewlabelPrice.setFont(new java.awt.Font("Tahoma", 0, 18)); // NOI18N
-        jLabelChangePriceNewlabelPrice.setHorizontalAlignment(javax.swing.SwingConstants.RIGHT);
+        jLabelChangePriceNewlabelPrice.setHorizontalAlignment(javax.swing.SwingConstants.LEFT);
         jLabelChangePriceNewlabelPrice.setText(bundle.getString("ChangePricePanel.jLabel33.text")); // NOI18N
 
         jTextFieldNewLabelPrice.setBackground(new java.awt.Color(204, 204, 255));
@@ -357,57 +397,42 @@ public class ChangePricePanel extends javax.swing.JPanel implements control.Lang
         jPanel3Layout.setHorizontalGroup(
             jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel3Layout.createSequentialGroup()
-                .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(jPanel3Layout.createSequentialGroup()
+                .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
+                    .addComponent(jTextFieldNewLabelPrice, javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(jLabelChangePriceNewlabelPrice, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addGroup(javax.swing.GroupLayout.Alignment.LEADING, jPanel3Layout.createSequentialGroup()
                         .addContainerGap()
-                        .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addGroup(jPanel3Layout.createSequentialGroup()
-                                .addComponent(jLabelChangePriceNewDis, javax.swing.GroupLayout.PREFERRED_SIZE, 164, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                .addComponent(jTextFieldNewDiscount, javax.swing.GroupLayout.PREFERRED_SIZE, 250, javax.swing.GroupLayout.PREFERRED_SIZE))
-                            .addGroup(jPanel3Layout.createSequentialGroup()
-                                .addComponent(jLabelChangePriceNewSellPrice, javax.swing.GroupLayout.PREFERRED_SIZE, 164, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                .addComponent(jTextFieldNewSellingPrice, javax.swing.GroupLayout.PREFERRED_SIZE, 250, javax.swing.GroupLayout.PREFERRED_SIZE)))
-                        .addGap(0, 0, Short.MAX_VALUE))
-                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel3Layout.createSequentialGroup()
-                        .addGap(0, 0, Short.MAX_VALUE)
-                        .addComponent(jButton1)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(jButton2))
-                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel3Layout.createSequentialGroup()
-                        .addComponent(jLabelChangePriceNewWSPrice, javax.swing.GroupLayout.PREFERRED_SIZE, 170, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(jTextFieldNewWholeSalePrice))
-                    .addGroup(jPanel3Layout.createSequentialGroup()
-                        .addComponent(jLabelChangePriceNewlabelPrice, javax.swing.GroupLayout.PREFERRED_SIZE, 170, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(jTextFieldNewLabelPrice)))
-                .addContainerGap())
+                        .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                            .addComponent(jLabelChangePriceNewDis, javax.swing.GroupLayout.DEFAULT_SIZE, 164, Short.MAX_VALUE)
+                            .addComponent(jLabelChangePriceNewSellPrice, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                            .addComponent(jLabelChangePriceNewWSPrice, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                            .addComponent(jTextFieldNewWholeSalePrice)
+                            .addComponent(jTextFieldNewSellingPrice)
+                            .addComponent(jTextFieldNewDiscount)
+                            .addComponent(jButton1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))))
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
         jPanel3Layout.setVerticalGroup(
             jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel3Layout.createSequentialGroup()
                 .addContainerGap()
-                .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(jLabelChangePriceNewlabelPrice, javax.swing.GroupLayout.PREFERRED_SIZE, 40, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(jTextFieldNewLabelPrice, javax.swing.GroupLayout.PREFERRED_SIZE, 40, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addComponent(jLabelChangePriceNewlabelPrice, javax.swing.GroupLayout.PREFERRED_SIZE, 40, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(jLabelChangePriceNewDis, javax.swing.GroupLayout.PREFERRED_SIZE, 40, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(jTextFieldNewDiscount, javax.swing.GroupLayout.PREFERRED_SIZE, 40, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addComponent(jTextFieldNewLabelPrice, javax.swing.GroupLayout.PREFERRED_SIZE, 40, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addComponent(jLabelChangePriceNewDis, javax.swing.GroupLayout.PREFERRED_SIZE, 40, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(jLabelChangePriceNewSellPrice, javax.swing.GroupLayout.PREFERRED_SIZE, 40, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(jTextFieldNewSellingPrice, javax.swing.GroupLayout.PREFERRED_SIZE, 40, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addComponent(jTextFieldNewDiscount, javax.swing.GroupLayout.PREFERRED_SIZE, 40, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addComponent(jLabelChangePriceNewSellPrice, javax.swing.GroupLayout.PREFERRED_SIZE, 40, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(jLabelChangePriceNewWSPrice, javax.swing.GroupLayout.PREFERRED_SIZE, 40, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(jTextFieldNewWholeSalePrice, javax.swing.GroupLayout.PREFERRED_SIZE, 40, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addComponent(jTextFieldNewSellingPrice, javax.swing.GroupLayout.PREFERRED_SIZE, 40, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addComponent(jLabelChangePriceNewWSPrice, javax.swing.GroupLayout.PREFERRED_SIZE, 40, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(jButton1)
-                    .addComponent(jButton2))
+                .addComponent(jTextFieldNewWholeSalePrice, javax.swing.GroupLayout.PREFERRED_SIZE, 40, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(18, 18, 18)
+                .addComponent(jButton1)
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
 
@@ -550,6 +575,14 @@ public class ChangePricePanel extends javax.swing.JPanel implements control.Lang
         jTextFieldInvItmExp.setFont(new java.awt.Font("Tahoma", 0, 20)); // NOI18N
         jTextFieldInvItmExp.setHorizontalAlignment(javax.swing.JTextField.RIGHT);
 
+        jButton2.setFont(new java.awt.Font("Segoe UI", 0, 18)); // NOI18N
+        jButton2.setText("Cancel");
+        jButton2.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jButton2ActionPerformed(evt);
+            }
+        });
+
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(this);
         this.setLayout(layout);
         layout.setHorizontalGroup(
@@ -569,31 +602,33 @@ public class ChangePricePanel extends javax.swing.JPanel implements control.Lang
                     .addComponent(jLabelPIItemDiscount, javax.swing.GroupLayout.PREFERRED_SIZE, 198, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addGap(10, 10, 10)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                        .addComponent(jTextFieldInvItmItmDis, javax.swing.GroupLayout.Alignment.TRAILING)
+                        .addComponent(jTextFieldPIItmLablePrice, javax.swing.GroupLayout.Alignment.TRAILING)
+                        .addComponent(jTextFieldInvItmItmName2)
+                        .addComponent(jTextFieldInvItemItmName)
                         .addGroup(layout.createSequentialGroup()
-                            .addGap(0, 0, Short.MAX_VALUE)
-                            .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                                .addComponent(jTextFieldInvItmItmName2)
-                                .addComponent(jTextFieldInvItemItmName)
-                                .addGroup(layout.createSequentialGroup()
-                                    .addComponent(jTextFieldItmCode, javax.swing.GroupLayout.PREFERRED_SIZE, 141, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                    .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                    .addComponent(jButtonInvItemSearch))
-                                .addComponent(jComboBoxPIItemBatches, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                                .addComponent(jTextFieldInvItmAvailQty)
-                                .addComponent(jTextFieldInvItmWholesalePrice)
-                                .addComponent(jTextFieldInvItmUnitPrice, javax.swing.GroupLayout.PREFERRED_SIZE, 228, javax.swing.GroupLayout.PREFERRED_SIZE)))
-                        .addComponent(jTextFieldPIItmLablePrice, javax.swing.GroupLayout.Alignment.LEADING)
-                        .addComponent(jTextFieldInvItmItmDis, javax.swing.GroupLayout.Alignment.LEADING)
-                        .addComponent(jTextFieldInvItmExp, javax.swing.GroupLayout.Alignment.LEADING))
-                    .addComponent(jTextFieldInvItmPurchAmount, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, 228, javax.swing.GroupLayout.PREFERRED_SIZE))
+                            .addComponent(jTextFieldItmCode)
+                            .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                            .addComponent(jButtonInvItemSearch))
+                        .addComponent(jComboBoxPIItemBatches, 0, 228, Short.MAX_VALUE)
+                        .addComponent(jTextFieldInvItmAvailQty)
+                        .addComponent(jTextFieldInvItmWholesalePrice)
+                        .addComponent(jTextFieldInvItmUnitPrice, javax.swing.GroupLayout.Alignment.TRAILING))
+                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                        .addComponent(jTextFieldInvItmExp, javax.swing.GroupLayout.Alignment.TRAILING)
+                        .addComponent(jTextFieldInvItmPurchAmount, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, 228, Short.MAX_VALUE)))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(jPanel3, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                    .addComponent(jButton2, javax.swing.GroupLayout.PREFERRED_SIZE, 132, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addGroup(layout.createSequentialGroup()
+                        .addComponent(jPanel3, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(numberPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))))
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
+            .addGroup(layout.createSequentialGroup()
                 .addContainerGap()
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(layout.createSequentialGroup()
@@ -619,28 +654,34 @@ public class ChangePricePanel extends javax.swing.JPanel implements control.Lang
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                             .addComponent(jTextFieldInvItmItmDis, javax.swing.GroupLayout.PREFERRED_SIZE, 36, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addComponent(jLabelPIItemDiscount, javax.swing.GroupLayout.PREFERRED_SIZE, 31, javax.swing.GroupLayout.PREFERRED_SIZE)))
-                    .addComponent(jPanel3, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(jTextFieldInvItmUnitPrice, javax.swing.GroupLayout.PREFERRED_SIZE, 36, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(jLabelPIItemSaleUnitPrice, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(jTextFieldInvItmWholesalePrice, javax.swing.GroupLayout.PREFERRED_SIZE, 36, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(jLabelPIItemWholeSalePrice))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(jTextFieldInvItmAvailQty, javax.swing.GroupLayout.PREFERRED_SIZE, 36, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(jLabelPIItemQtyAvail))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(jTextFieldInvItmPurchAmount, javax.swing.GroupLayout.PREFERRED_SIZE, 36, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(jLabelPIItemPurchasingUnitPrice))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(jTextFieldInvItmExp, javax.swing.GroupLayout.PREFERRED_SIZE, 36, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(jLabelPIItemExpDate))
+                            .addComponent(jLabelPIItemDiscount, javax.swing.GroupLayout.PREFERRED_SIZE, 31, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                            .addComponent(jTextFieldInvItmUnitPrice, javax.swing.GroupLayout.PREFERRED_SIZE, 36, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(jLabelPIItemSaleUnitPrice, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                            .addComponent(jTextFieldInvItmWholesalePrice, javax.swing.GroupLayout.PREFERRED_SIZE, 36, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(jLabelPIItemWholeSalePrice))
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                            .addComponent(jTextFieldInvItmAvailQty, javax.swing.GroupLayout.PREFERRED_SIZE, 36, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(jLabelPIItemQtyAvail))
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                            .addComponent(jTextFieldInvItmPurchAmount, javax.swing.GroupLayout.PREFERRED_SIZE, 36, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(jLabelPIItemPurchasingUnitPrice))
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                            .addComponent(jTextFieldInvItmExp, javax.swing.GroupLayout.PREFERRED_SIZE, 36, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(jLabelPIItemExpDate)))
+                    .addGroup(layout.createSequentialGroup()
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                            .addComponent(jButton2)
+                            .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                .addComponent(numberPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addComponent(jPanel3, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                        .addGap(0, 0, Short.MAX_VALUE)))
                 .addContainerGap())
         );
     }// </editor-fold>//GEN-END:initComponents
@@ -829,6 +870,7 @@ public class ChangePricePanel extends javax.swing.JPanel implements control.Lang
     private javax.swing.JTextField jTextFieldNewSellingPrice;
     private javax.swing.JTextField jTextFieldNewWholeSalePrice;
     private javax.swing.JTextField jTextFieldPIItmLablePrice;
+    private easyPOS.NumberPanel numberPanel1;
     // End of variables declaration//GEN-END:variables
 
     private void clearItemData(){

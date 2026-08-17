@@ -154,6 +154,9 @@ public class SaleInvoiceJPanel extends javax.swing.JPanel implements control.Lan
         EventManager.getInstance().addNumberPadKeyEventListener(new NumberPadKeyPressListener() {
             @Override
             public void onKeyPressed(NumberPadKeyPressListener.NumberPadButton pressed) {
+                if (!SaleInvoiceJPanel.this.isShowing()) {
+                    return;
+                }
                 if (jTextFieldCustNo.isFocusOwner()) {
                     if (NumberPadKeyPressListener.NumberPadButton.BUTTON_OK.equals(pressed)) {
                         fireKeyPressEvent(jTextFieldCustNo);

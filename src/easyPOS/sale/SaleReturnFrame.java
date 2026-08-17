@@ -69,6 +69,10 @@ public class SaleReturnFrame extends javax.swing.JFrame implements control.Langu
         EventManager.getInstance().addNumberPadKeyEventListener(new NumberPadKeyPressListener() {
             @Override
             public void onKeyPressed(NumberPadKeyPressListener.NumberPadButton pressed) {
+                if (!SaleReturnFrame.this.isShowing()) {
+                    return;
+                }
+                
                 if (salereturnSaleInvoiceNoTextField.isFocusOwner()) {
                     if (NumberPadKeyPressListener.NumberPadButton.BUTTON_OK.equals(pressed)) {
                         fireKeyPressEvent(salereturnSaleInvoiceNoTextField);

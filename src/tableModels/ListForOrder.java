@@ -2,7 +2,6 @@
 package tableModels;
 
 import dataModels.StockItemDataModel;
-import dbOperations.ItemMovement;
 import java.text.DecimalFormat;
 import java.util.ArrayList;
 import javax.swing.table.AbstractTableModel;
@@ -10,7 +9,6 @@ import javax.swing.table.AbstractTableModel;
 
 public class ListForOrder extends AbstractTableModel{
     DecimalFormat df=new DecimalFormat("#0.00");
-    ItemMovement im=new ItemMovement();
     
     private static final String[] COLUMN_NAMES={"  ","Item Code","Item Name","Sub Name","Category","Unit Price","Discount","Available Stock","purchase price","Exp Date","supplier 1","supplier 2","coment","Last Month Selling Rate","Avg Selling Rate of 3 months","This month Selling"};
     private static ArrayList<StockItemDataModel> list;

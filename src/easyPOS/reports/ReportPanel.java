@@ -6,8 +6,6 @@ import control.ApplicationDataManager;
 import control.EasyPosLogger;
 import control.RuntimeDataManager;
 import dataModels.Language;
-import dataModels.SaleDataModel;
-import dbOperations.SalesDBOperation;
 import java.awt.Font;
 import java.awt.FontFormatException;
 import java.awt.GraphicsEnvironment;
@@ -35,13 +33,6 @@ import webService.ServerAPIConnection;
  * @author malit
  */
 public class ReportPanel extends javax.swing.JPanel implements control.LanguageChangeListener {
-
-    ArrayList<SaleDataModel> allSalesList;
-    ArrayList<SaleDataModel> dailySalesList;
-    ArrayList<SaleDataModel> monthlySalesList;
-    ArrayList<SaleDataModel> annualSalesList;
-
-    SalesDBOperation sdbops = new SalesDBOperation();
 
     private List<OnlineOrder> currentOrders = new ArrayList<>();
     
