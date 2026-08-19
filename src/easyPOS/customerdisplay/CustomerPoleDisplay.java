@@ -61,28 +61,27 @@ public class CustomerPoleDisplay {
 
     /**
      * line2 is accepted for backwards compatibility but IGNORED — an LED8 has a
-     * single numeric field. Only line1's numeric content is displayed.
+     * single numeric field.Only line1's numeric content is displayed.
+     * @param port
+     * @param line
      */
     public void initializePortAndSendData(String port, String line) {
         // Serial I/O blocks, so it must never run on the caller's thread (typically the
         // Swing EDT) - queue it on the single writer thread instead.
-        
-        // TEMPEROARY DISABLED
-//        queue.offer(new Runnable() {
-//            @Override
-//            public void run() {
-//                writeToDisplay(port, line);
-//            }
-//        });
+        if (port != null && !port.isEmpty()) {
+            queue.offer((Runnable) () -> {
+                writeToDisplay(port, line);
+            });
+        }
     }
 
     /**
-     * Sends the startup / idle value ("0"). Call this once when the app opens,
-     * after the display finishes its power-on self-test (the "8.8.8.8.8.8.8.8"
-     * all-segments flash).
+     * Sends the startup / idle value ("0").Call this once when the app opens,
+     * after the display finishes its power-on self-test (the "8.8.8.8.8.8.8.8" all-segments flash).
+     * @param port
      */
     public void showStartupValue(String port) {
-        initializePortAndSendData(port, "0");
+        initializePortAndSendData(port, "0.00");
     }
 
     private void writeToDisplay(String port, String value) {
@@ -98,9 +97,6 @@ public class CustomerPoleDisplay {
         comPort.setParity(SerialPort.NO_PARITY);
         // Block until the bytes are actually handed to the device.
         comPort.setComPortTimeouts(SerialPort.TIMEOUT_WRITE_BLOCKING, 0, 0);
-
-        EasyPosLogger.getInstance().log(EasyPosLogger.LogLevel.INFO,
-                "Customer Pole Display Opening port: " + comPort.getSystemPortName());
 
         if (comPort.openPort()) {
             try (OutputStream out = comPort.getOutputStream()) {

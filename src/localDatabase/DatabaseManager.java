@@ -98,9 +98,9 @@ public class DatabaseManager {
             "email TEXT NOT NULL," +
             "phone TEXT NOT NULL," +
             "password TEXT NOT NULL," +
-            "password_hint TEXT NOT NULL," +
+            "password_hint TEXT," +
             "hint_type INTEGER NOT NULL," +
-            "note TEXT NOT NULL," +
+            "note TEXT," +
             "status INTEGER NOT NULL," +
             "force_password_change INTEGER NOT NULL DEFAULT 0" +
             ");",
@@ -116,10 +116,10 @@ public class DatabaseManager {
             "category_id INTEGER PRIMARY KEY AUTOINCREMENT," +
             "institute_id INTEGER NOT NULL," +
             "cat_name TEXT NOT NULL," +
-            "cat_name_sin TEXT NOT NULL," +
-            "cat_name_tam TEXT NOT NULL," +
+            "cat_name_sin TEXT," +
+            "cat_name_tam TEXT," +
             "image TEXT," +
-            "description TEXT NOT NULL," +
+            "description TEXT," +
             "trspp REAL," +
             "twspp REAL," +
             "enable INTEGER NOT NULL" +
@@ -148,21 +148,21 @@ public class DatabaseManager {
             "primary_db_table TEXT NOT NULL," +
             "pk_column_name INTEGER NOT NULL," +
             "pk_value TEXT NOT NULL," +
-            "description TEXT NOT NULL," +
+            "description TEXT," +
             "is_synched INTEGER NOT NULL" +
             ");",
 
             "CREATE TABLE IF NOT EXISTS measure_unit (" +
             "measure_unit_id INTEGER PRIMARY KEY AUTOINCREMENT," +
             "unit_name_eng TEXT NOT NULL," +
-            "unit_name_sin TEXT NOT NULL," +
-            "unit_name_tam TEXT NOT NULL," +
-            "description TEXT NOT NULL" +
+            "unit_name_sin TEXT," +
+            "unit_name_tam TEXT," +
+            "description TEXT" +
             ");",
 
             "CREATE TABLE IF NOT EXISTS institute (" +
             "institute_id INTEGER PRIMARY KEY AUTOINCREMENT," +
-            "business_name TEXT NOT NULL," +
+            "business_name TEXT," +
             "description TEXT," +
             "print_business_name TEXT," +
             "print_business_sub_name TEXT," +
@@ -180,7 +180,7 @@ public class DatabaseManager {
             "data_id INTEGER PRIMARY KEY AUTOINCREMENT," +
             "key TEXT NOT NULL," +
             "value TEXT NOT NULL," +
-            "description TEXT NOT NULL" +
+            "description TEXT" +
             ");",
             
             "CREATE TABLE IF NOT EXISTS item (" +
@@ -188,16 +188,16 @@ public class DatabaseManager {
             "institute_id INTEGER NOT NULL," +
             "barcode TEXT NOT NULL," +
             "item_name TEXT NOT NULL," +
-            "item_name_sin TEXT NOT NULL," +
-            "item_name_tam TEXT NOT NULL," +
+            "item_name_sin TEXT," +
+            "item_name_tam TEXT," +
             "category_id INTEGER NOT NULL," +
             "measure_unit_id INTEGER NOT NULL," +
-            "image_name TEXT NOT NULL," +
+            "image_name TEXT," +
             "minimum_stock REAL NOT NULL," +
             "added_by TEXT NOT NULL," +
             "added_date_time TEXT NOT NULL," +
-            "modified_by TEXT NOT NULL," +
-            "modified_date_time TEXT NOT NULL," +
+            "modified_by TEXT," +
+            "modified_date_time TEXT," +
             "is_active INTEGER NOT NULL" +
             ");",
             
@@ -209,10 +209,10 @@ public class DatabaseManager {
             "quantity_available REAL NOT NULL," +
             "purchasing_price REAL NOT NULL," +
             "label_price REAL NOT NULL," +
-            "discount REAL NOT NULL," +
+            "discount REAL," +
             "selling_price REAL NOT NULL," +
-            "wholesale_price REAL NOT NULL," +
-            "expiry_date TEXT NOT NULL," +
+            "wholesale_price REAL," +
+            "expiry_date TEXT," +
             "is_active INTEGER NOT NULL" + 
             ");",
 
@@ -248,9 +248,9 @@ public class DatabaseManager {
             "selling_price REAL NOT NULL," +
             "discount REAL NOT NULL," +
             "billing_price REAL NOT NULL," +
-            "net_amount REAL NOT NULL," +
-            "cost_for_unit REAL NOT NULL," +
-            "total_cost REAL NOT NULL," +
+            "net_amount REAL," +
+            "cost_for_unit REAL," +
+            "total_cost REAL," +
             "status TEXT NOT NULL" +
             ");"
     };
