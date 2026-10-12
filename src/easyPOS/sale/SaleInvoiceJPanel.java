@@ -258,6 +258,8 @@ public class SaleInvoiceJPanel extends javax.swing.JPanel implements control.Lan
         }
         
         if (itemModel == null) {
+            jTextFieldItmCode.setText(""); // To fix the append barcode by scanner for item not found.
+            jTextFieldItmCode.requestFocus();
             EasyPOSMessageDialog.showLocalizedError(null, ApplicationMessages.ERROR_ITEM_NOT_FOUND);
         }
         else if (itemModel.getStock().isEmpty()) {
@@ -1634,7 +1636,13 @@ public class SaleInvoiceJPanel extends javax.swing.JPanel implements control.Lan
     private void jTextFieldQtyKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_jTextFieldQtyKeyPressed
         if(evt.getKeyCode()==KeyEvent.VK_ENTER && !jTextFieldItmCode.getText().isEmpty())
         {
-            validateAndAddToBill();
+            if (jTextFieldQty.getText().length() > 4) {
+                // Not a valid input - may be a barcode reading data
+                jTextFieldQty.setText(jTextFieldQty.getText().substring(0, 3));
+                jTextFieldQty.requestFocus();
+            }else{
+                validateAndAddToBill();
+            }            
         }else if(evt.getKeyCode()==KeyEvent.VK_LEFT){
             jTextFieldItmName1.requestFocus();//move cursor
         }else if(evt.getKeyCode()==KeyEvent.VK_RIGHT){
