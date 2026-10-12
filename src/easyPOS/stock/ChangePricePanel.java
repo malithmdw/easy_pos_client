@@ -44,6 +44,7 @@ public class ChangePricePanel extends javax.swing.JPanel implements control.Lang
         switchLanguage();
         control.EventManager.getInstance().addLanguageChangeListener(this);
         
+        numberPanel1.setButtonInvisible(NumberPadKeyPressListener.NumberPadButton.BUTTON_OK);
         EventManager.getInstance().addNumberPadKeyEventListener(new NumberPadKeyPressListener() {
             @Override
             public void onKeyPressed(NumberPadKeyPressListener.NumberPadButton pressed) {

@@ -60,6 +60,7 @@ public class Customer extends javax.swing.JPanel implements control.LanguageChan
     public Customer() {
         initComponents();
         switchLanguage();
+        numberPanel1.setButtonInvisible(NumberPadKeyPressListener.NumberPadButton.BUTTON_OK);
         customerDetailsPanel.setVisible(false);
         customerTransactionsPanel.setVisible(false);
         jPanelCustPayment.setVisible(false);

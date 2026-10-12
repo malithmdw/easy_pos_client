@@ -2,6 +2,7 @@ package easyPOS;
 
 import control.EventManager;
 import control.NumberPadKeyPressListener;
+import control.NumberPadKeyPressListener.NumberPadButton;
 import java.awt.event.KeyEvent;
 
 /**
@@ -28,6 +29,52 @@ public class NumberPanel extends javax.swing.JPanel {
         jButtonNumPanel0.setFocusable(false);  // prevents stealing focus
         jButtonNumPanelDot.setFocusable(false);  // prevents stealing focus
         jButtonNumPanelBackSpace.setFocusable(false);  // prevents stealing focus
+    }
+    
+    public void setButtonInvisible(NumberPadButton button){
+        switch (button) {
+            case BUTTON_1:
+                jButtonNumPanel1.setVisible(false);
+                break;
+            case BUTTON_2:
+                jButtonNumPanel2.setVisible(false);
+                break;
+            case BUTTON_3:
+                jButtonNumPanel3.setVisible(false);
+                break;
+            case BUTTON_4:
+                jButtonNumPanel4.setVisible(false);
+                break;
+            case BUTTON_5:
+                jButtonNumPanel5.setVisible(false);
+                break;
+            case BUTTON_6:
+                jButtonNumPanel6.setVisible(false);
+                break;
+            case BUTTON_7:
+                jButtonNumPanel7.setVisible(false);
+                break;
+            case BUTTON_8:
+                jButtonNumPanel8.setVisible(false);
+                break;
+            case BUTTON_9:
+                jButtonNumPanel9.setVisible(false);
+                break;
+            case BUTTON_0:
+                jButtonNumPanel0.setVisible(false);
+                break;
+            case BUTTON_DOT:
+                jButtonNumPanelDot.setVisible(false);
+                break;
+            case BUTTON_BACK:
+                jButtonNumPanelBackSpace.setVisible(false);
+                break;
+            case BUTTON_OK:
+                jButtonNumPanelOK.setVisible(false);
+                break;
+            default:
+                break;
+        }
     }
     
       

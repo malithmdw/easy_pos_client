@@ -1,6 +1,8 @@
  package tableModels;
 
+import control.ApplicationDataManager;
 import dataModels.BillItemDataModel;
+import static dataModels.Language.SINHALA;
 import java.text.DecimalFormat;
 import java.util.List;
 import javax.swing.table.AbstractTableModel;
@@ -27,6 +29,19 @@ public class SaleInvoiceItemTbl extends AbstractTableModel{
     public int getColumnCount() {
         return COLUMN_NAMES.length;
     }
+    
+    private String getItemNameBySelectedAppLanguage(BillItemDataModel bidm){
+        switch (ApplicationDataManager.getInstance().getApplicationLanguage()) {
+            case ENGLISH:
+                return bidm.getItemName();
+            case SINHALA:
+                return bidm.getItemNameSin();
+            case TAMIL:
+                return bidm.getItemNameTam();
+            default:
+                return bidm.getItemName();
+        }
+    }
 
     @Override
     public Object getValueAt(int rowIndex, int columnIndex) {
@@ -36,7 +51,7 @@ public class SaleInvoiceItemTbl extends AbstractTableModel{
             case 1:
                 return billItemList.get(rowIndex).getItemId();
             case 2:
-                return billItemList.get(rowIndex).getItemName();
+                return getItemNameBySelectedAppLanguage(billItemList.get(rowIndex));
             case 3:
                 return df.format(billItemList.get(rowIndex).getUnitPrice());
             case 4:

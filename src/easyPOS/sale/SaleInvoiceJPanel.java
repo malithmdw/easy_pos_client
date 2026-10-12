@@ -54,6 +54,10 @@ import util.DateTimeUtil;
 import util.GeneralUtil;
 import webService.ServerAPIConnection;
 import easyPOS.localization.ApplicationMessages;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+import javax.swing.table.TableColumn;
+import tableModels.CustomFontTableCellRenderer;
 
 /**
  *
@@ -443,6 +447,20 @@ public class SaleInvoiceJPanel extends javax.swing.JPanel implements control.Lan
         }
         
         jTableSaleToBill.setRowHeight(35);
+        
+        // Set sinhala tamil font for item name cell font
+        TableColumn column = jTableSaleToBill.getColumnModel().getColumn(2);
+        Font sinhalaFont;
+        
+        try {
+            sinhalaFont = Font.createFont(Font.TRUETYPE_FONT,
+                    ApplicationDataManager.getInstance().getSinhalaFontFile()).deriveFont(18f);
+            // Assign the custom renderer to that column
+            column.setCellRenderer(new CustomFontTableCellRenderer(sinhalaFont));
+        } catch (FontFormatException | IOException ex) {
+            Logger.getLogger(SaleInvoiceJPanel.class.getName()).log(Level.SEVERE, null, ex);
+        }
+
         pushToCustomerDisplay();
     }
 

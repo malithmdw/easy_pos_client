@@ -29,6 +29,7 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.swing.JTable;
 import javax.swing.table.TableColumn;
+import serverDataModels.MeasureUnit;
 import serverResponseDataModel.CommonResponse;
 import uiUtil.EasyPOSMessageDialog;
 import tableModels.LiveStockBatchTbl;
@@ -88,11 +89,18 @@ public class LiveStockPanel extends javax.swing.JPanel {
                         // Load table
                         itemDataList = (ArrayList<Item>) response.getData();
                         List<CategoryModel> categorys = DatabaseManager.getInstance().getCategories();
+                        List<MeasureUnit> measureUnits = DatabaseManager.getInstance().getMeasureUnits();
                         
                         for (Item item : itemDataList) {
                             for (CategoryModel category : categorys) {
                                 if (category.getCategoryId() == item.category_id) {
                                     item.category = category.newCategoryDTO();
+                                    break;
+                                }
+                            }
+                            for (MeasureUnit measureUnit : measureUnits) {
+                                if (measureUnit.measure_unit_id == item.measure_unit_id) {
+                                    item.measureUnit = measureUnit;
                                     break;
                                 }
                             }
