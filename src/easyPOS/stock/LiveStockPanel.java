@@ -24,13 +24,16 @@ import localDatabase.DatabaseManager;
 import serverDataModels.Item;
 import serverDataModels.ItemStock;
 import easyPOS.localization.ApplicationMessages;
+import easyPOS.sale.SaleInvoiceJPanel;
 import java.awt.Component;
+import java.awt.print.PrinterException;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.swing.JTable;
 import javax.swing.table.TableColumn;
 import serverDataModels.MeasureUnit;
 import serverResponseDataModel.CommonResponse;
+import tableModels.CustomFontTableCellRenderer;
 import uiUtil.EasyPOSMessageDialog;
 import tableModels.LiveStockBatchTbl;
 import tableModels.LiveStockItemTbl;
@@ -47,7 +50,9 @@ public class LiveStockPanel extends javax.swing.JPanel {
     
     private StockPanel parent;
     private List<Item> itemDataList;
+    private List<Item> filteredItemDataList;
     private ArrayList<SupplierDataModel> allActiveSuppliers;
+    List<CategoryModel> categorys;
     
     /**
      * Creates new form StockItemListPanel
@@ -58,8 +63,21 @@ public class LiveStockPanel extends javax.swing.JPanel {
     
     public void loadInitialDataToUI(StockPanel parent)
     {
-        this.parent = parent;
+        this.parent = parent;        
+        this.categorys = DatabaseManager.getInstance().getCategories();
+        loadCategoryDropdown();
         getAndLoadAllLiveStock();
+        
+        // Change Combobox font
+        Font sinhalaFont;
+        
+        try {
+            sinhalaFont = Font.createFont(Font.TRUETYPE_FONT,
+                    ApplicationDataManager.getInstance().getSinhalaFontFile()).deriveFont(18f);
+            jComboBoxSearchItem.setFont(sinhalaFont);
+        } catch (FontFormatException | IOException ex) {
+            Logger.getLogger(SaleInvoiceJPanel.class.getName()).log(Level.SEVERE, null, ex);
+        }
     }
     
     private void getAndLoadAllLiveStock() {        
@@ -105,7 +123,7 @@ public class LiveStockPanel extends javax.swing.JPanel {
                                 }
                             }
                         }
-                        loadStockTable();
+                        loadStockTable(itemDataList);
                         
                     } else {
                         EasyPOSMessageDialog.showErrorMessageDialog(LiveStockPanel.this.getRootPane(), response.getAPIResponse());
@@ -122,8 +140,8 @@ public class LiveStockPanel extends javax.swing.JPanel {
         worker.execute();
     }
 
-    private void loadStockTable() {
-        LiveStockItemTbl stoLTbl = new LiveStockItemTbl(itemDataList);
+    private void loadStockTable(List<Item> itmList) {
+        LiveStockItemTbl stoLTbl = new LiveStockItemTbl(itmList);
         jTableCurStockItems.setModel(stoLTbl);
         DefaultTableCellRenderer rightRenderer=new DefaultTableCellRenderer();
         rightRenderer.setHorizontalAlignment(JLabel.RIGHT);
@@ -164,7 +182,7 @@ public class LiveStockPanel extends javax.swing.JPanel {
         } catch (FontFormatException | IOException ex) {
             Logger.getLogger(LiveStockPanel.class.getName()).log(Level.SEVERE, null, ex);
         }
-        if(!itemDataList.isEmpty())
+        if(!itmList.isEmpty())
             jTableCurStockItems.setRowSelectionInterval(0, 0);
     }
     
@@ -189,18 +207,31 @@ public class LiveStockPanel extends javax.swing.JPanel {
         jTableLiveStockItemBatches.setRowHeight(35);
     }
         
-    private void loadSuppliersToDropdown() {
-        allActiveSuppliers = supplierDBOperation.getAllSuppliers(ApplicationDataManager.getInstance().getLoggedInUser().getInstituteId());
-        String[] supplierDropdownItems = new String[allActiveSuppliers.size() + 1]; 
+    private void loadCategoryDropdown() {
+        String[] categoryItems = new String[categorys.size() + 1]; 
         
-        supplierDropdownItems[0] = "-- ALL --";
+        categoryItems[0] = "-- ALL --";
         
-        for (int i = 0; i < allActiveSuppliers.size(); i++) {
-            SupplierDataModel supplier = allActiveSuppliers.get(i);
-            supplierDropdownItems[i+1] = supplier.getSupplierName();
+        for (int i = 0; i < categorys.size(); i++) {
+            CategoryModel category = categorys.get(i);
+            String catText = "ERROR";
+            switch (ApplicationDataManager.getInstance().getApplicationLanguage()) {
+                case ENGLISH:
+                    catText = category.getCatName();
+                    break;
+                case SINHALA:
+                    catText = category.getCatNameSin();                    
+                    break;
+                case TAMIL:
+                    catText = category.getCatNameTam();                    
+                    break;
+                default:
+                    
+            }
+            categoryItems[i+1] = catText;
         }
         
-        jComboBoxSearchItem.setModel(new DefaultComboBoxModel<>(supplierDropdownItems));
+        jComboBoxSearchItem.setModel(new DefaultComboBoxModel<>(categoryItems));
     }
     
     void loadStokeTbleFull(int situation,String searchInput1,String searchInput2){
@@ -415,10 +446,10 @@ public class LiveStockPanel extends javax.swing.JPanel {
                             .addGroup(jPanel7Layout.createSequentialGroup()
                                 .addComponent(jTextFieldStokeSearch, javax.swing.GroupLayout.PREFERRED_SIZE, 250, javax.swing.GroupLayout.PREFERRED_SIZE)
                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                .addComponent(jComboBoxSearchItem, javax.swing.GroupLayout.PREFERRED_SIZE, 172, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addComponent(jComboBoxSearchItem, javax.swing.GroupLayout.PREFERRED_SIZE, 349, javax.swing.GroupLayout.PREFERRED_SIZE)
                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                                 .addComponent(jButtonStokeSearch)))
-                        .addGap(0, 337, Short.MAX_VALUE))
+                        .addGap(0, 192, Short.MAX_VALUE))
                     .addComponent(jPanel2, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
                 .addContainerGap())
         );
@@ -499,25 +530,26 @@ public class LiveStockPanel extends javax.swing.JPanel {
             }else{
                 EasyPOSMessageDialog.showLocalizedError(this, ApplicationMessages.ERROR_PRINTER_STOPPED);
             }
-        }catch(Exception e){
+        }catch(PrinterException e){
             EasyPOSMessageDialog.showLocalizedError(this, ApplicationMessages.ERROR_PRINT_PROCESS_FAILED);
         }
     }//GEN-LAST:event_jButtonStockFullPrintActionPerformed
 
     private void jComboBoxSearchItemItemStateChanged(java.awt.event.ItemEvent evt) {//GEN-FIRST:event_jComboBoxSearchItemItemStateChanged
-//        int index = jComboBoxSearchItem.getSelectedIndex();
-//        
-//        if (index != 0) {
-//            stList = stockRepository.getItemListBySupplierCode(allActiveSuppliers.get(index - 1).getSupplierCode());
-//            loadStockTable();
-//        }
-//        else
-//        {
-//            //load all
-//            stList = stockRepository.getAllItems();
-//            loadStockTable();            
-//        }
-//        loadStockTable();
+        int index = jComboBoxSearchItem.getSelectedIndex();
+        
+        if (index != 0) {
+            int selectedCatId = categorys.get(index - 1).getCategoryId();
+            filteredItemDataList = new ArrayList();
+            for (Item item : itemDataList) {
+                if (item.category_id == selectedCatId) {
+                    filteredItemDataList.add(item);
+                }
+            }
+            loadStockTable(filteredItemDataList);
+        }else{
+            loadStockTable(itemDataList);
+        }
     }//GEN-LAST:event_jComboBoxSearchItemItemStateChanged
 
     private void jTableCurStockItemsMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jTableCurStockItemsMouseClicked

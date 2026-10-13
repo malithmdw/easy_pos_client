@@ -317,6 +317,7 @@ public class OpenScreen extends javax.swing.JFrame{
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
         setTitle("Easy POS");
+        setExtendedState(6);
 
         jPanelBase.setPreferredSize(new java.awt.Dimension(1036, 550));
         jPanelBase.setLayout(new java.awt.CardLayout());
@@ -404,7 +405,7 @@ public class OpenScreen extends javax.swing.JFrame{
         jPanelSuppliersLayout.setHorizontalGroup(
             jPanelSuppliersLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addComponent(supplierPanel1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-            .addComponent(headerPanel1, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, 1036, Short.MAX_VALUE)
+            .addComponent(headerPanel1, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
         );
         jPanelSuppliersLayout.setVerticalGroup(
             jPanelSuppliersLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -492,7 +493,7 @@ public class OpenScreen extends javax.swing.JFrame{
         jPanelCustomerLayout.setHorizontalGroup(
             jPanelCustomerLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addComponent(customer1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-            .addComponent(headerPanel6, javax.swing.GroupLayout.DEFAULT_SIZE, 1092, Short.MAX_VALUE)
+            .addComponent(headerPanel6, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
         );
         jPanelCustomerLayout.setVerticalGroup(
             jPanelCustomerLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -563,7 +564,7 @@ public class OpenScreen extends javax.swing.JFrame{
             EasyPosLogger.getInstance().error("", ex);
         }
         //</editor-fold>
-
+        
         /* Create and display the form */
         java.awt.EventQueue.invokeLater(new Runnable() {
             @Override

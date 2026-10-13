@@ -452,6 +452,7 @@ public class SaleReturnFrame extends javax.swing.JFrame implements control.Langu
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
 
+        submitSalereturnButton.setBackground(new java.awt.Color(0, 51, 204));
         submitSalereturnButton.setFont(new java.awt.Font("Segoe UI", 0, 18)); // NOI18N
         submitSalereturnButton.setText("Submit Return");
         submitSalereturnButton.addActionListener(new java.awt.event.ActionListener() {
@@ -462,6 +463,11 @@ public class SaleReturnFrame extends javax.swing.JFrame implements control.Langu
 
         jButton2.setFont(new java.awt.Font("Segoe UI", 0, 18)); // NOI18N
         jButton2.setText("Cancel");
+        jButton2.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jButton2ActionPerformed(evt);
+            }
+        });
 
         jLabel9.setFont(new java.awt.Font("Segoe UI", 0, 16)); // NOI18N
         jLabel9.setHorizontalAlignment(javax.swing.SwingConstants.RIGHT);
@@ -733,6 +739,10 @@ public class SaleReturnFrame extends javax.swing.JFrame implements control.Langu
         saleReturnItmQtyTextField.setText("");
         updateReturnAmount();
     }//GEN-LAST:event_addItemToReturnsButtonActionPerformed
+
+    private void jButton2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton2ActionPerformed
+        this.dispose();
+    }//GEN-LAST:event_jButton2ActionPerformed
 
 
     public static void main(String args[]) {
