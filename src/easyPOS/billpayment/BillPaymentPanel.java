@@ -105,6 +105,7 @@ public final class BillPaymentPanel extends javax.swing.JPanel implements contro
                 jLabel1.setFont(customFont);
                 jLabel2.setFont(customFont);
                 jButtonPayBill.setFont(customFont);
+                jLabelSelectedBillerName.setFont(customFont);
             } catch (IOException | FontFormatException e) {
                 EasyPosLogger.getInstance().error("BillPayment font load error", e);
             }
