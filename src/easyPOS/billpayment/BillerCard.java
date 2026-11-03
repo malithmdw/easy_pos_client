@@ -1,7 +1,6 @@
 
 package easyPOS.billpayment;
 
-import control.ApplicationDataManager;
 import dataModels.Language;
 import java.awt.Color;
 import java.awt.Font;

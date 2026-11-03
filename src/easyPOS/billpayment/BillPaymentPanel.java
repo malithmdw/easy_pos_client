@@ -1,7 +1,4 @@
-/*
- * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
- * Click nbfs://nbhost/SystemFileSystem/Templates/GUIForms/JPanel.java to edit this template
- */
+
 package easyPOS.billpayment;
 
 import control.ApplicationDataManager;
@@ -9,9 +6,11 @@ import control.BillPaymentReceiptPrint;
 import control.EasyPosLogger;
 import control.RuntimeDataManager;
 import appDataModels.InstituteModel;
+import control.EventManager;
+import control.NumberPadKeyPressListener;
+import dataModels.Language;
 import dataModels.ReceiptCommonData;
-import java.awt.Component;
-import java.awt.Container;
+import easyPOS.NumberPanel;
 import java.awt.Image;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
@@ -23,7 +22,12 @@ import java.awt.print.PrinterJob;
 import java.io.File;
 import java.io.IOException;
 import java.net.URL;
+import java.awt.Font;
+import java.awt.FontFormatException;
+import java.awt.GraphicsEnvironment;
 import java.util.List;
+import java.util.Locale;
+import java.util.ResourceBundle;
 import java.util.UUID;
 import javax.imageio.ImageIO;
 import javax.print.PrintService;
@@ -41,28 +45,94 @@ import webService.BillPaymentWebService;
  *
  * @author MalithWanniarachchi
  */
-public class BillPaymentPanel extends javax.swing.JPanel {
+public final class BillPaymentPanel extends javax.swing.JPanel implements control.LanguageChangeListener {
 
     private javax.swing.JPanel billersInnerPanel;
     private BillPaymentProviderModel selectedProvider;
+    private ResourceBundle bundle;
 
     /**
      * Creates new form BillPaymentPanel
      */
     public BillPaymentPanel() {
         initComponents();
+        switchLanguage();
         setupBillersPanel();
+        
+        numberPanel1.setButtonInvisible(NumberPadKeyPressListener.NumberPadButton.BUTTON_OK);
 
         billPaymentCategoryCardList.setOnBillPaymentCategorySelectListener(category ->
                 loadBillerCards(category.id));
 
-        String user = ApplicationDataManager.getInstance().getBillPaymentUser();
-        String pwd  = ApplicationDataManager.getInstance().getBillPaymentPassword();
-        if (user != null && !user.isEmpty() && pwd != null && !pwd.isEmpty()) {
-            initializeBillPaymentData();
-        }
+        loadInitialDataToUI();
+
+        EventManager.getInstance().addLanguageChangeListener(this);
+        EventManager.getInstance().addNumberPadKeyEventListener(new NumberPadKeyPressListener() {
+            @Override
+            public void onKeyPressed(NumberPadKeyPressListener.NumberPadButton pressed) {
+                if (!BillPaymentPanel.this.isShowing()) {
+                    return;
+                }
+                
+                if (jTextFieldAccNumber.isFocusOwner()) {
+                    jTextFieldAccNumber.setText(NumberPanel.getNum(jTextFieldAccNumber.getText(), pressed));
+                    jTextFieldAccNumber.setRequestFocusEnabled(true);
+                }else if (jTextFieldAmount.isFocusOwner()) {
+                    jTextFieldAmount.setText(NumberPanel.getNum(jTextFieldAmount.getText(), pressed));
+                    jTextFieldAmount.setRequestFocusEnabled(true);
+                }
+            }
+        });
     }
 
+    @Override
+    public void onLanguageChanged() {
+        switchLanguage();
+        revalidate();
+        repaint();
+    }
+
+    private void switchLanguage() {
+        Language appLang = ApplicationDataManager.getInstance().getApplicationLanguage();
+        Locale locale = (appLang == Language.SINHALA) ? new Locale("si", "LK") : Locale.ENGLISH;
+        bundle = ResourceBundle.getBundle("easyPOS/billpayment/Bundle", locale);
+        if (appLang == Language.SINHALA) {
+            try {
+                Font customFont = Font.createFont(Font.TRUETYPE_FONT,
+                        ApplicationDataManager.getInstance().getSinhalaFontFile()).deriveFont(14f);
+                GraphicsEnvironment ge = GraphicsEnvironment.getLocalGraphicsEnvironment();
+                ge.registerFont(customFont);
+                jLabel1.setFont(customFont);
+                jLabel2.setFont(customFont);
+                jButtonPayBill.setFont(customFont);
+            } catch (IOException | FontFormatException e) {
+                EasyPosLogger.getInstance().error("BillPayment font load error", e);
+            }
+        }
+        jLabel1.setText(bundle.getString("BillPaymentPanel.jLabel1.text"));
+        jLabel2.setText(bundle.getString("BillPaymentPanel.jLabel2.text"));
+        jButtonPayBill.setText(bundle.getString("BillPaymentPanel.jButtonPayBill.text"));
+    }
+
+    public void loadInitialDataToUI(){
+        if (RuntimeDataManager.getInstance()
+                .getRuntimeData().getBillPaymentCategories() == null || 
+            RuntimeDataManager.getInstance()
+                .getRuntimeData().getBillPaymentCategories().isEmpty() || 
+            RuntimeDataManager.getInstance()
+                .getRuntimeData().getBillPaymentProviders() == null || 
+            RuntimeDataManager.getInstance()
+                .getRuntimeData().getBillPaymentProviders().isEmpty() 
+                ) {
+            String user = ApplicationDataManager.getInstance().getBillPaymentUser();
+            String pwd  = ApplicationDataManager.getInstance().getBillPaymentPassword();
+            if (user != null && !user.isEmpty() && pwd != null && !pwd.isEmpty()) {
+                initializeBillPaymentData();
+            }
+        }
+        
+    }
+    
     /** Wraps jPanelBillPaymentBillers in a scroll pane with a FlowLayout inner panel. */
     private void setupBillersPanel() {
         billersInnerPanel = new javax.swing.JPanel(
@@ -134,6 +204,7 @@ public class BillPaymentPanel extends javax.swing.JPanel {
         billersInnerPanel.removeAll();
         selectedProvider = null;
         jLabelSelectedBillerLogo.setIcon(null);
+        jLabelSelectedBillerName.setText("");
 
         for (BillPaymentProviderModel provider : providers) {
             if (categoryId != null && !categoryId.equals(provider.categoryId)) continue;
@@ -162,6 +233,12 @@ public class BillPaymentPanel extends javax.swing.JPanel {
     /** Shows the selected biller's logo in jLabelSelectedBillerLogo. */
     private void selectBiller(BillPaymentProviderModel provider) {
         selectedProvider = provider;
+        
+        if (ApplicationDataManager.getInstance().getApplicationLanguage().equals(Language.SINHALA)) {
+            jLabelSelectedBillerName.setText(provider.si);
+        }else{
+            jLabelSelectedBillerName.setText(provider.name);
+        }
 
         if (provider.image == null || provider.image.isEmpty()) {
             jLabelSelectedBillerLogo.setIcon(null);
@@ -182,7 +259,7 @@ public class BillPaymentPanel extends javax.swing.JPanel {
                     Image scaled = img.getScaledInstance(79, 71, Image.SCALE_SMOOTH);
                     SwingUtilities.invokeLater(() ->
                             jLabelSelectedBillerLogo.setIcon(new ImageIcon(scaled)));
-                }
+                        }
             } catch (IOException ex) {
                 EasyPosLogger.getInstance().error("BillPayment biller logo load error", ex);
             }
@@ -221,7 +298,7 @@ public class BillPaymentPanel extends javax.swing.JPanel {
         }
 
         if (target == null) {
-            JOptionPane.showMessageDialog(this, "Printer not found: " + printerName);
+            JOptionPane.showMessageDialog(this, bundle.getString("BillPaymentPanel.msg.printerNotFound") + " " + printerName);
             return;
         }
 
@@ -239,7 +316,7 @@ public class BillPaymentPanel extends javax.swing.JPanel {
             job.print();
         } catch (PrinterException ex) {
             EasyPosLogger.getInstance().error("BillPayment receipt print failed", ex);
-            JOptionPane.showMessageDialog(this, "Receipt printing failed.");
+            JOptionPane.showMessageDialog(this, bundle.getString("BillPaymentPanel.msg.printFailed"));
         }
     }
 
@@ -262,6 +339,7 @@ public class BillPaymentPanel extends javax.swing.JPanel {
         jLabel2 = new javax.swing.JLabel();
         jTextFieldAmount = new javax.swing.JTextField();
         jButtonPayBill = new javax.swing.JButton();
+        jLabelSelectedBillerName = new javax.swing.JLabel();
         numberPanel1 = new easyPOS.NumberPanel();
 
         jPanel1.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(0, 0, 0)));
@@ -301,14 +379,17 @@ public class BillPaymentPanel extends javax.swing.JPanel {
 
         jPanel3.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(0, 0, 0)));
 
+        jLabel1.setFont(new java.awt.Font("Segoe UI", 0, 14)); // NOI18N
         jLabel1.setText("Account / Mobile Number :");
 
         jTextFieldAccNumber.setFont(new java.awt.Font("Segoe UI", 0, 16)); // NOI18N
 
+        jLabel2.setFont(new java.awt.Font("Segoe UI", 0, 14)); // NOI18N
         jLabel2.setText("Amount :");
 
         jTextFieldAmount.setFont(new java.awt.Font("Segoe UI", 0, 16)); // NOI18N
 
+        jButtonPayBill.setFont(new java.awt.Font("Segoe UI", 0, 18)); // NOI18N
         jButtonPayBill.setText("Pay");
         jButtonPayBill.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -325,13 +406,11 @@ public class BillPaymentPanel extends javax.swing.JPanel {
                 .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addComponent(jTextFieldAccNumber)
                     .addComponent(jTextFieldAmount)
-                    .addGroup(jPanel3Layout.createSequentialGroup()
-                        .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(jLabelSelectedBillerLogo, javax.swing.GroupLayout.PREFERRED_SIZE, 79, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addComponent(jLabel1)
-                            .addComponent(jLabel2, javax.swing.GroupLayout.PREFERRED_SIZE, 144, javax.swing.GroupLayout.PREFERRED_SIZE))
-                        .addGap(0, 10, Short.MAX_VALUE))
-                    .addComponent(jButtonPayBill, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                    .addComponent(jButtonPayBill, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addComponent(jLabel1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addComponent(jLabel2, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addComponent(jLabelSelectedBillerName, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addComponent(jLabelSelectedBillerLogo, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
                 .addContainerGap())
         );
         jPanel3Layout.setVerticalGroup(
@@ -339,7 +418,9 @@ public class BillPaymentPanel extends javax.swing.JPanel {
             .addGroup(jPanel3Layout.createSequentialGroup()
                 .addContainerGap()
                 .addComponent(jLabelSelectedBillerLogo, javax.swing.GroupLayout.PREFERRED_SIZE, 71, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(jLabelSelectedBillerName, javax.swing.GroupLayout.PREFERRED_SIZE, 37, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(45, 45, 45)
                 .addComponent(jLabel1)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(jTextFieldAccNumber, javax.swing.GroupLayout.PREFERRED_SIZE, 31, javax.swing.GroupLayout.PREFERRED_SIZE)
@@ -357,38 +438,36 @@ public class BillPaymentPanel extends javax.swing.JPanel {
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
-                .addContainerGap()
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                 .addComponent(jPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(jPanel3, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(numberPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, 305, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                .addComponent(numberPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, 305, javax.swing.GroupLayout.PREFERRED_SIZE))
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
                 .addContainerGap()
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(layout.createSequentialGroup()
-                        .addComponent(numberPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addGap(0, 0, Short.MAX_VALUE))
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
                     .addComponent(jPanel1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                    .addComponent(jPanel3, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-                .addContainerGap())
+                    .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
+                        .addComponent(jPanel3, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                        .addComponent(numberPanel1, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)))
+                .addContainerGap(88, Short.MAX_VALUE))
         );
     }// </editor-fold>//GEN-END:initComponents
 
     private void jButtonPayBillActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonPayBillActionPerformed
         // ---- Validation ----
         if (selectedProvider == null) {
-            JOptionPane.showMessageDialog(this, "Please select a biller first.");
+            JOptionPane.showMessageDialog(this, bundle.getString("BillPaymentPanel.msg.selectBillerFirst"));
             return;
         }
 
         String accNumber = jTextFieldAccNumber.getText().trim();
         if (accNumber.isEmpty()) {
-            JOptionPane.showMessageDialog(this, "Please enter account / mobile number.");
+            JOptionPane.showMessageDialog(this, bundle.getString("BillPaymentPanel.msg.enterAccNumber"));
             return;
         }
 
@@ -397,11 +476,11 @@ public class BillPaymentPanel extends javax.swing.JPanel {
         try {
             amount = Double.parseDouble(amountStr);
         } catch (NumberFormatException ex) {
-            JOptionPane.showMessageDialog(this, "Please enter a valid amount.");
+            JOptionPane.showMessageDialog(this, bundle.getString("BillPaymentPanel.msg.enterValidAmount"));
             return;
         }
         if (amount <= 0 || amount >= 10000) {
-            JOptionPane.showMessageDialog(this, "Amount must be greater than 0 and less than 10,000.");
+            JOptionPane.showMessageDialog(this, bundle.getString("BillPaymentPanel.msg.amountRange"));
             return;
         }
 
@@ -454,6 +533,7 @@ public class BillPaymentPanel extends javax.swing.JPanel {
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel2;
     private javax.swing.JLabel jLabelSelectedBillerLogo;
+    private javax.swing.JLabel jLabelSelectedBillerName;
     private javax.swing.JPanel jPanel1;
     private javax.swing.JPanel jPanel3;
     private javax.swing.JPanel jPanelBillPaymentBillers;

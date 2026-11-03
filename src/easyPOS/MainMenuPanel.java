@@ -265,26 +265,24 @@ public class MainMenuPanel extends javax.swing.JPanel implements control.Languag
             jLabelMainMenuBusinessName.setFont(customFont);
             jButtonDailyTrans.setFont(customFont);
             jButtonStoke.setFont(customFont);
-//            jButtonSupp.setFont(customFont);
             jButtonReports.setFont(customFont);
             jButtonSettings.setFont(customFont);
             jButtonLogOut1.setFont(customFont);
             jButtonSupp1.setFont(customFont);
-//            jButtonSettings1.setFont(customFont);
             jButtonSettings2.setFont(customFont);
+            jButtonBillPayment.setFont(customFont);
         } catch (IOException | FontFormatException e) {
             System.err.println(e);
         }
         }
         jButtonDailyTrans.setText(resourceBundle.getString("MainMenuPanel.jButtonDailyTrans.text"));
         jButtonStoke.setText(resourceBundle.getString("MainMenuPanel.jButtonStoke.text"));
-//        jButtonSupp.setText(resourceBundle.getString("MainMenuPanel.jButtonSupp.text"));
         jButtonReports.setText(resourceBundle.getString("MainMenuPanel.jButtonReports.text"));
         jButtonSettings.setText(resourceBundle.getString("MainMenuPanel.jButtonSettings.text"));
         jButtonLogOut1.setText(resourceBundle.getString("MainMenuPanel.jButtonLogOut1.text"));
         jButtonSupp1.setText(resourceBundle.getString("MainMenuPanel.jButtonSupp1.text"));
-//        jButtonSettings1.setText(resourceBundle.getString("MainMenuPanel.jButtonSettings1.text"));
         jButtonSettings2.setText(resourceBundle.getString("MainMenuPanel.jButtonSettings2.text"));
+        jButtonBillPayment.setText(resourceBundle.getString("MainMenuPanel.jButtonBillPayment.text"));
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables

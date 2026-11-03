@@ -85,6 +85,7 @@ public class OpenScreen extends javax.swing.JFrame{
             case BILL_PAYMENT:
             {
                 loadPage(jPanelBillPayment);
+                billPaymentPanel.loadInitialDataToUI();
                 break;
             }
             case STOCK:
@@ -140,6 +141,11 @@ public class OpenScreen extends javax.swing.JFrame{
             case SALES_MOOD:
             {                
                 permissionName = Permission.P_SALE_PANEL;
+                break;
+            }
+            case BILL_PAYMENT:
+            {                
+                permissionName = Permission.P_BILL_PAYMENT_PANEL;
                 break;
             }
             case STOCK:
@@ -247,7 +253,7 @@ public class OpenScreen extends javax.swing.JFrame{
         salePanel = new easyPOS.sale.SalePanel();
         jPanelBillPayment = new javax.swing.JPanel();
         headerPanel7 = new easyPOS.HeaderPanel();
-        billPaymentPanel1 = new easyPOS.billpayment.BillPaymentPanel();
+        billPaymentPanel = new easyPOS.billpayment.BillPaymentPanel();
         jPanelStock = new javax.swing.JPanel();
         headerPanel2 = new easyPOS.HeaderPanel();
         stockPanel1 = new easyPOS.stock.StockPanel();
@@ -397,7 +403,7 @@ public class OpenScreen extends javax.swing.JFrame{
                 .addContainerGap()
                 .addGroup(jPanelBillPaymentLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
                     .addComponent(headerPanel7, javax.swing.GroupLayout.DEFAULT_SIZE, 1093, Short.MAX_VALUE)
-                    .addComponent(billPaymentPanel1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                    .addComponent(billPaymentPanel, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
         jPanelBillPaymentLayout.setVerticalGroup(
@@ -406,7 +412,7 @@ public class OpenScreen extends javax.swing.JFrame{
                 .addContainerGap()
                 .addComponent(headerPanel7, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(billPaymentPanel1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addComponent(billPaymentPanel, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                 .addContainerGap())
         );
 
@@ -609,7 +615,7 @@ public class OpenScreen extends javax.swing.JFrame{
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
-    private easyPOS.billpayment.BillPaymentPanel billPaymentPanel1;
+    private easyPOS.billpayment.BillPaymentPanel billPaymentPanel;
     private easyPOS.customers.Customer customer1;
     private easyPOS.HeaderPanel headerPanel1;
     private easyPOS.HeaderPanel headerPanel2;
