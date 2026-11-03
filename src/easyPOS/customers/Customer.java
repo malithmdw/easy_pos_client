@@ -606,8 +606,13 @@ public class Customer extends javax.swing.JPanel implements control.LanguageChan
         // Print All 
         ArrayList<BarcodeLableItemDataModel> barcodeLableItems = new ArrayList<>();
         BarcodeLableItemDataModel barcodeLabel = new BarcodeLableItemDataModel();
-        barcodeLabel.setBarcode(selectedCustomer.getContactNumber());
-        barcodeLabel.setItemId(Integer.parseInt(selectedCustomer.getContactNumber().replaceAll(" ", "")));
+        // Strip all non-numeric characters (spaces, +, dashes) so Code 128
+        // stays in Code C mode — without this, spaces force Code B and the
+        // barcode overflows the 34mm label, clipping the stop code and
+        // making it unreadable by the scanner.
+        String cleanContact = selectedCustomer.getContactNumber().replaceAll("[^0-9]", "");
+        barcodeLabel.setBarcode(cleanContact);
+        barcodeLabel.setItemId(cleanContact.isEmpty() ? 0 : Integer.parseInt(cleanContact));
         barcodeLabel.setItemName(selectedCustomer.getCustomerName());
         barcodeLabel.setItemNameSin("");
         barcodeLabel.setItemNameTam("");
