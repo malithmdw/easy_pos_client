@@ -33,6 +33,7 @@ public class ApplicationDataManager {
     public static final String CATEGORY_LOCAL_FOLDER_PATH = "C:/EasyPOS/Images/Category/";
     public static final String ITEM_LOCAL_FOLDER_PATH = "C:/EasyPOS/Images/Item/";
     public static final String RECEIPT_LOGO_LOCAL_FOLDER_PATH = "C:/EasyPOS/Images/Other/";
+    public static final String BILLERS_LOCAL_FOLDER_PATH = "C:/EasyPOS/Images/Billers/";
     
         
     public static ApplicationDataManager getInstance() {
@@ -53,6 +54,8 @@ public class ApplicationDataManager {
     private String receiptPrinterName = "BIXOLON SRP-E302";
     private String labelPrinterName = "ZDesigner ZD888-203dpi ZPL";
     private String customerPoleDisplayCOMPORT = "COM1";
+    private String billPaymentUser = "";
+    private String billPaymentPassword = "";
     private int lastInvoiceNumber = 0;
     private File receiptLogo;
     
@@ -71,6 +74,8 @@ public class ApplicationDataManager {
         appData.put("RECEIPT_PRINTER_NAME", receiptPrinterName);
         appData.put("LABEL_PRINTER_NAME", labelPrinterName);
         appData.put("CUSTOMER_POLE_DISPLAY_COM_PORT", customerPoleDisplayCOMPORT);
+        appData.put("BILL_PAYMENT_USER", billPaymentUser);
+        appData.put("BILL_PAYMENT_PASSWORD", billPaymentPassword);
         return appData;
     }
     
@@ -113,7 +118,13 @@ public class ApplicationDataManager {
                 case "CUSTOMER_POLE_DISPLAY_COM_PORT":
                     customerPoleDisplayCOMPORT =  value;
                     break;
-        
+                case "BILL_PAYMENT_USER":
+                    billPaymentUser = value;
+                    break;
+                case "BILL_PAYMENT_PASSWORD":
+                    billPaymentPassword = value;
+                    break;
+
                 default:
                     System.err.println("NO APP DATA VALUE FOUND");
             }
@@ -359,6 +370,22 @@ public class ApplicationDataManager {
      */
     public void setCustomerPoleDisplayCOMPORT(String customerPoleDisplayCOMPORT) {
         this.customerPoleDisplayCOMPORT = customerPoleDisplayCOMPORT;
+    }
+
+    public String getBillPaymentUser() {
+        return billPaymentUser;
+    }
+
+    public void setBillPaymentUser(String billPaymentUser) {
+        this.billPaymentUser = billPaymentUser;
+    }
+
+    public String getBillPaymentPassword() {
+        return billPaymentPassword;
+    }
+
+    public void setBillPaymentPassword(String billPaymentPassword) {
+        this.billPaymentPassword = billPaymentPassword;
     }
 
 }

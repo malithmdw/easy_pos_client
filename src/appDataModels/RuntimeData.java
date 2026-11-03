@@ -2,6 +2,8 @@ package appDataModels;
 
 import java.util.ArrayList;
 import java.util.List;
+import serverDataModels.BillPaymentCategoryModel;
+import serverDataModels.BillPaymentProviderModel;
 
 /**
  *
@@ -15,6 +17,9 @@ public class RuntimeData {
     private UserAccountModel user;
     private InstituteModel selectedInstitute;
     private List<CategoryModel> categoryModelList = new ArrayList<>();
+    private String billPaymentJwt;
+    private List<BillPaymentCategoryModel> billPaymentCategories = new ArrayList<>();
+    private List<BillPaymentProviderModel> billPaymentProviders = new ArrayList<>();
     
     /**
      * @return the categoryModelList
@@ -90,12 +95,36 @@ public class RuntimeData {
     public void setSelectedInstitute(InstituteModel instituteModel) {
         this.selectedInstitute = instituteModel;
     }
-    
+
     /**
      * @return the selectedInstitute
      */
     public InstituteModel getSelectedInstitute() {
         return selectedInstitute;
+    }
+
+    public String getBillPaymentJwt() {
+        return billPaymentJwt;
+    }
+
+    public void setBillPaymentJwt(String billPaymentJwt) {
+        this.billPaymentJwt = billPaymentJwt;
+    }
+
+    public List<BillPaymentCategoryModel> getBillPaymentCategories() {
+        return billPaymentCategories;
+    }
+
+    public void setBillPaymentCategories(List<BillPaymentCategoryModel> billPaymentCategories) {
+        this.billPaymentCategories = billPaymentCategories;
+    }
+
+    public List<BillPaymentProviderModel> getBillPaymentProviders() {
+        return billPaymentProviders;
+    }
+
+    public void setBillPaymentProviders(List<BillPaymentProviderModel> billPaymentProviders) {
+        this.billPaymentProviders = billPaymentProviders;
     }
 
 }

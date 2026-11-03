@@ -93,7 +93,7 @@ public class ServerDataSubmissionQueue {
 
             if (!localFile.exists()) {
 
-                String serverFileLocation = WebService.IMAGE_FOLDER_PATH + "/category/" + fileName;
+                String serverFileLocation = (new WebService().getServerImageFolderPath()) + "/category/" + fileName;
 
                 downloadFile(serverFileLocation, localFile.getAbsolutePath());
                 EasyPosLogger.getInstance().log(EasyPosLogger.LogLevel.INFO, "File download - " +fileName);
@@ -110,7 +110,7 @@ public class ServerDataSubmissionQueue {
 
             if (!localFile.exists()) {
 
-                String serverFileLocation = WebService.IMAGE_FOLDER_PATH + "/item/" + fileName;
+                String serverFileLocation = (new WebService().getServerImageFolderPath()) + "/item/" + fileName;
 
                 downloadFile(serverFileLocation, localFile.getAbsolutePath());
                 
@@ -125,7 +125,7 @@ public class ServerDataSubmissionQueue {
 
         if (!localFile.exists()) {
 
-            String serverFileLocation = WebService.IMAGE_FOLDER_PATH + "/other/" + fileName;
+            String serverFileLocation = (new WebService().getServerImageFolderPath()) + "/other/" + fileName;
 
             downloadFile(serverFileLocation, localFile.getAbsolutePath());
             

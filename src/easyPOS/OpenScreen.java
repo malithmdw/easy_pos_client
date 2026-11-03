@@ -82,6 +82,11 @@ public class OpenScreen extends javax.swing.JFrame{
                 salePanel.setNextInvoiceNumber();
                 break;
             }
+            case BILL_PAYMENT:
+            {
+                loadPage(jPanelBillPayment);
+                break;
+            }
             case STOCK:
             {
                 loadPage(jPanelStock);
@@ -240,6 +245,9 @@ public class OpenScreen extends javax.swing.JFrame{
         mainMenuPanel1 = new easyPOS.MainMenuPanel();
         jPanelDailyTrans = new javax.swing.JPanel();
         salePanel = new easyPOS.sale.SalePanel();
+        jPanelBillPayment = new javax.swing.JPanel();
+        headerPanel7 = new easyPOS.HeaderPanel();
+        billPaymentPanel1 = new easyPOS.billpayment.BillPaymentPanel();
         jPanelStock = new javax.swing.JPanel();
         headerPanel2 = new easyPOS.HeaderPanel();
         stockPanel1 = new easyPOS.stock.StockPanel();
@@ -333,7 +341,7 @@ public class OpenScreen extends javax.swing.JFrame{
         );
         jPanelLogScreenLayout.setVerticalGroup(
             jPanelLogScreenLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(loginPanel1, javax.swing.GroupLayout.DEFAULT_SIZE, 550, Short.MAX_VALUE)
+            .addComponent(loginPanel1, javax.swing.GroupLayout.DEFAULT_SIZE, 619, Short.MAX_VALUE)
         );
 
         jPanelBase.add(jPanelLogScreen, "card2");
@@ -372,7 +380,7 @@ public class OpenScreen extends javax.swing.JFrame{
         jPanelDailyTrans.setLayout(jPanelDailyTransLayout);
         jPanelDailyTransLayout.setHorizontalGroup(
             jPanelDailyTransLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(salePanel, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+            .addComponent(salePanel, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, 1034, Short.MAX_VALUE)
         );
         jPanelDailyTransLayout.setVerticalGroup(
             jPanelDailyTransLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -380,6 +388,29 @@ public class OpenScreen extends javax.swing.JFrame{
         );
 
         jPanelBase.add(jPanelDailyTrans, "card4");
+
+        javax.swing.GroupLayout jPanelBillPaymentLayout = new javax.swing.GroupLayout(jPanelBillPayment);
+        jPanelBillPayment.setLayout(jPanelBillPaymentLayout);
+        jPanelBillPaymentLayout.setHorizontalGroup(
+            jPanelBillPaymentLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(jPanelBillPaymentLayout.createSequentialGroup()
+                .addContainerGap()
+                .addGroup(jPanelBillPaymentLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                    .addComponent(headerPanel7, javax.swing.GroupLayout.DEFAULT_SIZE, 1093, Short.MAX_VALUE)
+                    .addComponent(billPaymentPanel1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+        );
+        jPanelBillPaymentLayout.setVerticalGroup(
+            jPanelBillPaymentLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(jPanelBillPaymentLayout.createSequentialGroup()
+                .addContainerGap()
+                .addComponent(headerPanel7, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(billPaymentPanel1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addContainerGap())
+        );
+
+        jPanelBase.add(jPanelBillPayment, "card12");
 
         javax.swing.GroupLayout jPanelStockLayout = new javax.swing.GroupLayout(jPanelStock);
         jPanelStock.setLayout(jPanelStockLayout);
@@ -578,6 +609,7 @@ public class OpenScreen extends javax.swing.JFrame{
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
+    private easyPOS.billpayment.BillPaymentPanel billPaymentPanel1;
     private easyPOS.customers.Customer customer1;
     private easyPOS.HeaderPanel headerPanel1;
     private easyPOS.HeaderPanel headerPanel2;
@@ -585,6 +617,7 @@ public class OpenScreen extends javax.swing.JFrame{
     private easyPOS.HeaderPanel headerPanel4;
     private easyPOS.HeaderPanel headerPanel5;
     private easyPOS.HeaderPanel headerPanel6;
+    private easyPOS.HeaderPanel headerPanel7;
     private easyPOS.invoice.PurchasingInvoiceBasePanel inventoryPanel1;
     private javax.swing.JButton jButton10;
     private javax.swing.JComboBox jComboBoxFPwd;
@@ -593,6 +626,7 @@ public class OpenScreen extends javax.swing.JFrame{
     private javax.swing.JLabel jLabel53;
     private javax.swing.JPanel jPanel23;
     private javax.swing.JPanel jPanelBase;
+    private javax.swing.JPanel jPanelBillPayment;
     private javax.swing.JPanel jPanelCustomer;
     private javax.swing.JPanel jPanelDailyTrans;
     private javax.swing.JPanel jPanelInventory;

@@ -7,6 +7,7 @@ package dataModels;
 public enum MenuItemType {
     HOME,
     SALES_MOOD,
+    BILL_PAYMENT,
     STOCK,
     CUSTOMER,
     SUPPLIER,

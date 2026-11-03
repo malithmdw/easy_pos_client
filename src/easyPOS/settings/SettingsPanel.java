@@ -3,7 +3,6 @@ package easyPOS.settings;
 import appDataModels.UserAccountModel;
 import control.ApplicationDataManager;
 import dataModels.Language;
-import dbOperations.LoginDBOperation;
 import java.awt.Font;
 import java.awt.FontFormatException;
 import java.awt.GraphicsEnvironment;
@@ -64,6 +63,8 @@ public class SettingsPanel extends javax.swing.JPanel implements control.Languag
         jTextField18.setText(ApplicationDataManager.getInstance().getReceiptPrinterName());
         jTextField19.setText(ApplicationDataManager.getInstance().getLabelPrinterName());
         customerPoleDisplayCOMPortTextField.setText(ApplicationDataManager.getInstance().getCustomerPoleDisplayCOMPORT());
+        billPaymentUserTextField.setText(ApplicationDataManager.getInstance().getBillPaymentUser());
+        billPaymentPasswordField.setText(ApplicationDataManager.getInstance().getBillPaymentPassword());
     }
     
     @SuppressWarnings("unchecked")
@@ -109,6 +110,10 @@ public class SettingsPanel extends javax.swing.JPanel implements control.Languag
         jLabel47 = new javax.swing.JLabel();
         jLabel48 = new javax.swing.JLabel();
         customerPoleDisplayCOMPortTextField = new javax.swing.JTextField();
+        jLabel49 = new javax.swing.JLabel();
+        billPaymentUserTextField = new javax.swing.JTextField();
+        jLabel50 = new javax.swing.JLabel();
+        billPaymentPasswordField = new javax.swing.JPasswordField();
 
         jTabbedPane3.setFont(new java.awt.Font("Tahoma", 0, 12)); // NOI18N
 
@@ -312,13 +317,17 @@ public class SettingsPanel extends javax.swing.JPanel implements control.Languag
 
         jLabel48.setText("Customer Pole Display COM Port");
 
+        jLabel49.setText("Bill Payment User");
+
+        jLabel50.setText("Bill Payment Pass Key");
+
         javax.swing.GroupLayout jPanel21Layout = new javax.swing.GroupLayout(jPanel21);
         jPanel21.setLayout(jPanel21Layout);
         jPanel21Layout.setHorizontalGroup(
             jPanel21Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel21Layout.createSequentialGroup()
                 .addContainerGap()
-                .addGroup(jPanel21Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                .addGroup(jPanel21Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
                     .addGroup(jPanel21Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
                         .addComponent(jButton1)
                         .addGroup(jPanel21Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
@@ -342,15 +351,9 @@ public class SettingsPanel extends javax.swing.JPanel implements control.Languag
                                             .addGroup(jPanel21Layout.createSequentialGroup()
                                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                                                 .addComponent(jTextField18, javax.swing.GroupLayout.PREFERRED_SIZE, 144, javax.swing.GroupLayout.PREFERRED_SIZE))
-                                            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel21Layout.createSequentialGroup()
-                                                .addGap(0, 0, 0)
-                                                .addComponent(jTextField19, javax.swing.GroupLayout.PREFERRED_SIZE, 144, javax.swing.GroupLayout.PREFERRED_SIZE)))
-                                        .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel21Layout.createSequentialGroup()
-                                            .addGap(0, 0, 0)
-                                            .addComponent(jComboBox1, javax.swing.GroupLayout.PREFERRED_SIZE, 144, javax.swing.GroupLayout.PREFERRED_SIZE)))
-                                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel21Layout.createSequentialGroup()
-                                        .addGap(0, 0, 0)
-                                        .addComponent(jComboBox2, javax.swing.GroupLayout.PREFERRED_SIZE, 144, javax.swing.GroupLayout.PREFERRED_SIZE))))
+                                            .addComponent(jTextField19, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, 144, javax.swing.GroupLayout.PREFERRED_SIZE))
+                                        .addComponent(jComboBox1, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, 144, javax.swing.GroupLayout.PREFERRED_SIZE))
+                                    .addComponent(jComboBox2, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, 144, javax.swing.GroupLayout.PREFERRED_SIZE)))
                             .addGroup(jPanel21Layout.createSequentialGroup()
                                 .addComponent(jLabel47, javax.swing.GroupLayout.PREFERRED_SIZE, 171, javax.swing.GroupLayout.PREFERRED_SIZE)
                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
@@ -358,7 +361,15 @@ public class SettingsPanel extends javax.swing.JPanel implements control.Languag
                     .addGroup(jPanel21Layout.createSequentialGroup()
                         .addComponent(jLabel48, javax.swing.GroupLayout.PREFERRED_SIZE, 210, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                        .addComponent(customerPoleDisplayCOMPortTextField, javax.swing.GroupLayout.PREFERRED_SIZE, 144, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                        .addComponent(customerPoleDisplayCOMPortTextField, javax.swing.GroupLayout.PREFERRED_SIZE, 144, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addGroup(jPanel21Layout.createSequentialGroup()
+                        .addComponent(jLabel49, javax.swing.GroupLayout.PREFERRED_SIZE, 210, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                        .addComponent(billPaymentUserTextField, javax.swing.GroupLayout.PREFERRED_SIZE, 144, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addGroup(jPanel21Layout.createSequentialGroup()
+                        .addComponent(jLabel50, javax.swing.GroupLayout.PREFERRED_SIZE, 210, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                        .addComponent(billPaymentPasswordField)))
                 .addContainerGap(551, Short.MAX_VALUE))
         );
         jPanel21Layout.setVerticalGroup(
@@ -396,9 +407,17 @@ public class SettingsPanel extends javax.swing.JPanel implements control.Languag
                 .addGroup(jPanel21Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jLabel47)
                     .addComponent(jComboBox5, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addGap(15, 15, 15)
+                .addGap(27, 27, 27)
+                .addGroup(jPanel21Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(jLabel49)
+                    .addComponent(billPaymentUserTextField, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addGroup(jPanel21Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(jLabel50)
+                    .addComponent(billPaymentPasswordField, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addGap(25, 25, 25)
                 .addComponent(jButton1)
-                .addContainerGap(190, Short.MAX_VALUE))
+                .addContainerGap(103, Short.MAX_VALUE))
         );
 
         jTabbedPane3.addTab("Advanced Settings", jPanel21);
@@ -437,6 +456,8 @@ public class SettingsPanel extends javax.swing.JPanel implements control.Languag
         ApplicationDataManager.getInstance().setReceiptPrinterName(jTextField18.getText());
         ApplicationDataManager.getInstance().setLabelPrinterName(jTextField19.getText());
         ApplicationDataManager.getInstance().setCustomerPoleDisplayCOMPORT(customerPoleDisplayCOMPortTextField.getText());
+        ApplicationDataManager.getInstance().setBillPaymentUser(billPaymentUserTextField.getText());
+        ApplicationDataManager.getInstance().setBillPaymentPassword(new String(billPaymentPasswordField.getPassword()));
         
         ApplicationDataManager.getInstance().setApplicationLanguage((Language) jComboBox1.getSelectedItem());        
         
@@ -476,6 +497,8 @@ public class SettingsPanel extends javax.swing.JPanel implements control.Languag
                 jLabel45.setFont(customFont); jLabel46.setFont(customFont);
                 jLabel47.setFont(customFont); jButton1.setFont(customFont);
                 jLabel48.setFont(customFont);
+                jLabel49.setFont(customFont);
+                jLabel50.setFont(customFont);
                 jButton41.setFont(customFont);
             } catch (IOException | FontFormatException e) {
                 System.err.println(e);
@@ -500,10 +523,14 @@ public class SettingsPanel extends javax.swing.JPanel implements control.Languag
         jLabel46.setText(resourceBundle.getString("SettingsPanel.jLabel46.text"));
         jLabel47.setText(resourceBundle.getString("SettingsPanel.jLabel47.text"));
         jButton1.setText(resourceBundle.getString("SettingsPanel.jButton1.text"));
-        jLabel48.setText(resourceBundle.getString("SettingsPanel.jLabel48.text"));        
+        jLabel48.setText(resourceBundle.getString("SettingsPanel.jLabel48.text"));
+        jLabel49.setText(resourceBundle.getString("SettingsPanel.jLabel49.text"));
+        jLabel50.setText(resourceBundle.getString("SettingsPanel.jLabel50.text"));
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
+    private javax.swing.JPasswordField billPaymentPasswordField;
+    private javax.swing.JTextField billPaymentUserTextField;
     private javax.swing.JTextField customerPoleDisplayCOMPortTextField;
     private javax.swing.JButton jButton1;
     private javax.swing.JButton jButton41;
@@ -522,6 +549,8 @@ public class SettingsPanel extends javax.swing.JPanel implements control.Languag
     private javax.swing.JLabel jLabel46;
     private javax.swing.JLabel jLabel47;
     private javax.swing.JLabel jLabel48;
+    private javax.swing.JLabel jLabel49;
+    private javax.swing.JLabel jLabel50;
     private javax.swing.JLabel jLabel61;
     private javax.swing.JLabel jLabel62;
     private javax.swing.JLabel jLabel63;

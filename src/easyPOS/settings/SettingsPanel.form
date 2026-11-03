@@ -362,7 +362,7 @@
               <Group type="103" groupAlignment="0" attributes="0">
                   <Group type="102" attributes="0">
                       <EmptySpace max="-2" attributes="0"/>
-                      <Group type="103" groupAlignment="0" attributes="0">
+                      <Group type="103" groupAlignment="0" max="-2" attributes="0">
                           <Group type="103" alignment="0" groupAlignment="1" attributes="0">
                               <Component id="jButton1" min="-2" max="-2" attributes="0"/>
                               <Group type="103" groupAlignment="0" max="-2" attributes="0">
@@ -409,6 +409,16 @@
                               <Component id="jLabel48" min="-2" pref="210" max="-2" attributes="0"/>
                               <EmptySpace type="unrelated" max="-2" attributes="0"/>
                               <Component id="customerPoleDisplayCOMPortTextField" min="-2" pref="144" max="-2" attributes="0"/>
+                          </Group>
+                          <Group type="102" alignment="0" attributes="0">
+                              <Component id="jLabel49" min="-2" pref="210" max="-2" attributes="0"/>
+                              <EmptySpace type="unrelated" max="-2" attributes="0"/>
+                              <Component id="billPaymentUserTextField" min="-2" pref="144" max="-2" attributes="0"/>
+                          </Group>
+                          <Group type="102" alignment="0" attributes="0">
+                              <Component id="jLabel50" min="-2" pref="210" max="-2" attributes="0"/>
+                              <EmptySpace type="unrelated" max="-2" attributes="0"/>
+                              <Component id="billPaymentPasswordField" max="32767" attributes="0"/>
                           </Group>
                       </Group>
                       <EmptySpace pref="551" max="32767" attributes="0"/>
@@ -458,9 +468,19 @@
                           <Component id="jLabel47" alignment="3" min="-2" max="-2" attributes="0"/>
                           <Component id="jComboBox5" alignment="3" min="-2" max="-2" attributes="0"/>
                       </Group>
-                      <EmptySpace min="-2" pref="15" max="-2" attributes="0"/>
+                      <EmptySpace min="-2" pref="27" max="-2" attributes="0"/>
+                      <Group type="103" groupAlignment="3" attributes="0">
+                          <Component id="jLabel49" alignment="3" min="-2" max="-2" attributes="0"/>
+                          <Component id="billPaymentUserTextField" alignment="3" min="-2" max="-2" attributes="0"/>
+                      </Group>
+                      <EmptySpace max="-2" attributes="0"/>
+                      <Group type="103" groupAlignment="3" attributes="0">
+                          <Component id="jLabel50" alignment="3" min="-2" max="-2" attributes="0"/>
+                          <Component id="billPaymentPasswordField" alignment="3" min="-2" max="-2" attributes="0"/>
+                      </Group>
+                      <EmptySpace min="-2" pref="25" max="-2" attributes="0"/>
                       <Component id="jButton1" min="-2" max="-2" attributes="0"/>
-                      <EmptySpace pref="190" max="32767" attributes="0"/>
+                      <EmptySpace pref="103" max="32767" attributes="0"/>
                   </Group>
               </Group>
             </DimensionLayout>
@@ -594,6 +614,20 @@
               </Properties>
             </Component>
             <Component class="javax.swing.JTextField" name="customerPoleDisplayCOMPortTextField">
+            </Component>
+            <Component class="javax.swing.JLabel" name="jLabel49">
+              <Properties>
+                <Property name="text" type="java.lang.String" value="Bill Payment User"/>
+              </Properties>
+            </Component>
+            <Component class="javax.swing.JTextField" name="billPaymentUserTextField">
+            </Component>
+            <Component class="javax.swing.JLabel" name="jLabel50">
+              <Properties>
+                <Property name="text" type="java.lang.String" value="Bill Payment Pass Key"/>
+              </Properties>
+            </Component>
+            <Component class="javax.swing.JPasswordField" name="billPaymentPasswordField">
             </Component>
           </SubComponents>
         </Container>

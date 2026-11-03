@@ -27,14 +27,28 @@ import serverResponseDataModel.ServerResponse;
  */
 public class WebService {
     
-    private static final String POST_URL = "https://moosero.lk/EASYPOS-API-PHP-master/api";
-    public static final String IMAGE_FOLDER_PATH = "https://moosero.lk/EASYPOS-images";
-    private static final String POST_URL2 = "https://slbglk.net/SLBG-API-PHP-master/access_api/getAllData/getBankList.php";
+    private static final String EASYPOS_POST_URL = "https://moosero.lk/EASYPOS-API-PHP-master/api";    
+    private static final String EASYRELOAD_POST_URL = "https://www.moosero.lk/EASY-RELOAD-BACKEND/api";
+    public static final String EASYPOS_IMAGE_FOLDER_PATH = "https://moosero.lk/EASYPOS-images";
+    public static final String EASYRELOAD_IMAGE_FOLDER_PATH = "https://moosero.lk/EASYRELOAD-images";
     private static final String USER_AGENT = "Mozilla/5.0";
+     
+        
+    private final String POST_URL;
+    private final String IMAGE_FOLDER_PATH;
     
-    private static final String SERVER_DB_USR = "admin";
-    private static final String SERVER_DB_PWD = "2u#*BmNnMR";
-    private static final String SERVER_DB_NAME = "u601745278_easy_pos";
+    public WebService(){
+        this.POST_URL = EASYPOS_POST_URL;
+        this.IMAGE_FOLDER_PATH = EASYPOS_IMAGE_FOLDER_PATH;
+    }
+    public WebService(boolean billPayment){
+        this.POST_URL = EASYRELOAD_POST_URL;
+        this.IMAGE_FOLDER_PATH = EASYRELOAD_IMAGE_FOLDER_PATH;
+    }
+    
+    public String getServerImageFolderPath() {
+        return IMAGE_FOLDER_PATH;
+    }
     
     public CommonResponse sendPOSTRequest(String apiPath, Map<String, String> header, Object bodyData) {
         CommonResponse commonResponse = new CommonResponse();

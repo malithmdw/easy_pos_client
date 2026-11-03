@@ -71,6 +71,7 @@ public class MainMenuPanel extends javax.swing.JPanel implements control.Languag
         jButtonLogOut1 = new javax.swing.JButton();
         jButtonSupp1 = new javax.swing.JButton();
         jButtonSettings2 = new javax.swing.JButton();
+        jButtonBillPayment = new javax.swing.JButton();
 
         setBackground(new java.awt.Color(204, 204, 204));
 
@@ -151,6 +152,16 @@ public class MainMenuPanel extends javax.swing.JPanel implements control.Languag
             }
         });
 
+        jButtonBillPayment.setFont(new java.awt.Font("Tahoma", 1, 18)); // NOI18N
+        jButtonBillPayment.setForeground(new java.awt.Color(51, 51, 51));
+        jButtonBillPayment.setIcon(new javax.swing.ImageIcon(getClass().getResource("/images/shopcart.png"))); // NOI18N
+        jButtonBillPayment.setText(bundle.getString("MainMenuPanel.jButtonBillPayment.text")); // NOI18N
+        jButtonBillPayment.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jButtonBillPaymentActionPerformed(evt);
+            }
+        });
+
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(this);
         this.setLayout(layout);
         layout.setHorizontalGroup(
@@ -175,7 +186,8 @@ public class MainMenuPanel extends javax.swing.JPanel implements control.Languag
                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                                     .addComponent(jButtonSettings, javax.swing.GroupLayout.PREFERRED_SIZE, 375, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                    .addComponent(jButtonReports, javax.swing.GroupLayout.PREFERRED_SIZE, 375, javax.swing.GroupLayout.PREFERRED_SIZE))))
+                                    .addComponent(jButtonReports, javax.swing.GroupLayout.PREFERRED_SIZE, 375, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                    .addComponent(jButtonBillPayment, javax.swing.GroupLayout.PREFERRED_SIZE, 375, javax.swing.GroupLayout.PREFERRED_SIZE))))
                         .addGap(46, 46, 46)))
                 .addContainerGap())
         );
@@ -189,13 +201,17 @@ public class MainMenuPanel extends javax.swing.JPanel implements control.Languag
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jButtonDailyTrans, javax.swing.GroupLayout.PREFERRED_SIZE, 70, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(jButtonReports, javax.swing.GroupLayout.PREFERRED_SIZE, 69, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addComponent(jButtonBillPayment, javax.swing.GroupLayout.PREFERRED_SIZE, 69, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(jButtonStoke, javax.swing.GroupLayout.PREFERRED_SIZE, 70, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(jButtonSettings, javax.swing.GroupLayout.PREFERRED_SIZE, 70, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(jButtonSettings2, javax.swing.GroupLayout.PREFERRED_SIZE, 70, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                    .addGroup(layout.createSequentialGroup()
+                        .addComponent(jButtonStoke, javax.swing.GroupLayout.PREFERRED_SIZE, 70, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(jButtonSettings2, javax.swing.GroupLayout.PREFERRED_SIZE, 70, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addGroup(layout.createSequentialGroup()
+                        .addComponent(jButtonReports, javax.swing.GroupLayout.PREFERRED_SIZE, 69, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(jButtonSettings, javax.swing.GroupLayout.PREFERRED_SIZE, 70, javax.swing.GroupLayout.PREFERRED_SIZE)))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(jButtonSupp1, javax.swing.GroupLayout.PREFERRED_SIZE, 70, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 92, Short.MAX_VALUE)
@@ -231,6 +247,10 @@ public class MainMenuPanel extends javax.swing.JPanel implements control.Languag
     private void jButtonSettings2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonSettings2ActionPerformed
         EventManager.getInstance().notifyMenuItemChanged(MenuItemType.CUSTOMER);
     }//GEN-LAST:event_jButtonSettings2ActionPerformed
+
+    private void jButtonBillPaymentActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonBillPaymentActionPerformed
+        EventManager.getInstance().notifyMenuItemChanged(MenuItemType.BILL_PAYMENT);
+    }//GEN-LAST:event_jButtonBillPaymentActionPerformed
 
     private void switchLanguage() {
         Language appLang = ApplicationDataManager.getInstance().getApplicationLanguage();
@@ -268,6 +288,7 @@ public class MainMenuPanel extends javax.swing.JPanel implements control.Languag
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
+    private javax.swing.JButton jButtonBillPayment;
     private javax.swing.JButton jButtonDailyTrans;
     private javax.swing.JButton jButtonLogOut1;
     private javax.swing.JButton jButtonReports;
