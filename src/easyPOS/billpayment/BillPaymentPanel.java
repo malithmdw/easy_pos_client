@@ -11,6 +11,7 @@ import control.NumberPadKeyPressListener;
 import dataModels.Language;
 import dataModels.ReceiptCommonData;
 import easyPOS.NumberPanel;
+import easyPOS.localization.ApplicationMessages;
 import java.awt.Color;
 import java.awt.Component;
 import java.awt.Image;
@@ -34,7 +35,6 @@ import java.util.EventObject;
 import java.util.List;
 import java.util.Locale;
 import java.util.ResourceBundle;
-import java.util.UUID;
 import java.util.concurrent.ExecutionException;
 import javax.imageio.ImageIO;
 import javax.print.PrintService;
@@ -81,7 +81,7 @@ public final class BillPaymentPanel extends javax.swing.JPanel implements contro
         billPaymentCategoryCardList.setOnBillPaymentCategorySelectListener(category ->
                 loadBillerCards(category.id));
 
-        loadInitialDataToUI();
+        loadInitialDataToUI(true);
 
         if (RuntimeDataManager.getInstance().getRuntimeData().getBillPaymentJwt() != null) {
             loadPaymentHistory();
@@ -136,7 +136,7 @@ public final class BillPaymentPanel extends javax.swing.JPanel implements contro
         jButtonPayBill.setText(bundle.getString("BillPaymentPanel.jButtonPayBill.text"));
     }
 
-    public void loadInitialDataToUI(){
+    public void loadInitialDataToUI(boolean isApplicationLoading){
         if (RuntimeDataManager.getInstance()
                 .getRuntimeData().getBillPaymentCategories() == null || 
             RuntimeDataManager.getInstance()
@@ -150,6 +150,10 @@ public final class BillPaymentPanel extends javax.swing.JPanel implements contro
             String pwd  = ApplicationDataManager.getInstance().getBillPaymentPassword();
             if (user != null && !user.isEmpty() && pwd != null && !pwd.isEmpty()) {
                 initializeBillPaymentData();
+            }else{
+                if (!isApplicationLoading) {
+                    EasyPOSMessageDialog.showLocalizedError(this, ApplicationMessages.ERROR_BILLPAYMENT_CREDENTIALS_NOT_FOUND);
+                }                
             }
         }
         
@@ -346,13 +350,13 @@ public final class BillPaymentPanel extends javax.swing.JPanel implements contro
     private void setupHistoryTable() {
         historyTableModel = new BillPaymentHistoryTableModel(new ArrayList<>());
         jTableBillPaymentHistory.setModel(historyTableModel);
-        jTableBillPaymentHistory.setRowHeight(26);
-        jTableBillPaymentHistory.setFont(new Font("Segoe UI", Font.PLAIN, 12));
-        jTableBillPaymentHistory.getTableHeader().setFont(new Font("Segoe UI", Font.BOLD, 12));
+        jTableBillPaymentHistory.setRowHeight(28);
+        jTableBillPaymentHistory.setFont(new Font("Segoe UI", Font.PLAIN, 14));
+        jTableBillPaymentHistory.getTableHeader().setFont(new Font("Segoe UI", Font.BOLD, 14));
         jTableBillPaymentHistory.setSelectionMode(javax.swing.ListSelectionModel.SINGLE_SELECTION);
 
         jTableBillPaymentHistory.getColumnModel().getColumn(BillPaymentHistoryTableModel.COL_ROW_NUM).setMaxWidth(35);
-        jTableBillPaymentHistory.getColumnModel().getColumn(BillPaymentHistoryTableModel.COL_TRAN_ID).setPreferredWidth(170);
+        jTableBillPaymentHistory.getColumnModel().getColumn(BillPaymentHistoryTableModel.COL_DATETIME).setPreferredWidth(145);
         jTableBillPaymentHistory.getColumnModel().getColumn(BillPaymentHistoryTableModel.COL_CATEGORY).setPreferredWidth(80);
         jTableBillPaymentHistory.getColumnModel().getColumn(BillPaymentHistoryTableModel.COL_PROVIDER).setPreferredWidth(100);
         jTableBillPaymentHistory.getColumnModel().getColumn(BillPaymentHistoryTableModel.COL_ACCOUNT).setPreferredWidth(120);
