@@ -85,7 +85,7 @@ public class OpenScreen extends javax.swing.JFrame{
             case BILL_PAYMENT:
             {
                 loadPage(jPanelBillPayment);
-                billPaymentPanel.loadInitialDataToUI();
+                billPaymentPanel.loadInitialDataToUI(false);
                 break;
             }
             case STOCK:
