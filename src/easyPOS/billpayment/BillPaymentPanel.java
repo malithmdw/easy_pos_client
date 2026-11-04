@@ -350,7 +350,7 @@ public final class BillPaymentPanel extends javax.swing.JPanel implements contro
         historyTableModel = new BillPaymentHistoryTableModel(new ArrayList<>());
         jTableBillPaymentHistory.setModel(historyTableModel);
         jTableBillPaymentHistory.setRowHeight(35);
-        jTableBillPaymentHistory.setFont(new Font("Segoe UI", Font.PLAIN, 16));
+        jTableBillPaymentHistory.setFont(new Font("Segoe UI", Font.PLAIN, 18));
         jTableBillPaymentHistory.getTableHeader().setFont(new Font("Segoe UI", Font.BOLD, 14));
         jTableBillPaymentHistory.setSelectionMode(javax.swing.ListSelectionModel.SINGLE_SELECTION);
 
