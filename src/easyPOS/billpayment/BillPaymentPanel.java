@@ -42,7 +42,6 @@ import javax.swing.DefaultCellEditor;
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
 import javax.swing.JCheckBox;
-import javax.swing.JOptionPane;
 import javax.swing.JTable;
 import javax.swing.SwingUtilities;
 import javax.swing.table.DefaultTableCellRenderer;
@@ -325,7 +324,7 @@ public final class BillPaymentPanel extends javax.swing.JPanel implements contro
         }
 
         if (target == null) {
-            JOptionPane.showMessageDialog(this, bundle.getString("BillPaymentPanel.msg.printerNotFound") + " " + printerName);
+            EasyPOSMessageDialog.showLocalizedError(this, ApplicationMessages.ERROR_BILLPAYMENT_PRINTER_NOT_FOUND);
             return;
         }
 
@@ -343,15 +342,15 @@ public final class BillPaymentPanel extends javax.swing.JPanel implements contro
             job.print();
         } catch (PrinterException ex) {
             EasyPosLogger.getInstance().error("BillPayment receipt print failed", ex);
-            JOptionPane.showMessageDialog(this, bundle.getString("BillPaymentPanel.msg.printFailed"));
+            EasyPOSMessageDialog.showLocalizedError(this, ApplicationMessages.ERROR_BILLPAYMENT_PRINTING_FAILED);
         }
     }
 
     private void setupHistoryTable() {
         historyTableModel = new BillPaymentHistoryTableModel(new ArrayList<>());
         jTableBillPaymentHistory.setModel(historyTableModel);
-        jTableBillPaymentHistory.setRowHeight(28);
-        jTableBillPaymentHistory.setFont(new Font("Segoe UI", Font.PLAIN, 14));
+        jTableBillPaymentHistory.setRowHeight(35);
+        jTableBillPaymentHistory.setFont(new Font("Segoe UI", Font.PLAIN, 16));
         jTableBillPaymentHistory.getTableHeader().setFont(new Font("Segoe UI", Font.BOLD, 14));
         jTableBillPaymentHistory.setSelectionMode(javax.swing.ListSelectionModel.SINGLE_SELECTION);
 
@@ -626,6 +625,7 @@ public final class BillPaymentPanel extends javax.swing.JPanel implements contro
 
         jPanel2.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(0, 0, 0)));
 
+        jTableBillPaymentHistory.setFont(new java.awt.Font("Segoe UI", 0, 16)); // NOI18N
         jTableBillPaymentHistory.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
                 {null, null, null, null},
@@ -685,13 +685,13 @@ public final class BillPaymentPanel extends javax.swing.JPanel implements contro
     private void jButtonPayBillActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonPayBillActionPerformed
         // ---- Validation ----
         if (selectedProvider == null) {
-            JOptionPane.showMessageDialog(this, bundle.getString("BillPaymentPanel.msg.selectBillerFirst"));
+            EasyPOSMessageDialog.showLocalizedError(this, ApplicationMessages.ERROR_BILLPAYMENT_SELECT_THE_BILLER);
             return;
         }
 
         String accNumber = jTextFieldAccNumber.getText().trim();
         if (accNumber.isEmpty()) {
-            JOptionPane.showMessageDialog(this, bundle.getString("BillPaymentPanel.msg.enterAccNumber"));
+            EasyPOSMessageDialog.showLocalizedError(this, ApplicationMessages.ERROR_BILLPAYMENT_ENTER_ACC_NO);
             return;
         }
 
@@ -700,11 +700,11 @@ public final class BillPaymentPanel extends javax.swing.JPanel implements contro
         try {
             amount = Double.parseDouble(amountStr);
         } catch (NumberFormatException ex) {
-            JOptionPane.showMessageDialog(this, bundle.getString("BillPaymentPanel.msg.enterValidAmount"));
+            EasyPOSMessageDialog.showLocalizedError(this, ApplicationMessages.ERROR_BILLPAYMENT_ENTER_VALID_AMOUNT);
             return;
         }
         if (amount <= 0 || amount >= 10000) {
-            JOptionPane.showMessageDialog(this, bundle.getString("BillPaymentPanel.msg.amountRange"));
+            EasyPOSMessageDialog.showLocalizedError(this, ApplicationMessages.ERROR_BILLPAYMENT_INVALID_AMOUNT_RANGE);
             return;
         }
 
@@ -746,6 +746,7 @@ public final class BillPaymentPanel extends javax.swing.JPanel implements contro
                     }
                 } catch (InterruptedException | ExecutionException ex) {
                     EasyPosLogger.getInstance().error("BillPayment pay action error", ex);
+                    EasyPOSMessageDialog.showLocalizedError(BillPaymentPanel.this, ApplicationMessages.ERROR_BILLPAYMENT_PROCESSING_ERROR);
                 }
             }
         }.execute();

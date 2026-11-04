@@ -75,7 +75,15 @@ public class ApplicationMessages {
     public static final String ERROR_NOTES_SAVE_FAILED                 = "error.notes.save.failed";
     public static final String ERROR_BACKUP_FILE_CREATE_FAILED         = "error.backup.file.create.failed";
     public static final String ERROR_BILLPAYMENT_CREDENTIALS_NOT_FOUND = "error.billpayment.credentials.notfound";
-
+    public static final String ERROR_BILLPAYMENT_SELECT_THE_BILLER     = "error.billpayment.selectBillerFirst";    
+    public static final String ERROR_BILLPAYMENT_ENTER_ACC_NO          = "error.billpayment.enterAccNumber";    
+    public static final String ERROR_BILLPAYMENT_ENTER_VALID_AMOUNT    = "error.billpayment.enterValidAmount";
+    public static final String ERROR_BILLPAYMENT_INVALID_AMOUNT_RANGE  = "error.billpayment.amountRange";
+    public static final String ERROR_BILLPAYMENT_PRINTER_NOT_FOUND     = "error.billpayment.printerNotFound";
+    public static final String ERROR_BILLPAYMENT_PRINTING_FAILED       = "error.billpayment.printFailed";
+    public static final String ERROR_BILLPAYMENT_PROCESSING_ERROR      = "error.billpayment.processError";
+    
+    
     // ── Info / Success ───────────────────────────────────────────────────────
     public static final String INFO_SAVE_SUCCESS                       = "info.save.success";
     public static final String INFO_INSERT_SUCCESS                     = "info.insert.success";
