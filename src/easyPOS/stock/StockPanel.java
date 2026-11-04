@@ -2,15 +2,23 @@ package easyPOS.stock;
 
 import appDataModels.APIHeaderData;
 import appDataModels.CategoryModel;
+import control.ApplicationDataManager;
 import control.EasyPosLogger;
 import control.RuntimeDataManager;
+import dataModels.Language;
+import java.awt.Font;
+import java.awt.FontFormatException;
+import java.awt.GraphicsEnvironment;
 import java.awt.HeadlessException;
 import java.awt.print.PrinterException;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.List;
+import java.util.Locale;
 import java.util.Map;
+import java.util.ResourceBundle;
 import java.util.concurrent.ExecutionException;
 import easyPOS.localization.ApplicationMessages;
 import javax.swing.JOptionPane;
@@ -30,13 +38,22 @@ import webService.ServerAPIConnection;
  *
  * @author malit
  */
-public class StockPanel extends javax.swing.JPanel {
+public class StockPanel extends javax.swing.JPanel implements control.LanguageChangeListener {
     
     /**
      * Creates new form StockContentPanel
      */
     public StockPanel() {
         initComponents();
+        switchLanguage();
+        control.EventManager.getInstance().addLanguageChangeListener(this);
+    }
+
+    @Override
+    public void onLanguageChanged() {
+        switchLanguage();
+        revalidate();
+        repaint();
     }
     
     
@@ -605,6 +622,37 @@ public class StockPanel extends javax.swing.JPanel {
 //            }            
 //        }
     }
+    private void switchLanguage() {
+        Language appLang = ApplicationDataManager.getInstance().getApplicationLanguage();
+        Locale locale = (appLang == Language.SINHALA) ? new Locale("si", "LK") : Locale.ENGLISH;
+        ResourceBundle mainBundle = ResourceBundle.getBundle("easyPOS/Bundle", locale);
+        ResourceBundle stockBundle = ResourceBundle.getBundle("easyPOS/stock/Bundle", locale);
+        if (appLang == Language.SINHALA) {
+            try {
+                Font customFont = Font.createFont(Font.TRUETYPE_FONT,
+                        ApplicationDataManager.getInstance().getSinhalaFontFile()).deriveFont(12f);
+                GraphicsEnvironment ge = GraphicsEnvironment.getLocalGraphicsEnvironment();
+                ge.registerFont(customFont);
+                jLabel86.setFont(customFont);
+                jLabel81.setFont(customFont);
+                jButtonPrintExpSt.setFont(customFont);
+                jButton24.setFont(customFont);
+            } catch (IOException | FontFormatException e) {
+                System.err.println(e);
+            }
+        }
+        jTabbedPaneListForOrder.setTitleAt(0, mainBundle.getString("StockPanel.jPanel7.TabConstraints.tabTitle"));
+        jTabbedPaneListForOrder.setTitleAt(1, stockBundle.getString("StockPanel.jPanel1.TabConstraints.tabTitle"));
+        jTabbedPaneListForOrder.setTitleAt(2, mainBundle.getString("StockPanel.jPanel4.TabConstraints.tabTitle"));
+        jTabbedPaneListForOrder.setTitleAt(3, mainBundle.getString("StockPanel.jPanel12.TabConstraints.tabTitle"));
+        jTabbedPaneListForOrder.setTitleAt(4, stockBundle.getString("StockPanel.jPanel2.TabConstraints.tabTitle"));
+        jTabbedPaneListForOrder.setTitleAt(5, stockBundle.getString("StockPanel.barcodeLablePrintPanel1.TabConstraints.tabTitle"));
+        jLabel86.setText(mainBundle.getString("StockPanel.jLabel86.text"));
+        jLabel81.setText(mainBundle.getString("StockPanel.jLabel81.text"));
+        jButtonPrintExpSt.setText(mainBundle.getString("StockPanel.jButtonPrintExpSt.text"));
+        jButton24.setText(mainBundle.getString("StockPanel.jButton24.text"));
+    }
+
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private easyPOS.stock.AddNewItemPanel addNewItemPanel1;
     private easyPOS.stock.BarcodeLablePrintPanel barcodeLablePrintPanel1;
