@@ -38,7 +38,7 @@ public class SettingsPanel extends javax.swing.JPanel implements control.Languag
 
     
     @SuppressWarnings("unchecked")
-    private void loadInitialData() {
+    public final void loadInitialData() {
         UserAccountModel userAccount = ApplicationDataManager.getInstance().getLoggedInUser();
         if (userAccount != null) {
             jTextFieldUserName.setText(userAccount.getUserName());
@@ -500,6 +500,7 @@ public class SettingsPanel extends javax.swing.JPanel implements control.Languag
                 jLabel49.setFont(customFont);
                 jLabel50.setFont(customFont);
                 jButton41.setFont(customFont);
+                jTabbedPane3.setFont(customFont);
             } catch (IOException | FontFormatException e) {
                 System.err.println(e);
             }

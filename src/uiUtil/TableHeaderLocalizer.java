@@ -2,6 +2,7 @@ package uiUtil;
 
 import javax.swing.JTable;
 import javax.swing.table.TableModel;
+import java.awt.Font;
 
 public class TableHeaderLocalizer {
 
@@ -16,6 +17,16 @@ public class TableHeaderLocalizer {
             table.getColumnModel().getColumn(i).setHeaderValue(model.getColumnName(i));
         }
         if (table.getTableHeader() != null) {
+            dataModels.Language lang = control.ApplicationDataManager.getInstance().getApplicationLanguage();
+            if (lang == dataModels.Language.SINHALA) {
+                try {
+                    Font sinhalaFont = Font.createFont(Font.TRUETYPE_FONT,
+                            control.ApplicationDataManager.getInstance().getSinhalaFontFile()).deriveFont(12f);
+                    table.getTableHeader().setFont(sinhalaFont);
+                } catch (Exception e) {
+                    // fall back to default header font
+                }
+            }
             table.getTableHeader().repaint();
         }
     }

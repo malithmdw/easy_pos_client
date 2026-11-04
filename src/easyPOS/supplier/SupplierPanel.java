@@ -1932,6 +1932,7 @@ public class SupplierPanel extends javax.swing.JPanel implements control.Languag
             jLabel105.setFont(customFont);
             jButton35.setFont(customFont);
             jButton23.setFont(customFont);
+            jTabbedPane1.setFont(customFont);
         } catch (IOException | FontFormatException e) {
             System.err.println(e);
         }

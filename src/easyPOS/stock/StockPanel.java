@@ -637,6 +637,7 @@ public class StockPanel extends javax.swing.JPanel implements control.LanguageCh
                 jLabel81.setFont(customFont);
                 jButtonPrintExpSt.setFont(customFont);
                 jButton24.setFont(customFont);
+                jTabbedPaneListForOrder.setFont(customFont);
             } catch (IOException | FontFormatException e) {
                 System.err.println(e);
             }
