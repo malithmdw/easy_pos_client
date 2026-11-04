@@ -12,6 +12,7 @@ import control.EasyPosLogger;
 import control.RuntimeDataManager;
 import serverDataModels.BillPaymentCategoryModel;
 import serverDataModels.BillPaymentProviderModel;
+import serverResponseDataModel.BillPaymentHistoryResponse;
 import serverResponseDataModel.BillPaymentLoginResponse;
 import serverResponseDataModel.BillPaymentResult;
 import serverResponseDataModel.CommonResponse;
@@ -111,7 +112,7 @@ public class BillPaymentServerAPIConnection {
      * stored in ApplicationDataManager. Stores the returned JWT in RuntimeData.
      */
     public CommonResponse login(String userName, String password) {
-        BillPaymentWebService webService = new BillPaymentWebService();
+        WebService webService = new WebService(true);
         Map<String, String> bodyData = new HashMap<>();
         bodyData.put("username", userName);   // EasyReload API field name is "username"
         bodyData.put("password", password);
@@ -139,8 +140,8 @@ public class BillPaymentServerAPIConnection {
      * Fetches bill-payment categories. On success, result is cached in
      * RuntimeData.billPaymentCategories for use by the UI without further API calls.
      */
-    public CommonResponse getBillerCategory() {
-        BillPaymentWebService webService = new BillPaymentWebService();
+    public CommonResponse getBillerCategory() {        
+        WebService webService = new WebService(true);
         CommonResponse commonResponse = callWithRetry(() ->
                 webService.sendGETRequest(API_NAME.BILL_PAYMENT_GET_CATEGORY.getAPIName(), generateHeader()));
 
@@ -164,8 +165,8 @@ public class BillPaymentServerAPIConnection {
      * Fetches bill-payment providers (billers). On success, result is cached in
      * RuntimeData.billPaymentProviders for use by the UI without further API calls.
      */
-    public CommonResponse getBillers() {
-        BillPaymentWebService webService = new BillPaymentWebService();
+    public CommonResponse getBillers() {        
+        WebService webService = new WebService(true);
         CommonResponse commonResponse = callWithRetry(() ->
                 webService.sendGETRequest(API_NAME.BILL_PAYMENT_GET_PROVIDERS.getAPIName(), generateHeader()));
 
@@ -185,17 +186,35 @@ public class BillPaymentServerAPIConnection {
         return commonResponse;
     }
 
-    public CommonResponse getHistory() {
-        BillPaymentWebService webService = new BillPaymentWebService();
+    public CommonResponse getHistory(String fromDate, String toDate) {
+        WebService webService = new WebService(true);
+        Map<String, Object> bodyData = new HashMap<>();
+        bodyData.put("fromDate", fromDate);
+        bodyData.put("toDate", toDate);
+        bodyData.put("page", 1);
+        bodyData.put("pageSize", 50);
+
         CommonResponse commonResponse = callWithRetry(() ->
-                webService.sendGETRequest(API_NAME.BILL_PAYMENT_HISTORY.getAPIName(), generateHeader()));
+                webService.sendPOSTRequest(API_NAME.BILL_PAYMENT_HISTORY.getAPIName(), generateHeader(), bodyData));
+
+        if (commonResponse.getAPIResponse().isSuccess()) {
+            ObjectMapper mapper = new ObjectMapper();
+            try {
+                BillPaymentHistoryResponse historyResponse = mapper.treeToValue(
+                        (JsonNode) commonResponse.getData(), BillPaymentHistoryResponse.class);
+                commonResponse.setData(historyResponse);
+            } catch (JsonProcessingException ex) {
+                commonResponse.setAPIResponse(ResponseCodes.get("95"));
+                EasyPosLogger.getInstance().error("BillPayment history parse error", ex);
+            }
+        }
         return commonResponse;
     }
 
     public CommonResponse payBill(String categoryId, String serviceProviderId,
                                    String accountNumber, double amount,
                                    String packageId, String clientRef) {
-        BillPaymentWebService webService = new BillPaymentWebService();
+        WebService webService = new WebService(true);
         Map<String, Object> bodyData = new HashMap<>();
         bodyData.put("clientRef", clientRef);
         bodyData.put("categoryId", categoryId);

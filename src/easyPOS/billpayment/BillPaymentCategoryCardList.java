@@ -15,7 +15,6 @@ import javax.swing.BoxLayout;
 import javax.swing.JScrollBar;
 import javax.swing.JScrollPane;
 import serverDataModels.BillPaymentCategoryModel;
-import webService.BillPaymentWebService;
 
 /**
  * Horizontal card strip for bill-payment categories.
@@ -78,7 +77,7 @@ public class BillPaymentCategoryCardList extends javax.swing.JPanel {
             final BillPaymentCategoryItemCard card = new BillPaymentCategoryItemCard();
             String displayName = category.getLocalizedName();
             String imageUrl = (category.image != null && !category.image.isEmpty())
-                    ? BillPaymentWebService.IMAGE_FOLDER_PATH + "/" + category.image
+                    ? (new webService.WebService(true).getServerImageFolderPath()) + "/" + category.image
                     : "";
             card.setDataFromUrl(imageUrl, displayName);
             itemGridPanel.add(card);

@@ -56,6 +56,7 @@ import webService.ServerAPIConnection;
 import easyPOS.localization.ApplicationMessages;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import javax.swing.JOptionPane;
 import javax.swing.table.TableColumn;
 import tableModels.CustomFontTableCellRenderer;
 
@@ -1675,15 +1676,19 @@ public class SaleInvoiceJPanel extends javax.swing.JPanel implements control.Lan
     }//GEN-LAST:event_jTextFieldQtyKeyPressed
 
     private void jButtonCancellBillActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonCancellBillActionPerformed
-        clearFieldsItemPanel();
-        billDataModel = new BillDataModel();
-        updateItemUITable();
-        clearFieldsTotalPanel();
+        int res = EasyPOSMessageDialog.showLocalizedConfirmationMessage(this, ApplicationMessages.INFO_DO_YOU_NEED_TO_DELETE);
+        
+        if (res == JOptionPane.YES_OPTION) {
+            clearFieldsItemPanel();
+            billDataModel = new BillDataModel();
+            updateItemUITable();
+            clearFieldsTotalPanel();
 
-        if (billDataModel != null && billDataModel.getBillItems() != null && billDataModel.getBillItems().isEmpty()) {
-            jCheckBoxActivateWholeSale.setEnabled(true);
-            isWholeSaleBill = false;
-            jCheckBoxActivateWholeSale.setSelected(false);
+            if (billDataModel != null && billDataModel.getBillItems() != null && billDataModel.getBillItems().isEmpty()) {
+                jCheckBoxActivateWholeSale.setEnabled(true);
+                isWholeSaleBill = false;
+                jCheckBoxActivateWholeSale.setSelected(false);
+            }
         }
     }//GEN-LAST:event_jButtonCancellBillActionPerformed
 

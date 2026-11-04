@@ -36,7 +36,7 @@ public class EasyPOSMessageDialog {
             JOptionPane.showMessageDialog(c, apiResponse.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
         }
     }
-
+    
     public static void showApiResponseDialog(Component c, ResponseCodes.ApiResponse apiResponse) {
         Language lang = ApplicationDataManager.getInstance().getApplicationLanguage();
         if (lang == Language.SINHALA) {
@@ -71,6 +71,10 @@ public class EasyPOSMessageDialog {
     public static void showLocalizedInfo(Component c, String messageKey) {
         showLocalizedDialog(c, messageKey, "Info", JOptionPane.INFORMATION_MESSAGE);
     }
+    
+    public static int showLocalizedConfirmationMessage(Component c, String messageKey) {
+        return showLocalizedConfirmationDialog(c, messageKey, "Confirm");
+    }
 
     public static void showLocalizedFormattedError(Component c, String messageKey, Object... args) {
         showRawDialog(c, ApplicationMessages.getFormattedMessage(messageKey, args), "Error", JOptionPane.ERROR_MESSAGE);
@@ -86,6 +90,38 @@ public class EasyPOSMessageDialog {
 
     public static void showRawInfo(Component c, String message) {
         JOptionPane.showMessageDialog(c, message, "Info", JOptionPane.INFORMATION_MESSAGE);
+    }
+    
+    private static int showLocalizedConfirmationDialog(Component c, String messageKey, String title) {
+        String msg = ApplicationMessages.getMessage(messageKey);
+        if (Language.SINHALA.equals(ApplicationDataManager.getInstance().getApplicationLanguage().SINHALA)) {
+            JLabel label = new JLabel(msg);
+            try {
+                Font customFont = Font.createFont(
+                        Font.TRUETYPE_FONT,
+                        ApplicationDataManager.getInstance().getSinhalaFontFile()
+                ).deriveFont(12f);
+                GraphicsEnvironment ge = GraphicsEnvironment.getLocalGraphicsEnvironment();
+                ge.registerFont(customFont);
+                label.setFont(customFont);
+            } catch (IOException | FontFormatException ignored) {}
+            
+            return JOptionPane.showConfirmDialog(
+                c, 
+                label, 
+                title, 
+                JOptionPane.YES_NO_CANCEL_OPTION, 
+                JOptionPane.QUESTION_MESSAGE
+            );
+        } else {
+            return JOptionPane.showConfirmDialog(
+                c, 
+                msg, 
+                title, 
+                JOptionPane.YES_NO_CANCEL_OPTION, 
+                JOptionPane.QUESTION_MESSAGE
+            );
+        }
     }
 
     private static void showLocalizedDialog(Component c, String messageKey, String title, int messageType) {

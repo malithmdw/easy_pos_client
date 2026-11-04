@@ -11,6 +11,8 @@ import control.NumberPadKeyPressListener;
 import dataModels.Language;
 import dataModels.ReceiptCommonData;
 import easyPOS.NumberPanel;
+import java.awt.Color;
+import java.awt.Component;
 import java.awt.Image;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
@@ -25,21 +27,34 @@ import java.net.URL;
 import java.awt.Font;
 import java.awt.FontFormatException;
 import java.awt.GraphicsEnvironment;
+import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
+import java.util.ArrayList;
+import java.util.EventObject;
 import java.util.List;
 import java.util.Locale;
 import java.util.ResourceBundle;
 import java.util.UUID;
+import java.util.concurrent.ExecutionException;
 import javax.imageio.ImageIO;
 import javax.print.PrintService;
+import javax.swing.DefaultCellEditor;
 import javax.swing.ImageIcon;
+import javax.swing.JButton;
+import javax.swing.JCheckBox;
 import javax.swing.JOptionPane;
+import javax.swing.JTable;
 import javax.swing.SwingUtilities;
+import javax.swing.table.DefaultTableCellRenderer;
+import javax.swing.table.TableCellRenderer;
 import serverDataModels.BillPaymentProviderModel;
+import serverResponseDataModel.BillPaymentHistoryItem;
+import serverResponseDataModel.BillPaymentHistoryResponse;
 import serverResponseDataModel.BillPaymentResult;
 import serverResponseDataModel.CommonResponse;
+import tableModels.BillPaymentHistoryTableModel;
 import uiUtil.EasyPOSMessageDialog;
 import webService.BillPaymentServerAPIConnection;
-import webService.BillPaymentWebService;
 
 /**
  *
@@ -50,6 +65,7 @@ public final class BillPaymentPanel extends javax.swing.JPanel implements contro
     private javax.swing.JPanel billersInnerPanel;
     private BillPaymentProviderModel selectedProvider;
     private ResourceBundle bundle;
+    private BillPaymentHistoryTableModel historyTableModel;
 
     /**
      * Creates new form BillPaymentPanel
@@ -58,13 +74,18 @@ public final class BillPaymentPanel extends javax.swing.JPanel implements contro
         initComponents();
         switchLanguage();
         setupBillersPanel();
-        
+        setupHistoryTable();
+
         numberPanel1.setButtonInvisible(NumberPadKeyPressListener.NumberPadButton.BUTTON_OK);
 
         billPaymentCategoryCardList.setOnBillPaymentCategorySelectListener(category ->
                 loadBillerCards(category.id));
 
         loadInitialDataToUI();
+
+        if (RuntimeDataManager.getInstance().getRuntimeData().getBillPaymentJwt() != null) {
+            loadPaymentHistory();
+        }
 
         EventManager.getInstance().addLanguageChangeListener(this);
         EventManager.getInstance().addNumberPadKeyEventListener(new NumberPadKeyPressListener() {
@@ -186,6 +207,7 @@ public final class BillPaymentPanel extends javax.swing.JPanel implements contro
                     if (get()) {
                         billPaymentCategoryCardList.loadAllCards();
                         loadBillerCards(null);
+                        loadPaymentHistory();
                     }
                 } catch (Exception ex) {
                     EasyPosLogger.getInstance().error("BillPayment UI init error", ex);
@@ -213,7 +235,7 @@ public final class BillPaymentPanel extends javax.swing.JPanel implements contro
             BillerCard card = new BillerCard();
             String displayName = provider.getLocalizedName();
             String imageUrl = (provider.image != null && !provider.image.isEmpty())
-                    ? BillPaymentWebService.IMAGE_FOLDER_PATH + "/" + provider.image : "";
+                    ? (new webService.WebService(true).getServerImageFolderPath()) + "/" + provider.image : "";
             card.setDataFromUrl(imageUrl, displayName);
 
             final BillPaymentProviderModel p = provider;
@@ -246,7 +268,7 @@ public final class BillPaymentPanel extends javax.swing.JPanel implements contro
             return;
         }
 
-        String imageUrl = BillPaymentWebService.IMAGE_FOLDER_PATH + "/" + provider.image;
+        String imageUrl = (new webService.WebService(true).getServerImageFolderPath()) + "/" + provider.image;
 
         new Thread(() -> {
             try {
@@ -285,7 +307,7 @@ public final class BillPaymentPanel extends javax.swing.JPanel implements contro
         return data;
     }
 
-    private void printBillPaymentReceipt(BillPaymentResult result) {
+    private void printBillPaymentReceipt(BillPaymentResult result, BillPaymentProviderModel provider) {
         PrinterJob job = PrinterJob.getPrinterJob();
         PrintService[] services = PrinterJob.lookupPrintServices();
         String printerName = ApplicationDataManager.getInstance().getReceiptPrinterName();
@@ -313,11 +335,172 @@ public final class BillPaymentPanel extends javax.swing.JPanel implements contro
             pf.setPaper(paper);
             pf.setOrientation(PageFormat.PORTRAIT);
 
-            job.setPrintable(new BillPaymentReceiptPrint(result, selectedProvider, buildReceiptData()), pf);
+            job.setPrintable(new BillPaymentReceiptPrint(result, provider, buildReceiptData()), pf);
             job.print();
         } catch (PrinterException ex) {
             EasyPosLogger.getInstance().error("BillPayment receipt print failed", ex);
             JOptionPane.showMessageDialog(this, bundle.getString("BillPaymentPanel.msg.printFailed"));
+        }
+    }
+
+    private void setupHistoryTable() {
+        historyTableModel = new BillPaymentHistoryTableModel(new ArrayList<>());
+        jTableBillPaymentHistory.setModel(historyTableModel);
+        jTableBillPaymentHistory.setRowHeight(26);
+        jTableBillPaymentHistory.setFont(new Font("Segoe UI", Font.PLAIN, 12));
+        jTableBillPaymentHistory.getTableHeader().setFont(new Font("Segoe UI", Font.BOLD, 12));
+        jTableBillPaymentHistory.setSelectionMode(javax.swing.ListSelectionModel.SINGLE_SELECTION);
+
+        jTableBillPaymentHistory.getColumnModel().getColumn(BillPaymentHistoryTableModel.COL_ROW_NUM).setMaxWidth(35);
+        jTableBillPaymentHistory.getColumnModel().getColumn(BillPaymentHistoryTableModel.COL_TRAN_ID).setPreferredWidth(170);
+        jTableBillPaymentHistory.getColumnModel().getColumn(BillPaymentHistoryTableModel.COL_CATEGORY).setPreferredWidth(80);
+        jTableBillPaymentHistory.getColumnModel().getColumn(BillPaymentHistoryTableModel.COL_PROVIDER).setPreferredWidth(100);
+        jTableBillPaymentHistory.getColumnModel().getColumn(BillPaymentHistoryTableModel.COL_ACCOUNT).setPreferredWidth(120);
+        jTableBillPaymentHistory.getColumnModel().getColumn(BillPaymentHistoryTableModel.COL_AMOUNT).setPreferredWidth(80);
+        jTableBillPaymentHistory.getColumnModel().getColumn(BillPaymentHistoryTableModel.COL_STATUS).setPreferredWidth(80);
+        jTableBillPaymentHistory.getColumnModel().getColumn(BillPaymentHistoryTableModel.COL_PRINT).setPreferredWidth(70);
+        jTableBillPaymentHistory.getColumnModel().getColumn(BillPaymentHistoryTableModel.COL_PRINT).setMaxWidth(70);
+
+        jTableBillPaymentHistory.getColumnModel().getColumn(BillPaymentHistoryTableModel.COL_STATUS)
+                .setCellRenderer(new StatusCellRenderer());
+
+        jTableBillPaymentHistory.getColumnModel().getColumn(BillPaymentHistoryTableModel.COL_PRINT)
+                .setCellRenderer(new PrintButtonRenderer());
+        jTableBillPaymentHistory.getColumnModel().getColumn(BillPaymentHistoryTableModel.COL_PRINT)
+                .setCellEditor(new PrintButtonEditor());
+    }
+
+    private void loadPaymentHistory() {
+        new javax.swing.SwingWorker<CommonResponse, Void>() {
+            @Override
+            protected CommonResponse doInBackground() {
+                LocalDate today = LocalDate.now();
+                String toDate   = today.format(DateTimeFormatter.ISO_LOCAL_DATE);
+                String fromDate = today.minusDays(6).format(DateTimeFormatter.ISO_LOCAL_DATE);
+                return BillPaymentServerAPIConnection.getInstance().getHistory(fromDate, toDate);
+            }
+
+            @Override
+            protected void done() {
+                try {
+                    CommonResponse response = get();
+                    if (response.getAPIResponse().isSuccess()) {
+                        BillPaymentHistoryResponse historyResponse = (BillPaymentHistoryResponse) response.getData();
+                        if (historyResponse != null && historyResponse.items != null) {
+                            historyTableModel.setItems(historyResponse.items);
+                        }
+                    } else {
+                        EasyPosLogger.getInstance().log(EasyPosLogger.LogLevel.ERROR,
+                                "BillPayment history load failed: " + response.getAPIResponse().getMessage());
+                    }
+                } catch (Exception ex) {
+                    EasyPosLogger.getInstance().error("BillPayment history load error", ex);
+                }
+            }
+        }.execute();
+    }
+
+    private void printHistoryItemAtRow(int row) {
+        BillPaymentHistoryItem item = historyTableModel.getItem(row);
+
+        BillPaymentResult result = new BillPaymentResult();
+        result.clientRef         = item.clientRef;
+        result.categoryId        = item.categoryId;
+        result.serviceProviderId = item.serviceProviderId;
+        result.accountNumber     = item.accountNumber;
+        result.amount            = item.amount;
+        result.packageId         = item.packageId;
+        result.dateTime          = item.dateTime;
+        result.status            = item.status;
+
+        BillPaymentProviderModel provider = null;
+        List<BillPaymentProviderModel> providers = RuntimeDataManager.getInstance()
+                .getRuntimeData().getBillPaymentProviders();
+        if (providers != null && item.serviceProviderId != null) {
+            for (BillPaymentProviderModel p : providers) {
+                if (item.serviceProviderId.equals(p.id)) {
+                    provider = p;
+                    break;
+                }
+            }
+        }
+
+        printBillPaymentReceipt(result, provider);
+    }
+
+    // ---- Inner cell renderer/editor classes ----
+
+    private static class StatusCellRenderer extends DefaultTableCellRenderer {
+        private static final Color COLOR_SUCCESS = new Color(144, 238, 144);
+        private static final Color COLOR_PENDING = new Color(255, 193,   7);
+        private static final Color COLOR_FAILED  = new Color(255, 182, 193);
+
+        @Override
+        public Component getTableCellRendererComponent(JTable table, Object value,
+                boolean isSelected, boolean hasFocus, int row, int column) {
+            super.getTableCellRendererComponent(table, value, isSelected, hasFocus, row, column);
+            setHorizontalAlignment(CENTER);
+            if (!isSelected) {
+                String status = value != null ? value.toString() : "";
+                switch (status) {
+                    case "Success": setBackground(COLOR_SUCCESS); break;
+                    case "Pending": setBackground(COLOR_PENDING); break;
+                    case "Failed":  setBackground(COLOR_FAILED);  break;
+                    default:        setBackground(table.getBackground()); break;
+                }
+            }
+            setForeground(Color.BLACK);
+            return this;
+        }
+    }
+
+    private static class PrintButtonRenderer extends JButton implements TableCellRenderer {
+        public PrintButtonRenderer() {
+            setOpaque(true);
+            setText("Print");
+            setFont(new Font("Segoe UI", Font.PLAIN, 11));
+        }
+
+        @Override
+        public Component getTableCellRendererComponent(JTable table, Object value,
+                boolean isSelected, boolean hasFocus, int row, int column) {
+            return this;
+        }
+    }
+
+    private class PrintButtonEditor extends DefaultCellEditor {
+        private final JButton button;
+        private int currentRow;
+
+        public PrintButtonEditor() {
+            super(new JCheckBox());
+            setClickCountToStart(1);
+            button = new JButton("Print");
+            button.setFont(new Font("Segoe UI", Font.PLAIN, 11));
+            button.addActionListener(e -> {
+                fireEditingStopped();
+                printHistoryItemAtRow(currentRow);
+            });
+        }
+
+        @Override
+        public boolean isCellEditable(EventObject e) {
+            if (e instanceof MouseEvent) {
+                return ((MouseEvent) e).getClickCount() >= 1;
+            }
+            return super.isCellEditable(e);
+        }
+
+        @Override
+        public Component getTableCellEditorComponent(JTable table, Object value,
+                boolean isSelected, int row, int column) {
+            currentRow = table.convertRowIndexToModel(row);
+            return button;
+        }
+
+        @Override
+        public Object getCellEditorValue() {
+            return "Print";
         }
     }
 
@@ -342,6 +525,9 @@ public final class BillPaymentPanel extends javax.swing.JPanel implements contro
         jButtonPayBill = new javax.swing.JButton();
         jLabelSelectedBillerName = new javax.swing.JLabel();
         numberPanel1 = new easyPOS.NumberPanel();
+        jPanel2 = new javax.swing.JPanel();
+        jScrollPane1 = new javax.swing.JScrollPane();
+        jTableBillPaymentHistory = new javax.swing.JTable();
 
         jPanel1.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(0, 0, 0)));
 
@@ -434,17 +620,49 @@ public final class BillPaymentPanel extends javax.swing.JPanel implements contro
                 .addContainerGap())
         );
 
+        jPanel2.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(0, 0, 0)));
+
+        jTableBillPaymentHistory.setModel(new javax.swing.table.DefaultTableModel(
+            new Object [][] {
+                {null, null, null, null},
+                {null, null, null, null},
+                {null, null, null, null},
+                {null, null, null, null}
+            },
+            new String [] {
+                "Title 1", "Title 2", "Title 3", "Title 4"
+            }
+        ));
+        jScrollPane1.setViewportView(jTableBillPaymentHistory);
+
+        javax.swing.GroupLayout jPanel2Layout = new javax.swing.GroupLayout(jPanel2);
+        jPanel2.setLayout(jPanel2Layout);
+        jPanel2Layout.setHorizontalGroup(
+            jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addComponent(jScrollPane1)
+        );
+        jPanel2Layout.setVerticalGroup(
+            jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 117, Short.MAX_VALUE)
+        );
+
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(this);
         this.setLayout(layout);
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                .addComponent(jPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(jPanel3, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(numberPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, 305, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addContainerGap()
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(layout.createSequentialGroup()
+                        .addComponent(jPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(jPanel3, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(numberPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, 305, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGap(0, 0, Short.MAX_VALUE))
+                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
+                        .addComponent(jPanel2, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                        .addContainerGap())))
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -452,10 +670,11 @@ public final class BillPaymentPanel extends javax.swing.JPanel implements contro
                 .addContainerGap()
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
                     .addComponent(jPanel1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                    .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
-                        .addComponent(jPanel3, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                        .addComponent(numberPanel1, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)))
-                .addContainerGap(88, Short.MAX_VALUE))
+                    .addComponent(jPanel3, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addComponent(numberPanel1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(jPanel2, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addContainerGap())
         );
     }// </editor-fold>//GEN-END:initComponents
 
@@ -491,7 +710,8 @@ public final class BillPaymentPanel extends javax.swing.JPanel implements contro
         final String finalAccNumber = accNumber;
         final double finalAmount    = amount;
         final BillPaymentProviderModel finalProvider = selectedProvider;
-        final String clientRef = UUID.randomUUID().toString();
+        final String clientRef = ApplicationDataManager.getInstance().getNextTransactionId();
+        ApplicationDataManager.getInstance().updateInvoiceNumberUtilized();
 
         new javax.swing.SwingWorker<CommonResponse, Void>() {
             @Override
@@ -512,15 +732,15 @@ public final class BillPaymentPanel extends javax.swing.JPanel implements contro
                     CommonResponse response = get();
                     if (response.getAPIResponse().isSuccess()) {
                         BillPaymentResult result = (BillPaymentResult) response.getData();
-                        printBillPaymentReceipt(result);
-                        // Clear fields after successful payment
+                        printBillPaymentReceipt(result, finalProvider);
                         jTextFieldAccNumber.setText("");
                         jTextFieldAmount.setText("");
+                        loadPaymentHistory();
                     } else {
                         EasyPOSMessageDialog.showErrorMessageDialog(
                                 BillPaymentPanel.this, response.getAPIResponse());
                     }
-                } catch (Exception ex) {
+                } catch (InterruptedException | ExecutionException ex) {
                     EasyPosLogger.getInstance().error("BillPayment pay action error", ex);
                 }
             }
@@ -536,8 +756,11 @@ public final class BillPaymentPanel extends javax.swing.JPanel implements contro
     private javax.swing.JLabel jLabelSelectedBillerLogo;
     private javax.swing.JLabel jLabelSelectedBillerName;
     private javax.swing.JPanel jPanel1;
+    private javax.swing.JPanel jPanel2;
     private javax.swing.JPanel jPanel3;
     private javax.swing.JPanel jPanelBillPaymentBillers;
+    private javax.swing.JScrollPane jScrollPane1;
+    private javax.swing.JTable jTableBillPaymentHistory;
     private javax.swing.JTextField jTextFieldAccNumber;
     private javax.swing.JTextField jTextFieldAmount;
     private easyPOS.NumberPanel numberPanel1;
