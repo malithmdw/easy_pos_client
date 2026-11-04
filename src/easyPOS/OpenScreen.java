@@ -118,6 +118,7 @@ public class OpenScreen extends javax.swing.JFrame{
             case SETTINGS:
             {
                 loadPage(jPanelSettings);
+                settingsPanel1.loadInitialData();
                 break;
             }
             case LOGOUT:

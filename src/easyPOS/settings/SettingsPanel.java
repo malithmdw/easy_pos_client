@@ -44,7 +44,7 @@ public class SettingsPanel extends javax.swing.JPanel implements control.Languag
             jTextFieldUserName.setText(userAccount.getUserName());
             jTextFieldUserCode.setText(userAccount.getUserCode());
             jTextFieldUserEmail.setText(userAccount.getEmail());
-            jTextFieldUserPhone.setText(userAccount.getPassword());
+            jTextFieldUserPhone.setText(userAccount.getPhone());
         }
 
         Language[] languages = Language.values();
