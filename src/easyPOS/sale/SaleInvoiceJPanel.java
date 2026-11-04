@@ -761,6 +761,7 @@ public class SaleInvoiceJPanel extends javax.swing.JPanel implements control.Lan
         jLabelBalance.setText(resourceBundle.getString("SaleInvoiceJPanel.jLabelBalance.text"));
         
         jButtonIssueBill.setText(resourceBundle.getString("SaleInvoiceJPanel.jButtonIssueBill.text"));
+        uiUtil.TableHeaderLocalizer.refresh(jTableSaleToBill);
     }
     
     private void submitToDB(BillDataModel billDataModel){
