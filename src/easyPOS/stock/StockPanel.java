@@ -651,6 +651,8 @@ public class StockPanel extends javax.swing.JPanel implements control.LanguageCh
         jLabel81.setText(mainBundle.getString("StockPanel.jLabel81.text"));
         jButtonPrintExpSt.setText(mainBundle.getString("StockPanel.jButtonPrintExpSt.text"));
         jButton24.setText(mainBundle.getString("StockPanel.jButton24.text"));
+        uiUtil.TableHeaderLocalizer.refresh(jTableExpStocks);
+        uiUtil.TableHeaderLocalizer.refresh(jTableToOrder);
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables

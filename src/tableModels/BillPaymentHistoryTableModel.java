@@ -49,7 +49,15 @@ public class BillPaymentHistoryTableModel extends AbstractTableModel {
 
     @Override
     public String getColumnName(int col) {
-        return COLUMN_NAMES[col];
+        try {
+            dataModels.Language lang = control.ApplicationDataManager.getInstance().getApplicationLanguage();
+            java.util.Locale locale = (lang == dataModels.Language.SINHALA)
+                    ? new java.util.Locale("si", "LK") : java.util.Locale.ENGLISH;
+            java.util.ResourceBundle bundle = java.util.ResourceBundle.getBundle("tableModels/Bundle", locale);
+            return bundle.getString("BillPaymentHistoryTableModel.col." + col);
+        } catch (Exception e) {
+            return COLUMN_NAMES[col];
+        }
     }
 
     @Override

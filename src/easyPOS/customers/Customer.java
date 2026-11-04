@@ -893,6 +893,7 @@ public class Customer extends javax.swing.JPanel implements control.LanguageChan
         jTextFieldCustomerSearch.setText(resourceBundle.getString("Customer.jTextFieldCustomerSearch.text"));
         jTextFieldCustomerSearch1.setText(resourceBundle.getString("Customer.jTextFieldCustomerSearch1.text"));
         jButtonPrintSticker.setText(resourceBundle.getString("Customer.jButtonPrintSticker.text"));
+        uiUtil.TableHeaderLocalizer.refresh(customerTransactionsTable);
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables

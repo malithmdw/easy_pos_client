@@ -231,6 +231,8 @@ public class SaleReturnFrame extends javax.swing.JFrame implements control.Langu
         if (jPanel3.getBorder() instanceof javax.swing.border.TitledBorder) {
             ((javax.swing.border.TitledBorder) jPanel3.getBorder()).setTitle(resourceBundle.getString("SaleReturnFrame.jPanel3.border.title"));
         }
+        uiUtil.TableHeaderLocalizer.refresh(saleInvoiceItemsTable);
+        uiUtil.TableHeaderLocalizer.refresh(vouchersTable1);
     }
 
     private boolean printSaleReturnVoucher(String voucherId, double voucherAmount, String voucherDateTime)

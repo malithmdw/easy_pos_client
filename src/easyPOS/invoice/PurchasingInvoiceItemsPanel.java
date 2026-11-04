@@ -1143,7 +1143,8 @@ public class PurchasingInvoiceItemsPanel extends javax.swing.JPanel implements c
         jLabelPIItemNewQty.setText(resourceBundle.getString("PurchasingInvoiceItemPanel.Qty")); 
         jLabelPIItemNewExpDate.setText(resourceBundle.getString("PurchasingInvoiceItemPanel.ExpiryDate")); 
         
-        jButtonPIItemAddToStock.setText(resourceBundle.getString("PurchasingInvoiceItemPanel.AddToStock")); 
+        jButtonPIItemAddToStock.setText(resourceBundle.getString("PurchasingInvoiceItemPanel.AddToStock"));
+        uiUtil.TableHeaderLocalizer.refresh(jTablePendingInvoices);
     }
     
     // Variables declaration - do not modify//GEN-BEGIN:variables

@@ -21,13 +21,19 @@ import tableModels.BarcodeLabletemTbl;
  *
  * @author malit
  */
-public class BarcodeLablePrintPanel extends javax.swing.JPanel {
+public class BarcodeLablePrintPanel extends javax.swing.JPanel implements control.LanguageChangeListener {
 
     private ArrayList<BarcodeLableItemDataModel> barcodeLableItems;
     
     public BarcodeLablePrintPanel() {
         this.barcodeLableItems = new ArrayList<>();
         initComponents();
+        control.EventManager.getInstance().addLanguageChangeListener(this);
+    }
+
+    @Override
+    public void onLanguageChanged() {
+        uiUtil.TableHeaderLocalizer.refresh(jTableBarcodeLablePrintItems);
     }
     
     public void loadData(){

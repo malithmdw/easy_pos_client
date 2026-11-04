@@ -1985,6 +1985,9 @@ public class SupplierPanel extends javax.swing.JPanel implements control.Languag
         jLabel105.setText(resourceBundle.getString("SupplierPanel.jLabel105.text"));
         jButton35.setText(resourceBundle.getString("SupplierPanel.jButton35.text"));
         jButton23.setText(resourceBundle.getString("SupplierPanel.jButton23.text"));
+        uiUtil.TableHeaderLocalizer.refresh(jTableSuppliers);
+        uiUtil.TableHeaderLocalizer.refresh(jTableSupplies);
+        uiUtil.TableHeaderLocalizer.refresh(jTableSupplierItems);
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables

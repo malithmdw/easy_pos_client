@@ -278,6 +278,7 @@ public class SalePaymentFrame extends javax.swing.JFrame implements control.Lang
         paymentMethodInputLabel1.setText(resourceBundle.getString("SalePaymentFrame.paymentMethodInputLabel1.text"));
         jButton1.setText(resourceBundle.getString("SalePaymentFrame.jButton1.text"));
         jButton2.setText(resourceBundle.getString("SalePaymentFrame.jButton2.text"));
+        uiUtil.TableHeaderLocalizer.refresh(vouchersTable);
     }
     
     private double calcRuleDiscount(boolean applyChangesForBillData){

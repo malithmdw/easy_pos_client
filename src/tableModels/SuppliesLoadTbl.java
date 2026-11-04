@@ -23,8 +23,17 @@ public class SuppliesLoadTbl extends AbstractTableModel{
     public int getRowCount() {
         return list.size();
     }
+    @Override
     public String getColumnName(int columnIndex){
-        return COLUMN_NAMES[columnIndex];
+        try {
+            dataModels.Language lang = control.ApplicationDataManager.getInstance().getApplicationLanguage();
+            java.util.Locale locale = (lang == dataModels.Language.SINHALA)
+                    ? new java.util.Locale("si", "LK") : java.util.Locale.ENGLISH;
+            java.util.ResourceBundle bundle = java.util.ResourceBundle.getBundle("tableModels/Bundle", locale);
+            return bundle.getString("SuppliesLoadTbl.col." + columnIndex);
+        } catch (Exception e) {
+            return COLUMN_NAMES[columnIndex];
+        }
     }
     @Override
     public int getColumnCount() {

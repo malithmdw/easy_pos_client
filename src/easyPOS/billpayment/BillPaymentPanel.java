@@ -133,6 +133,7 @@ public final class BillPaymentPanel extends javax.swing.JPanel implements contro
         jLabel1.setText(bundle.getString("BillPaymentPanel.jLabel1.text"));
         jLabel2.setText(bundle.getString("BillPaymentPanel.jLabel2.text"));
         jButtonPayBill.setText(bundle.getString("BillPaymentPanel.jButtonPayBill.text"));
+        uiUtil.TableHeaderLocalizer.refresh(jTableBillPaymentHistory);
     }
 
     public void loadInitialDataToUI(boolean isApplicationLoading){
@@ -569,17 +570,17 @@ public final class BillPaymentPanel extends javax.swing.JPanel implements contro
 
         jPanel3.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(0, 0, 0)));
 
-        jLabel1.setFont(new java.awt.Font("Segoe UI", 0, 14)); // NOI18N
+        jLabel1.setFont(new java.awt.Font("Segoe UI", 0, 18)); // NOI18N
         jLabel1.setText("Account / Mobile Number :");
 
         jTextFieldAccNumber.setFont(new java.awt.Font("Segoe UI", 0, 16)); // NOI18N
 
-        jLabel2.setFont(new java.awt.Font("Segoe UI", 0, 14)); // NOI18N
+        jLabel2.setFont(new java.awt.Font("Segoe UI", 0, 18)); // NOI18N
         jLabel2.setText("Amount :");
 
         jTextFieldAmount.setFont(new java.awt.Font("Segoe UI", 0, 16)); // NOI18N
 
-        jButtonPayBill.setFont(new java.awt.Font("Segoe UI", 0, 18)); // NOI18N
+        jButtonPayBill.setFont(new java.awt.Font("Segoe UI", 0, 22)); // NOI18N
         jButtonPayBill.setText("Pay");
         jButtonPayBill.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -619,7 +620,7 @@ public final class BillPaymentPanel extends javax.swing.JPanel implements contro
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(jTextFieldAmount, javax.swing.GroupLayout.PREFERRED_SIZE, 31, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                .addComponent(jButtonPayBill)
+                .addComponent(jButtonPayBill, javax.swing.GroupLayout.PREFERRED_SIZE, 48, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addContainerGap())
         );
 

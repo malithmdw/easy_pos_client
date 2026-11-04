@@ -410,6 +410,7 @@ public class ReportPanel extends javax.swing.JPanel implements control.LanguageC
         jLabel32.setText(resourceBundle.getString("ReportPanel.jLabel32.text"));
         jButtonShowOrders.setText(resourceBundle.getString("ReportPanel.jButton26.text"));
         jButtonPrintShippingLabel.setText(resourceBundle.getString("ReportPanel.jButton7.text"));
+        uiUtil.TableHeaderLocalizer.refresh(jTableReport);
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables

@@ -44,7 +44,7 @@ import webService.ServerAPIConnection;
  *
  * @author malit
  */
-public class LiveStockPanel extends javax.swing.JPanel {
+public class LiveStockPanel extends javax.swing.JPanel implements control.LanguageChangeListener {
 
     SupplierDBOperation supplierDBOperation = new SupplierDBOperation();
     
@@ -59,6 +59,13 @@ public class LiveStockPanel extends javax.swing.JPanel {
      */
     public LiveStockPanel() {
         initComponents();
+        control.EventManager.getInstance().addLanguageChangeListener(this);
+    }
+
+    @Override
+    public void onLanguageChanged() {
+        uiUtil.TableHeaderLocalizer.refresh(jTableCurStockItems);
+        uiUtil.TableHeaderLocalizer.refresh(jTableLiveStockItemBatches);
     }
     
     public void loadInitialDataToUI(StockPanel parent)
