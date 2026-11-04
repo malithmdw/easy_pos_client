@@ -117,7 +117,7 @@ public class BillPaymentServerAPIConnection {
         bodyData.put("username", userName);   // EasyReload API field name is "username"
         bodyData.put("password", password);
 
-        CommonResponse commonResponse = webService.sendPOSTRequest(
+        CommonResponse commonResponse = webService.sendBillPaymentPOSTRequest(
                 API_NAME.BILL_PAYMENT_LOGIN.getAPIName(), new HashMap<>(), bodyData);
 
         if (commonResponse.getAPIResponse().isSuccess()) {
@@ -143,7 +143,7 @@ public class BillPaymentServerAPIConnection {
     public CommonResponse getBillerCategory() {        
         WebService webService = new WebService(true);
         CommonResponse commonResponse = callWithRetry(() ->
-                webService.sendGETRequest(API_NAME.BILL_PAYMENT_GET_CATEGORY.getAPIName(), generateHeader()));
+                webService.sendBillPaymentGETRequest(API_NAME.BILL_PAYMENT_GET_CATEGORY.getAPIName(), generateHeader()));
 
         if (commonResponse.getAPIResponse().isSuccess()) {
             ObjectMapper mapper = new ObjectMapper();
@@ -168,7 +168,7 @@ public class BillPaymentServerAPIConnection {
     public CommonResponse getBillers() {        
         WebService webService = new WebService(true);
         CommonResponse commonResponse = callWithRetry(() ->
-                webService.sendGETRequest(API_NAME.BILL_PAYMENT_GET_PROVIDERS.getAPIName(), generateHeader()));
+                webService.sendBillPaymentGETRequest(API_NAME.BILL_PAYMENT_GET_PROVIDERS.getAPIName(), generateHeader()));
 
         if (commonResponse.getAPIResponse().isSuccess()) {
             ObjectMapper mapper = new ObjectMapper();
@@ -195,7 +195,7 @@ public class BillPaymentServerAPIConnection {
         bodyData.put("pageSize", 50);
 
         CommonResponse commonResponse = callWithRetry(() ->
-                webService.sendPOSTRequest(API_NAME.BILL_PAYMENT_HISTORY.getAPIName(), generateHeader(), bodyData));
+                webService.sendBillPaymentPOSTRequest(API_NAME.BILL_PAYMENT_HISTORY.getAPIName(), generateHeader(), bodyData));
 
         if (commonResponse.getAPIResponse().isSuccess()) {
             ObjectMapper mapper = new ObjectMapper();
@@ -226,7 +226,7 @@ public class BillPaymentServerAPIConnection {
         }
 
         CommonResponse commonResponse = callWithRetry(() ->
-                webService.sendPOSTRequest(API_NAME.BILL_PAYMENT_PAY.getAPIName(), generateHeader(), bodyData));
+                webService.sendBillPaymentPOSTRequest(API_NAME.BILL_PAYMENT_PAY.getAPIName(), generateHeader(), bodyData));
 
         if (commonResponse.getAPIResponse().isSuccess()) {
             ObjectMapper mapper = new ObjectMapper();

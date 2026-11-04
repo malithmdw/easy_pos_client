@@ -18,6 +18,7 @@ import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
+import serverResponseDataModel.BillPaymentServerResponse;
 import serverResponseDataModel.CommonResponse;
 import serverResponseDataModel.ServerResponse;
 
@@ -235,6 +236,131 @@ public class WebService {
         }
 
         return commonResponse;
+    }
+
+    // -------------------------------------------------------------------------
+    // EasyReload bill-payment variants
+    // These use the EasyReload envelope {"status","message","data"} instead of
+    // the EasyPOS envelope {"response_code","response_msg","data"}.
+    // -------------------------------------------------------------------------
+
+    public CommonResponse sendBillPaymentPOSTRequest(String apiPath, Map<String, String> header, Object bodyData) {
+        CommonResponse commonResponse = new CommonResponse();
+
+        try {
+            URL obj = new URL(POST_URL + "/" + apiPath);
+            ObjectMapper mapper = new ObjectMapper();
+
+            HttpURLConnection con = (HttpURLConnection) obj.openConnection();
+            con.setRequestMethod("POST");
+            con.setRequestProperty("User-Agent", USER_AGENT);
+            con.setRequestProperty("Content-Type", "application/json");
+
+            for (Map.Entry<String, String> entry : header.entrySet()) {
+                con.setRequestProperty(entry.getKey(), entry.getValue());
+            }
+
+            con.setConnectTimeout(30_000);
+            con.setReadTimeout(30_000);
+
+            String requestBody = mapper.writeValueAsString(bodyData);
+            con.setDoOutput(true);
+            try (OutputStream os = con.getOutputStream()) {
+                byte[] input = requestBody.getBytes("utf-8");
+                os.write(input, 0, input.length);
+            }
+
+            int httpCode = con.getResponseCode();
+            InputStream is = (httpCode >= 200 && httpCode < 300)
+                    ? con.getInputStream() : con.getErrorStream();
+
+            StringBuilder response = new StringBuilder();
+            try (BufferedReader br = new BufferedReader(new InputStreamReader(is, "utf-8"))) {
+                String responseLine;
+                while ((responseLine = br.readLine()) != null) {
+                    response.append(responseLine.trim());
+                }
+            }
+            String result = response.toString();
+            if (result.startsWith("﻿")) {
+                result = result.substring(1);
+            }
+
+            BillPaymentServerResponse serverResponse = mapper.readValue(result, BillPaymentServerResponse.class);
+            commonResponse.setData(serverResponse.data);
+            commonResponse.setAPIResponse(mapBillPaymentStatus(serverResponse.status, httpCode));
+
+        } catch (SocketTimeoutException timeoutEx) {
+            commonResponse.setAPIResponse(ResponseCodes.get("97"));
+        } catch (UnknownHostException | ConnectException networkEx) {
+            commonResponse.setAPIResponse(ResponseCodes.get("96"));
+        } catch (IOException ex) {
+            commonResponse.setAPIResponse(ResponseCodes.get("98"));
+        }
+
+        return commonResponse;
+    }
+
+    public CommonResponse sendBillPaymentGETRequest(String apiPath, Map<String, String> header) {
+        CommonResponse commonResponse = new CommonResponse();
+
+        try {
+            URL obj = new URL(POST_URL + "/" + apiPath);
+            ObjectMapper mapper = new ObjectMapper();
+
+            HttpURLConnection con = (HttpURLConnection) obj.openConnection();
+            con.setRequestMethod("GET");
+            con.setRequestProperty("User-Agent", USER_AGENT);
+            con.setRequestProperty("Content-Type", "application/json");
+
+            for (Map.Entry<String, String> entry : header.entrySet()) {
+                con.setRequestProperty(entry.getKey(), entry.getValue());
+            }
+
+            con.setConnectTimeout(30_000);
+            con.setReadTimeout(30_000);
+
+            int httpCode = con.getResponseCode();
+            InputStream is = (httpCode >= 200 && httpCode < 300)
+                    ? con.getInputStream() : con.getErrorStream();
+
+            StringBuilder response = new StringBuilder();
+            try (BufferedReader br = new BufferedReader(new InputStreamReader(is, "utf-8"))) {
+                String responseLine;
+                while ((responseLine = br.readLine()) != null) {
+                    response.append(responseLine.trim());
+                }
+            }
+            String result = response.toString();
+            if (result.startsWith("﻿")) {
+                result = result.substring(1);
+            }
+
+            BillPaymentServerResponse serverResponse = mapper.readValue(result, BillPaymentServerResponse.class);
+            commonResponse.setData(serverResponse.data);
+            commonResponse.setAPIResponse(mapBillPaymentStatus(serverResponse.status, httpCode));
+
+        } catch (SocketTimeoutException timeoutEx) {
+            commonResponse.setAPIResponse(ResponseCodes.get("97"));
+        } catch (UnknownHostException | ConnectException networkEx) {
+            commonResponse.setAPIResponse(ResponseCodes.get("96"));
+        } catch (IOException ex) {
+            commonResponse.setAPIResponse(ResponseCodes.get("98"));
+        }
+
+        return commonResponse;
+    }
+
+    // "SUCCESS" and "PENDING" both mean the call was accepted (receipt prints, JWT is valid).
+    // HTTP 401 maps to "04" so callWithRetry() can detect an expired token and re-login.
+    private static ResponseCodes.ApiResponse mapBillPaymentStatus(String status, int httpCode) {
+        if ("SUCCESS".equalsIgnoreCase(status) || "PENDING".equalsIgnoreCase(status)) {
+            return ResponseCodes.get("00");
+        }
+        if (httpCode == 401) {
+            return ResponseCodes.get("04");
+        }
+        return ResponseCodes.get("98");
     }
 
     private static String toJson(Object obj) {
